@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="source"/>
+	<classpathentry kind="lib" path="include/asm-all-4.0_RC1.jar"/>
+	<classpathentry kind="lib" path="include/commons-compress-1.5.jar"/>
+	<classpathentry kind="lib" path="include/json-simple-1.1.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="out"/>
+</classpath>
