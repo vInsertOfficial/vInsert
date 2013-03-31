@@ -102,7 +102,7 @@ public class Configuration {
             System.out.println("Local version: " + BOT_VERSION_MAJOR + "." + BOT_VERSION_MINOR);
 			System.out.println("Remote version: " + remote_major + "." + remote_minor);
 			if (remote_major > BOT_VERSION_MAJOR || remote_minor > BOT_VERSION_MINOR) {
-				BotWindow.error("Out of date!", "Vinsert has been updated, re-download the new version at http://vinsert.org/");
+				BotWindow.error("Out of date!", "Vinsert has been updated, re-download the new version at http://www.vinsert.org/");
 				System.exit(0);
 			}
     	} catch (Exception e) {

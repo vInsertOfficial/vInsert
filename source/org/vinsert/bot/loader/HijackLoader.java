@@ -54,20 +54,20 @@ public class HijackLoader {
 	 */
 	private ClassLoader classLoader;
 
-    public static String getWorld() {
-        try {
-            URL url = new URL("http://oldschool.runescape.com/slu");
-            String source = getPageSource(url);
-            return source.split("<a href=\\\"http://oldschool|.runescape.com/j1")[1];
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+	public static String getWorld() {
+		try {
+			URL url = new URL("http://oldschool.runescape.com/slu");
+			String source = getPageSource(url);
+			return source.split("<a href=\\\"http://oldschool|.runescape.com/j1")[1];
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	/**
 	 * Creates a new loader.
 	 * @param language The language to load the client in.
@@ -93,7 +93,7 @@ public class HijackLoader {
 			if (decrypt) {
 				Archive<ClassNode> archive = new JarArchive(jar);//new ClassArchive(AES.decryptPack(jar.getInputStream(jar.getEntry("inner.pack.gz")), stub.getParameter("0"), stub.getParameter("-1")));
 				logger.info("Archive opened. Injecting bytecode...");
-				
+
 				ClassLoader classLoader = loader.classLoader = new ArchiveClassLoader(archive);
 				Applet applet = loader.applet = (Applet) classLoader.loadClass("client").newInstance();
 				applet.setStub(stub);
@@ -104,15 +104,15 @@ public class HijackLoader {
 			}
 
 			logger.info("Archive opened. Running applet.");
-//			ClassLoader classLoader = loader.classLoader = new URLClassLoader(new URL[]{ url });
-//			Applet applet = loader.applet = (Applet) classLoader.loadClass("client").newInstance();
-//			applet.setStub(stub);
-//			applet.init();
-//			applet.start();
+			//			ClassLoader classLoader = loader.classLoader = new URLClassLoader(new URL[]{ url });
+			//			Applet applet = loader.applet = (Applet) classLoader.loadClass("client").newInstance();
+			//			applet.setStub(stub);
+			//			applet.init();
+			//			applet.start();
 		}
 		return loader;
 	}
-	
+
 	public IClient getClient() {
 		return (IClient) applet;
 	}

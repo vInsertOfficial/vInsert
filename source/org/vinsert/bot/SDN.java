@@ -86,7 +86,7 @@ public class SDN {
 		if (!data.isEmpty()) {
 			for (final String[] array : data) {
 				final String id = array[0];
-				final URL url = new URL("http://vinsert.org/repo/fetcher.php");
+				final URL url = new URL("http://www.vinsert.org/repo/fetcher.php");
                 final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 				conn.setDoInput(true);
 				conn.setDoOutput(true);
