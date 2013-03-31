@@ -42,8 +42,7 @@ public class BotPanel extends JPanel {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        bot.getApplet().requestFocus();
-        repaint(); //fix removal of loading screen? - Kaden. Test.
+        validate();
 	}
 	
 	public Bot getBot() {
