@@ -53,10 +53,9 @@ public class Widgets {
 	 */
 	public Widget get(int group, int child) {
  		Widget[] widgets = get(group);
- 		if (widgets != null && widgets[child] != null) {
+ 		if (widgets != null && widgets.length > child && widgets[child] != null) {
  			return widgets[child];
  		}
- 		
  		return null;
 	}
 	

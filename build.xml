@@ -1,0 +1,24 @@
+<project name="vInsert">
+	<target name="clean">
+		<delete dir="build"/>
+	</target>
+	
+	<target name="compile">
+		<mkdir dir="build/classes"/>
+		<javac srcdir="source" destdir="build/classes" includeantruntime="false">
+			 <classpath> <fileset dir="include">  
+				<include name="**/*.jar" />  
+			</fileset>  </classpath> 
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile">
+        	<jar destfile="build/vinsert.jar" basedir="build/classes">
+			<manifest>
+				<attribute name="Main-Class" value="org.vinsert.Application"/>
+			</manifest>
+			<zipgroupfileset dir="include" includes="**/*.jar" />
+			<zipfileset dir="res" includes="**/*.png" prefix="res"/>
+		</jar>
+	</target>
+</project>

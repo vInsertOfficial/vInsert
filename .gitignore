@@ -1,5 +1,5 @@
 *.class
-*.jar
 *.war
 *.ear
 out
+build

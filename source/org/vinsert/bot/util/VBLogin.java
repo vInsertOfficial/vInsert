@@ -104,7 +104,7 @@ public class VBLogin {
 
     public boolean login() {
         try {
-            final URL url = new URL("http://www.vinsert.org/repo/sec/login.php?username=" + URLEncoder.encode(username, "UTF-8") + "&password=" + URLEncoder.encode(password, "UTF-8"));
+            final URL url = new URL("http://www.vinsert.org/repo/sec/login.php?username=" + username + "&password=" + password);
             url.openConnection();
             final String page = IOHelper.downloadAsString(url);
             if (page != null && page.replaceAll(" ", "").length() > 0 && !page.equals("0")) {
