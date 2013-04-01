@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.vinsert.bot.script.ScriptContext;
 import org.vinsert.bot.script.api.generic.Interactable;
+import org.vinsert.bot.script.api.tools.Navigation.Directions;
 import org.vinsert.bot.util.ConvexHull;
 import org.vinsert.bot.util.Perspective;
 import org.vinsert.bot.util.Utils;
@@ -30,7 +31,44 @@ public abstract class Actor extends Renderable implements Interactable {
 		this.ctx = ctx;
 		this.actor = actor;
 	}
-	
+
+
+
+	public int getDirectionTo(Tile t) {
+		/**
+		 * @author Soxs
+		 * Gets the direction to a specified tile with an int.
+		 * See Navigation.
+		 */
+		int currentX = getLocation().getX();
+		int currentY = getLocation().getY();
+
+		int X = t.getX();
+		int Y = t.getY();
+
+		if (X > currentX && Y == currentY) {
+			return Directions.EAST.value;
+		} else if (X < currentX && Y == currentY) {
+			return Directions.WEST.value;
+
+		} else if (X == currentX && Y > currentY) {
+			return Directions.NORTH.value;
+		} else if (X == currentX && Y < currentY) {
+			return Directions.SOUTH.value;
+
+		} else if (X > currentX && Y > currentY) {
+			return Directions.NORTHE.value;
+		} else if (X < currentX && Y > currentY) {
+			return Directions.NORTHW.value;
+
+		} else if (X > currentX && Y < currentY) {
+			return Directions.SOUTHE.value;
+		} else if (X < currentX && Y < currentY) {
+			return Directions.SOUTHW.value;
+		}
+		return 0;
+	}
+
 	/**
 	 * @return The actor's orientation
 	 */
@@ -161,7 +199,7 @@ public abstract class Actor extends Renderable implements Interactable {
 		}
 		return new Player(ctx, ctx.getClient().getPlayers()[actor.getInteracting() - 32768]);
 	}
-	
+
 	/**
 	 * Gets the current interacting index.
 	 * @return The interacting index.
@@ -307,6 +345,7 @@ public abstract class Actor extends Renderable implements Interactable {
 		return gen;
 	}
 
+
 	@Override
 	public boolean interact(String action) {
 		Point point = hullPoint(hull());
@@ -314,13 +353,13 @@ public abstract class Actor extends Renderable implements Interactable {
 		Utils.sleep(Utils.random(150, 250));
 
 		int index = ctx.menu.getIndex(action);
-		
+
 		if (index == 0) {
 			ctx.mouse.click();
 			Utils.sleep(Utils.random(200, 400));
 			return true;
 		}
-		
+
 		ctx.mouse.click(true);
 		if (index != -1) {
 			Point menuPoint = ctx.menu.getClickPoint(index);
@@ -328,8 +367,9 @@ public abstract class Actor extends Renderable implements Interactable {
 			Utils.sleep(Utils.random(350, 650));
 			return true;
 		}
-		
+
 		return false;
 	}
+
 
 }
