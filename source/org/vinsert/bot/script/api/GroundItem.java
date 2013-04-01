@@ -233,36 +233,40 @@ public class GroundItem extends Item implements Hullable, Interactable {
 		return height;
 	}
 
+	/**
+	 * @author infor42
+	 * 
+	 * Interact with the GroundItem given a command as a String
+	 */
 	@Override
 	public boolean interact(String action) {
-		
 		int speed = ctx.mouse.getSpeed();
 		ctx.mouse.setSpeed(speed - 4);
+		Polygon hull = hull();
+		Point p = hullPoint(hull);
+		ctx.mouse.move(p.x, p.y);
 		
-		Point point = hullPoint(hull());
-		ctx.mouse.move(point.x, point.y);
-		Utils.sleep(Utils.random(15, 35));
-
+		long start = System.currentTimeMillis();
+		while(!hull.contains(ctx.mouse.getPosition())) { // max 1 second of hover before fails
+			if(System.currentTimeMillis() - start > 1000L)
+				return false;
+			ctx.mouse.move(p.x, p.y);
+		}
 		int index = ctx.menu.getIndex(action);
-		
-		if (index == 0) {
+		if(index == 0) {
 			ctx.mouse.click();
-			Utils.sleep(Utils.random(200, 400));
+			Utils.sleep(300, 500);
+			ctx.mouse.setSpeed(speed);
+			return true;
+		} else if(index > 0) {
+			ctx.mouse.click(true);
+			Utils.sleep(100, 200);
+			ctx.menu.click(index);
+			Utils.sleep(300, 500);
 			ctx.mouse.setSpeed(speed);
 			return true;
 		}
-		
-		ctx.mouse.click(true);
-
-		if (index != -1) {
-			Point menuPoint = ctx.menu.getClickPoint(index);
-			ctx.mouse.click(menuPoint.x, menuPoint.y);
-			Utils.sleep(Utils.random(350, 650));
-			ctx.mouse.setSpeed(speed);
-			return true;
-		}
-		
-		ctx.mouse.setSpeed(speed);
+		ctx.mouse.setSpeed(speed);		
 		return false;
 	}
 

@@ -282,21 +282,36 @@ public class GameObject implements Interactable, Hullable {
 		ctx.mouse.click(p.x, p.y);
 	}
 
+	/**
+	 * @author infor42
+	 * 
+	 * Interacts with the GameObject given a command as a String
+	 */
 	@Override
 	public boolean interact(String action) {
-		Point p = hullPoint(hull());
+		Polygon hull = hull();
+		Point p = hullPoint(hull);
 		ctx.mouse.move(p.x, p.y);
-		Utils.sleep(150, 250);
+		
+		long start = System.currentTimeMillis();
+		while(!hull.contains(ctx.mouse.getPosition())) { // max 1 second of hover before fails
+			if(System.currentTimeMillis() - start > 1000L)
+				return false;
+			ctx.mouse.move(p.x, p.y);
+		}
 		int index = ctx.menu.getIndex(action);
-		if (index == 0) {
-			ctx.mouse.click(p.x, p.y);
-			Utils.sleep(Utils.random(350, 650));
+		if(index == 0) {
+			ctx.mouse.click();
+			Utils.sleep(300, 500);
 			return true;
-		} else if (index > 0) {
+		} else if(index > 0) {
+			ctx.mouse.click(true);
+			Utils.sleep(100, 200);
 			ctx.menu.click(index);
+			Utils.sleep(300, 500);
 			return true;
 		}
-
+		
 		return false;
 	}
 
