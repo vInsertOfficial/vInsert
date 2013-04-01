@@ -11,6 +11,7 @@ import org.vinsert.bot.script.randevent.RandomEvent;
 
 /**
  * @Credits to: Tombraider
+ * Widgets need to work for this random event.
  */
 @ScriptManifest(authors = { "Soxs" }, name = "FreakyForest")
 public class FreakyForest extends RandomEvent {
@@ -21,6 +22,7 @@ public class FreakyForest extends RandomEvent {
 	public static int chickentokill = 0;
 	public static boolean gotMeat = false;
 	static int meats = 6179;
+	
 	
 	Npc lumberjack = npcs.getNearest(freakyForester);
 	GroundItem pheasantMeat = groundItems.getNearest(players.getLocalPlayer().getLocation(), Filters.groundItemId(6179));
@@ -56,10 +58,10 @@ public class FreakyForest extends RandomEvent {
 				String chickentokilltext = null;
 				Widget Wid = widgets.get(243, 2);
 				if (Wid != null && Wid.isValid()) {
-					chickentokilltext = Wid.getTooltip();
+					chickentokilltext = Wid.getText();
 				} else {
 					try {
-						chickentokilltext = Wid.getTooltip();
+						chickentokilltext = Wid.getText();
 					} catch (Exception e) {
 						log("Exception caught: " + e.toString());
 					}
