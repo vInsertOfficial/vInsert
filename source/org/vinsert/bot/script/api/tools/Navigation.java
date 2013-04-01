@@ -19,28 +19,42 @@ import org.vinsert.bot.util.Utils;
  *
  */
 public class Navigation {
-	
+
 	/**
 	 * The maximum threshold for transitioning between tiles in a smooth manner
 	 */
 	public static final int TRANSITION_THRESHOLD_MAX = 8;
-	
+
 	/**
 	 * The minimum threshold for transitioning between tiles in a smooth manner
 	 */
 	public static final int TRANSITION_THRESHOLD_MIN = 3;
-	
+
 	/**
 	 * The last path
 	 */
 	private Path lastPath;
 
 	private ScriptContext ctx;
-	
+
 	public Navigation(ScriptContext ctx) {
 		this.ctx = ctx;
 	}
-	
+
+
+	public static enum Directions {
+		/**
+		 * @Author Soxs
+		 * For use with the Actor#getDirectionTo
+		 */
+		NORTH(0), EAST(1), SOUTH(2), WEST(3),
+		NORTHE(4), NORTHW(5), SOUTHE(6), SOUTHW(7);
+		public int value;
+		Directions (int value) {
+			this.value = value;
+		}
+	}
+
 	/**
 	 * Navigates the player through the given path.
 	 * <p>
@@ -55,13 +69,13 @@ public class Navigation {
 			//the path is finished
 			return true;
 		}
-		
+
 		if (lastPath == null) {
 			lastPath = path;
 		} else if (lastPath != path) {
 			lastPath.reset();
 		}
-		
+
 		if (path.getTarget() == null) {
 			//interject into a path, to closest tile
 			Tile target = getFurthestWalkableTile(path);
@@ -71,7 +85,7 @@ public class Navigation {
 			}
 			path.setTarget(deviate(target, deviation, deviation), Utils.random(TRANSITION_THRESHOLD_MIN, TRANSITION_THRESHOLD_MAX));
 		}
-		
+
 		if (path.getNext().equals(path.getFinish())) {
 			//if we're on the last path node, we won't be transitioning so we have to end up at the exact position
 			if (!ctx.players.getLocalPlayer().isMoving()) {
@@ -91,10 +105,10 @@ public class Navigation {
 				navigate(path.getNext(), policy);
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Calculates the next viable tile (e.g. the furthest tile away from the player which is walkable on the minimap)
 	 * @param path The path
@@ -107,7 +121,7 @@ public class Navigation {
 			if (list.isEmpty()) {
 				list.addLast(t);
 			}
-			
+
 			Point p = Perspective.trans_tile_minimap(ctx.getClient(), t.getX(), t.getY());
 			if (p.x != -1 && p.y != -1) {
 				if (last.distanceTo(t) < last.distanceTo(list.peekFirst())) {
@@ -119,20 +133,20 @@ public class Navigation {
 		}
 		return list.peekFirst();
 	}
-	
+
 	private void navigateMinimap(Tile tile) {
 		Point p = Perspective.trans_tile_minimap(ctx.getClient(), tile.getX(), tile.getY());
 		if (p.x != -1 && p.y != -1) {
 			ctx.mouse.click(p.x, p.y);
 		}
 	}
-	
+
 	private void navigateScreen(Tile tile) {
 		Point point = Perspective.trans_tile_screen(ctx.getClient(), tile, Math.random(), Math.random(), 
 				Perspective.get_tile_height(ctx.getClient(), ctx.getClient().getPlane(), tile.getX(), tile.getY()));
 		ctx.mouse.click(point.x, point.y);
 	}
-	
+
 	/**
 	 * Clicks the tile in regards to the navigation policy
 	 * @param tile The tile to click
@@ -163,7 +177,7 @@ public class Navigation {
 			}
 		}
 	}
-	
+
 	/**
 	 * Deviates a tile by the random offset
 	 * @param tile
@@ -177,7 +191,7 @@ public class Navigation {
 		int y = tile.getY() + (-deviationY + Utils.random(0, deviationY * 2));
 		return new Tile(x, y);
 	}
-	
+
 	/**
 	 * Checks if running is toggled
 	 * @return true if the player is running, false if not
@@ -185,7 +199,7 @@ public class Navigation {
 	public boolean isRunning() {
 		return ctx.settings.get(Settings.TOGGLE_RUN) == 1;
 	}
-	
+
 	/**
 	 * Toggles running
 	 * @return true if running after being toggled, false if not
@@ -199,7 +213,7 @@ public class Navigation {
 			return true;
 		}
 	}
-	
+
 	/**
 	 * Toggles running
 	 * @param running The running flag
@@ -212,14 +226,14 @@ public class Navigation {
 		widget.click();
 		return true;
 	}
-	
+
 	/**
 	 * @return The player's current energy
 	 */
 	public int getEnergy() {
 		return Integer.parseInt(ctx.widgets.get(261, 40).getText());
 	}
-	
+
 	/**
 	 * The policy determining which method the navigator will use to
 	 * navigate to a position
@@ -240,5 +254,5 @@ public class Navigation {
 		 */
 		MIXED;
 	}
-	
+
 }
