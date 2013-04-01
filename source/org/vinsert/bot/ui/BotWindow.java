@@ -48,7 +48,7 @@ public class BotWindow {
 
 	}
 
-	public void init(final boolean login) {
+	public void init() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -61,11 +61,11 @@ public class BotWindow {
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					frame.setResizable(false);
 
-					initComponents(login);
+					initComponents();
 					frame.pack();
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
-					VBLogin.create(login);
+					VBLogin.create();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -73,9 +73,9 @@ public class BotWindow {
 		});
 	}
 
-	private void initComponents(final boolean login) {
+	private void initComponents() {
 		botTabs = new JTabbedPane();
-		toolBar = new BotToolBar(this, login);
+		toolBar = new BotToolBar(this);
 		toolBar.setPreferredSize(new Dimension(Configuration.BOT_TOOLBAR_WIDTH, Configuration.BOT_TOOLBAR_HEIGHT));
 		botTabs.setBorder(null);
 		botTabs.setBackground(Color.DARK_GRAY);

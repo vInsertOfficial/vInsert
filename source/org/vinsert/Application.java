@@ -10,8 +10,9 @@ public class Application {
 	public static void main(String[] args) throws Exception {
 		window = new BotWindow();
         System.setSecurityManager(new VSecruityManager());
+		Configuration.checkVersion();
         Configuration.mkdirs();
-		window.init(Configuration.checkVersion());
+		window.init();
 	}
 
     public static BotWindow getBotWindow() {

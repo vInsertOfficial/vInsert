@@ -93,7 +93,7 @@ public class Configuration {
 		return decode(RES_HEAD) + decode(RES_BODY) + decode(RES_TAIL);
 	}
     
-    public static boolean checkVersion() {
+    public static void checkVersion() {
     	try {
 			String str = ArchiveClassLoader.getText(composeres() + vesrionfile);
 			String[] strargs = str.split(",");
@@ -105,10 +105,9 @@ public class Configuration {
 				BotWindow.error("Out of date!", "Vinsert has been updated, re-download the new version at http://www.vinsert.org/");
 				System.exit(0);
 			}
-                        return true;
     	} catch (Exception e) {
     		BotWindow.warn("Connection error", "Could not verify bot version from server, entering offline mode.");
-    		return false;
+    		//ignore
     	}
     }
 
