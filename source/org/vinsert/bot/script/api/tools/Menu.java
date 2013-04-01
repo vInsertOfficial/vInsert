@@ -126,11 +126,7 @@ public class Menu {
 	 */
 	public Point getClickPoint(int index) {
 		Rectangle bounds = getBounds();
-		Point menu = new Point(bounds.x + 4, bounds.y + 4);
-
-		int pad = Math.random() > 0.5 ? bounds.width / 4 : bounds.width / 5;
-		menu.x += pad;
-		
+		Point menu = new Point(bounds.x + 4, bounds.y + 4);		
 		return new Point(menu.x + Utils.random(4, bounds.width - 4), menu.y + Utils.random(23, 30) + 15 * index);
 	}
 
