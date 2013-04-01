@@ -151,7 +151,13 @@ public class VBLogin {
         }
     }
 
-    public static void create() {
+    public static void create(boolean loginsdn) {
+        if (!loginsdn) {
+            VBLogin log = new VBLogin("", "");
+            log.usergroupId = 0;
+            log.userId = 0;
+            self = log;
+        }
         if (self != null) {
             return;
         }
