@@ -35,7 +35,11 @@ public class BankPin extends RandomEvent{
             if (bankPin[bankPinIndex].equals(num)) {
                 w.click();
                 bankPinIndex++;
+                break;
             }
+        }
+        if (bankPinIndex >= 4) {
+            close();
         }
         return random(1000, 1500);
     }
