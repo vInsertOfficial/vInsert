@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import javax.imageio.ImageIO;
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenu;
@@ -390,7 +391,7 @@ public class BotToolBar extends JToolBar {
         });
         
 	    add(newBotButton);
-	    addSeparator(new Dimension(575, 0));
+	    add(Box.createHorizontalGlue());
 		add(runScriptButton);
 		add(pauseScriptButton);
 		add(stopScriptButton);
