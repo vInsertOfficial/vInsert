@@ -390,7 +390,7 @@ public class BotToolBar extends JToolBar {
         });
         
 	    add(newBotButton);
-	    addSeparator(new Dimension(575, 24));
+	    addSeparator(new Dimension(575, 0));
 		add(runScriptButton);
 		add(pauseScriptButton);
 		add(stopScriptButton);
