@@ -46,17 +46,13 @@ import org.vinsert.bot.util.ScriptClassLoader;
 
 public class BotScriptSelector extends JDialog {
 
-	private final JDialog self = this;
-
-	private JTable table = new JTable();
-
-	private final List<ScriptInfo> scripts = new ArrayList<ScriptInfo>();
-
-	private final List<ScriptInfo> currentScripts = new ArrayList<ScriptInfo>();
-
+    private final JDialog self = this;
+    private JTable table = new JTable();
+    private final List<ScriptInfo> scripts = new ArrayList<ScriptInfo>();
+    private final List<ScriptInfo> currentScripts = new ArrayList<ScriptInfo>();
     private String path = Configuration.COMPILED_DIR;
 
-    public BotScriptSelector() {
+    public BotScriptSelector(final boolean login) {
         setTitle("Script Selector");
         setModal(true);
         setBackground(Color.BLACK);
@@ -71,6 +67,7 @@ public class BotScriptSelector extends JDialog {
         devToolBar.add(scriptPathLabel, BorderLayout.WEST);
         final JButton selectPath = new JButton("Select Path...");
         selectPath.addActionListener(new ActionListener() {
+
             public void actionPerformed(final ActionEvent e) {
                 final JFileChooser chooser = new JFileChooser();
                 chooser.setCurrentDirectory(new File(scriptPathLabel.getText()));
@@ -94,7 +91,7 @@ public class BotScriptSelector extends JDialog {
                 }
                 scriptPathLabel.setText(sp.getAbsolutePath());
                 try {
-                    load(sp);
+                    load(sp, login);
                 } catch (Exception err) {
                     err.printStackTrace();
                 }
@@ -125,24 +122,27 @@ public class BotScriptSelector extends JDialog {
         add(bottom, BorderLayout.SOUTH);
         try {
             final List<ScriptInfo> allScripts = new ArrayList<ScriptInfo>();
-            for (ScriptInfo script : SDN.getScriptDefinitions()) {
-                System.out.println(script.getName());
-                allScripts.add(script);
+            if (login) {
+                for (ScriptInfo script : SDN.getScriptDefinitions()) {
+                    System.out.println(script.getName());
+                    allScripts.add(script);
+                }
             }
             for (ScriptInfo script : scripts) {
                 allScripts.add(script);
             }
             final DefaultTableModel model = new CustomTableModel(new Object[]{
-                    "Script", "Version", "Description", "Author"}, 0);
-            load(new File(path));
+                        "Script", "Version", "Description", "Author"}, 0);
+            load(new File(path), login);
             search.addKeyListener(new KeyAdapter() {
+
                 public void keyReleased(final KeyEvent e) {
                     final String text = search.getText();
                     currentScripts.clear();
                     if (text.replaceAll(" ", "").length() == 0) {
                         final DefaultTableModel model = new DefaultTableModel(
                                 new Object[]{"Script", "Version",
-                                        "Description", "Author"}, 0);
+                                    "Description", "Author"}, 0);
                         for (final ScriptInfo definition : allScripts) {
                             currentScripts.add(definition);
                             String authors = "";
@@ -153,14 +153,14 @@ public class BotScriptSelector extends JDialog {
                                 }
                             }
                             model.addRow(new Object[]{definition.getName(),
-                                    definition.getVersion(),
-                                    definition.getDesc(), authors});
+                                        definition.getVersion(),
+                                        definition.getDesc(), authors});
                         }
                         table.setModel(model);
                     } else {
                         final DefaultTableModel model = new DefaultTableModel(
                                 new Object[]{"Script", "Version",
-                                        "Description", "Author"}, 0);
+                                    "Description", "Author"}, 0);
                         for (final ScriptInfo definition : scripts) {
                             final String script = definition.getName();
                             final String description = definition.getDesc();
@@ -194,9 +194,9 @@ public class BotScriptSelector extends JDialog {
                                     }
                                 }
                                 model.addRow(new Object[]{
-                                        definition.getName(),
-                                        definition.getVersion(),
-                                        definition.getDesc(), authors});
+                                            definition.getName(),
+                                            definition.getVersion(),
+                                            definition.getDesc(), authors});
                             }
                         }
                         table.setModel(model);
@@ -206,35 +206,29 @@ public class BotScriptSelector extends JDialog {
                 }
             });
             start.addActionListener(new ActionListener() {
+
                 public void actionPerformed(final ActionEvent e) {
                     new Thread(new Runnable() {
+
                         public void run() {
                             final int selected = table.getSelectedRow();
                             if (selected != -1) {
-                                final ScriptInfo def = currentScripts
-                                        .get(selected);
+                                final ScriptInfo def = currentScripts.get(selected);
                                 try {
                                     setVisible(false);
-                                    Bot bot = Application.getBotWindow()
-                                            .getActiveBot();
+                                    Bot bot = Application.getBotWindow().getActiveBot();
                                     if (bot != null) {
-                                        int scriptIndex = table
-                                                .getSelectedRow();
-                                        int accIndex = combobox
-                                                .getSelectedIndex();
+                                        int scriptIndex = table.getSelectedRow();
+                                        int accIndex = combobox.getSelectedIndex();
                                         if (scriptIndex > -1) {
                                             Account account = null;
                                             if (accIndex > -1) {
-                                                account = AccountManager
-                                                        .getAccounts().get(
-                                                                accIndex);
+                                                account = AccountManager.getAccounts().get(
+                                                        accIndex);
                                             }
-                                            Application
-                                                    .getBotWindow()
-                                                    .getActiveBot()
-                                                    .pushScript(
-                                                            loadScript(scriptIndex),
-                                                            true, account);
+                                            Application.getBotWindow().getActiveBot().pushScript(
+                                                    loadScript(scriptIndex),
+                                                    true, account);
                                             dispose();
                                         }
                                     }
@@ -249,15 +243,15 @@ public class BotScriptSelector extends JDialog {
             setLocationRelativeTo(null);
             pack();
         } catch (ClassNotFoundException e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
         } catch (FileNotFoundException e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
         } catch (InstantiationException e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
         } catch (IllegalAccessException e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
         }
     }
 
@@ -280,15 +274,17 @@ public class BotScriptSelector extends JDialog {
         }
     }
 
-    private void load(final File directory) throws ClassNotFoundException,
+    private void load(final File directory, boolean login) throws ClassNotFoundException,
             InstantiationException, IllegalAccessException,
             FileNotFoundException, IOException {
         scripts.clear();
         final DefaultTableModel model = new CustomTableModel(new Object[]{
-                "Script", "Version", "Description", "Author"}, 0);
+                    "Script", "Version", "Description", "Author"}, 0);
         ScriptClassLoader.loadLocal(scripts, directory);
-        for (ScriptInfo info : SDN.getScriptDefinitions()) {
-            scripts.add(info);
+        if (login) {
+            for (ScriptInfo info : SDN.getScriptDefinitions()) {
+                scripts.add(info);
+            }
         }
         for (final ScriptInfo definition : scripts) {
             currentScripts.add(definition);
@@ -300,23 +296,22 @@ public class BotScriptSelector extends JDialog {
                 }
             }
             model.addRow(new Object[]{definition.getName(),
-                    definition.getVersion(), definition.getDesc(), authors});
+                        definition.getVersion(), definition.getDesc(), authors});
         }
         table.setModel(model);
     }
 
-	public Script loadScript(int index) {
-		Script script = null;
-		try {
-			script = scripts.get(index).getClazz().asSubclass(Script.class)
-					.newInstance();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		return script;
-	}
+    public Script loadScript(int index) {
+        Script script = null;
+        try {
+            script = scripts.get(index).getClazz().asSubclass(Script.class).newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return script;
+    }
 
     private class CustomTableModel extends DefaultTableModel {
 
