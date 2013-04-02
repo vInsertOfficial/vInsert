@@ -121,9 +121,9 @@ public class BotAccountManager extends JDialog implements ActionListener {
                 final int row = table.getSelectedRow();
                 final String user = (String) table.getModel().getValueAt(table.getSelectedRow(), 0);
                 if (user != null) {
-                    for (Account account : AccountManager.getAccounts()) {
-                        if (account.getUsername().equals(user)) {
-                            AccountManager.getAccounts().remove(account);
+                    for (int i = 0; i < AccountManager.getAccounts().size(); i++) {
+                        if (AccountManager.getAccounts().get(i).getUsername().equals(user)) {
+                            AccountManager.getAccounts().remove(i);
                         }
                     }
                     ((DefaultTableModel) table.getModel()).fireTableRowsDeleted(row, row);

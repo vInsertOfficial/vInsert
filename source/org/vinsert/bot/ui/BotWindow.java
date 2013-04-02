@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -42,6 +43,7 @@ public class BotWindow {
 			public void run() {
 				try {
 					//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+					JDialog.setDefaultLookAndFeelDecorated(true);
 
 					frame = new JFrame(Configuration.BOT_NAME + " " + Configuration.BOT_VERSION_MAJOR+"."+Configuration.BOT_VERSION_MINOR);
 

@@ -1,5 +1,6 @@
 package org.vinsert;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;

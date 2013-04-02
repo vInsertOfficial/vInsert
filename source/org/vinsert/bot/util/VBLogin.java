@@ -28,7 +28,6 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import org.vinsert.Configuration;
-import org.vinsert.bot.Crypter;
 import org.vinsert.bot.IOHelper;
 
 /**
@@ -135,9 +134,7 @@ public class VBLogin {
                         file.createNewFile();
                     }
                     final BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-                    final String key = Crypter.randkey();
-                    final String encPass = Crypter.crypt(login.password, key);
-                    bw.write(login.getUsername() + ":" + encPass + ":" + key);
+                    bw.write(login.getUsername());
                     bw.close();
                 } catch (IOException e1) {
                     e1.printStackTrace();
@@ -185,7 +182,6 @@ public class VBLogin {
         center.add(pass, BorderLayout.CENTER);
         pass.setBounds(63, 85, 120, 20);
         final JCheckBox rememberMe = new JCheckBox("Remember Me");
-        rememberMe.setEnabled(false);
         final File account = new File(Configuration.STORAGE_DIR + File.separator + "Account.txt");
         if (account.exists()) {
             try {
@@ -197,9 +193,9 @@ public class VBLogin {
                 }
                 br.close();
                 content = content.replaceAll("\n", "");
-                final String[] split = content.split(":");
-                user.setText(split[0]);
-                pass.setText(Crypter.crypt(split[1], split[2]));
+                user.setText(content);
+                pass.requestFocus();
+                pass.requestFocusInWindow();
                 rememberMe.setSelected(true);
             } catch (Throwable e1) {
             	 e1.printStackTrace();

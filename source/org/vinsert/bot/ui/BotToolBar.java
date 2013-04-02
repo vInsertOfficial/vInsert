@@ -195,13 +195,9 @@ public class BotToolBar extends JToolBar {
 	    runScriptButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (window.getActiveBot() == null) return;
+				//if (window.getActiveBot() == null) return;
 				final BotScriptViewer bsv = new BotScriptViewer();
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						bsv.load();
-					}
-				});
+				bsv.load();
 				
 				//new BotScriptSelector(log).setVisible(true);
 //				Bot bot = window.getActiveBot();

@@ -78,7 +78,6 @@ public class BotScriptViewer extends JDialog {
 		setTitle("Script Viewer");
 		
 		setResizable(false);
-		setDefaultLookAndFeelDecorated(true);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(480, 320);
 		setLocationRelativeTo(null);
@@ -158,11 +157,6 @@ public class BotScriptViewer extends JDialog {
 			}
 		});
 		loader.execute();
-		try {
-			loader.get(15, TimeUnit.SECONDS);
-		} catch (Exception e) {
-		}
-		resetLoadingBar();
 	}
 	
 	/**
@@ -224,7 +218,9 @@ public class BotScriptViewer extends JDialog {
 						out.write(scriptList.get(i));
 						out.close();
 						ScriptClassLoader.load(definitions, file);
-						firePropertyChange("script", null, definitions.get(definitions.size() - 1));
+						if (definitions.size() > 0) {
+							firePropertyChange("script", null, definitions.get(definitions.size() - 1));
+						}
 					} catch (final Exception ignored) {
 						ignored.printStackTrace();
 					}
