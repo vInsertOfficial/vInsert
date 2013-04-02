@@ -1,10 +1,116 @@
 package org.vinsert.bot.ui;
 
+import java.awt.Dimension;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+
+import org.vinsert.Application;
+import org.vinsert.Configuration;
+import org.vinsert.bot.loader.arch.ArchiveClassLoader;
+
 /**
- * The version checker window
+ * The version checker
  * @author tommo
  *
  */
-public class BotVersionChecker {
+public class BotVersionChecker extends JDialog implements PropertyChangeListener {
+	
+	private static final long serialVersionUID = 1L;
+	private static final int WIDTH = 240;
+	private static final int HEIGHT = 80;
+	
+	private static final int RESULT_FALLBACK = 0;
+	private static final int RESULT_UP_TO_DATE = 1;
+	private static final int RESULT_OUT_OF_DATE = 2;
+	
+	private JProgressBar progressBar;
+	private Worker worker;
+	
+	public BotVersionChecker() {
+		init();
+	}
+	
+	private void init() {
+		final BotVersionChecker ref = this;
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				setLayout(null);
+				setSize(WIDTH, HEIGHT);
+				setUndecorated(true);
+				setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+				setResizable(false);
+				setLocationRelativeTo(null);
+				
+				progressBar = new JProgressBar();
+				progressBar.setString("Checking for updates...");
+				progressBar.setStringPainted(true);
+				progressBar.setIndeterminate(true);
+				progressBar.setPreferredSize(new Dimension(200, 80));
+				progressBar.setBounds(0, 0, WIDTH, HEIGHT);
+				
+				add(progressBar);
+				
+				setVisible(true);
+				
+				worker = new Worker();
+				worker.addPropertyChangeListener(ref);
+				worker.execute();
+			}
+		});
+	}
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals("version_check")) {
+			int value = (Integer) evt.getNewValue();
+			if (value == RESULT_UP_TO_DATE) {
+				setVisible(false);
+				Application.window = new BotWindow();
+				Application.window.init(true);
+			} else if (value == RESULT_OUT_OF_DATE) {
+				BotWindow.error("Out of date!", "Vinsert has been updated, re-download the new version at http://www.vinsert.org/");
+				System.exit(0);
+			} else if (value == RESULT_FALLBACK) {
+				setVisible(false);
+				BotWindow.warn("Connection error", "Could not verify bot version from server, entering offline mode.");
+				Application.window = new BotWindow();
+				Application.window.init(false);
+			}
+		}
+	}
+
+	/**
+	 * The worker which executes in the background to actually
+	 * do the version checking
+	 * @author tommo
+	 *
+	 */
+	public class Worker extends SwingWorker<Void, Void> {
+
+		@Override
+		protected Void doInBackground() throws Exception {
+			try {
+				String str = ArchiveClassLoader.getText(Configuration.composeres() + Configuration.vesrionfile);
+				String[] strargs = str.split(",");
+				Configuration.remote_major = Integer.parseInt(strargs[0]);
+				Configuration.remote_minor = Integer.parseInt(strargs[1]);
+				if (Configuration.remote_major > Configuration.BOT_VERSION_MAJOR || Configuration.remote_minor > Configuration.BOT_VERSION_MINOR) {
+					firePropertyChange("version_check", null, RESULT_OUT_OF_DATE);
+				}
+				firePropertyChange("version_check", null, RESULT_UP_TO_DATE);
+	    	} catch (Exception e) {
+	    		firePropertyChange("version_check", null, RESULT_FALLBACK);
+	    	}
+			return null;
+		}
+		
+	}
 
 }

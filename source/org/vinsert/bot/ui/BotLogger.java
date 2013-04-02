@@ -57,11 +57,12 @@ public class BotLogger extends JList<String> {
 	};
 
 	private static final long serialVersionUID = -402184203325742570L;
-	private static DefaultListModel model = new DefaultListModel();
+	private DefaultListModel model = new DefaultListModel();
 	private JScrollPane scroller;
 
 	public BotLogger() {
-		super(model);
+		super();
+		setModel(model);
 		setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
 		setAutoscrolls(true);

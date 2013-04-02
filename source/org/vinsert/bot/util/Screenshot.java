@@ -13,7 +13,7 @@ import java.io.IOException;
 public class Screenshot {
 
     public static BufferedImage getGameImage() {
-        return Application.getBotWindow().getActiveBot().getCanvas().getGameBuffer();
+        return Application.window.getActiveBot().getCanvas().getGameBuffer();
     }
 
     public static void takeScreenshot(String path) {

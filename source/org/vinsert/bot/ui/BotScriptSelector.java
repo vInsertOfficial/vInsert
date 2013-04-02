@@ -217,7 +217,7 @@ public class BotScriptSelector extends JDialog {
                                         .get(selected);
                                 try {
                                     setVisible(false);
-                                    Bot bot = Application.getBotWindow()
+                                    Bot bot = Application.window
                                             .getActiveBot();
                                     if (bot != null) {
                                         int scriptIndex = table
@@ -232,7 +232,7 @@ public class BotScriptSelector extends JDialog {
                                                                 accIndex);
                                             }
                                             Application
-                                                    .getBotWindow()
+                                                    .window
                                                     .getActiveBot()
                                                     .pushScript(
                                                             loadScript(scriptIndex),

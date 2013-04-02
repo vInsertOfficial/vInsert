@@ -45,7 +45,7 @@ public class BotTabPane extends JPanel {
 	/**
 	 * The active tab
 	 */
-	private Tab active;
+	private Tab selected;
 	
 	public BotTabPane(BotWindow window, boolean log) {
 		setPreferredSize(new Dimension(Configuration.BOT_APPLET_WIDTH + 8, Configuration.BOT_APPLET_HEIGHT + Configuration.BOT_LOGGER_HEIGHT + 40));
@@ -54,21 +54,18 @@ public class BotTabPane extends JPanel {
 		add(toolbar, BorderLayout.NORTH);
 	}
 	
-	public JPanel createTabButton(final int index, final BotPanel botPanel) {
+	public JPanel createTabButton(final Tab tab) {
 		final JPanel panel = new JPanel();
-		final JButton button = new JButton("Bot " + (index + 1));
+		final JButton button = new JButton("Bot");
 		final JPopupMenu closeMenu = new JPopupMenu();
 		final JMenuItem closeItem = new JMenuItem("Close");
 		
 		button.setIcon(Configuration.icon("res/icon_tab_small.png"));
 		button.setBounds(0, 0, 84, 24);
+		button.setFocusable(false);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				for (Tab tab : tabs) {
-					if (tab.getContent().equals(botPanel)) {
-						setTab(tab);
-					}
-				}
+				updateTabs(tab);
 			}
 		});
 		button.addMouseListener(new MouseAdapter() {
@@ -89,7 +86,7 @@ public class BotTabPane extends JPanel {
 		
 		closeItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				closeTab(index);
+				closeTab(tab);
 			}
 		});
 		closeMenu.add(closeItem);
@@ -103,47 +100,21 @@ public class BotTabPane extends JPanel {
 	}
 	
 	/**
-	 * Returns the index of the tab panel
-	 * @param tab The tab
-	 * @return The index, or -1 if not existent
-	 */
-	public int indexOfTab(Tab tab) {
-		for (Tab t : tabs) {
-			if (t.getIndex() == tab.getIndex()) {
-				return t.getIndex();
-			}
-		}
-		return -1;
-	}
-	
-	/**
-	 * Closes a tab
-	 * @param index The tab index
-	 */
-	public void closeTab(int index) {
-		for (Tab tab : tabs) {
-			if (tab.getIndex() == index) {
-				closeTab(tab);
-			}
-		}
-	}
-	
-	/**
 	 * Closes a tab
 	 * @param tab The tab to close
 	 */
 	public void closeTab(Tab tab) {
 		tabs.remove(tab);
-		if (active != null && active.getIndex() == tab.getIndex()) {
+		if (selected != null && selected.getIndex() == tab.getIndex()) {
 			clearContent();
 		}
-		updateTabs();
+		updateTabs(null);
 	}
 	
 	public void clearContent() {
-		if (active != null) {
-			remove(active.getContent());
-			active = null;
+		if (selected != null) {
+			remove(selected.getContent());
+			selected = null;
 			revalidate();
 			repaint();
 		}
@@ -156,42 +127,31 @@ public class BotTabPane extends JPanel {
 	 */
 	public int addTab(BotPanel panel) {
 		int index = tabs.size();
-		Tab tab = new Tab(index, createTabButton(index, panel), panel);
+		Tab tab = new Tab();
+		tab.setIndex(index);
+		tab.setContent(panel);
+		tab.setButton(createTabButton(tab));
 		tabs.add(tab);
-		active = tab;
-		updateTabs();
+		updateTabs(tab);
 		return index;
 	}
 	
-	/**
-	 * Updates the tab buttons
-	 * @param active The active bot panel
-	 */
-	public void updateTabs() {
+	public void updateTabs(Tab newSelected) {
 		List<JComponent> components = new ArrayList<JComponent>();
 		for (Tab t : tabs) {
 			components.add(t.getButton());
 		}
 		toolbar.updateComponents(components);
-		setTab(active);
-	}
-	
-	/**
-	 * Sets the active content panel
-	 * @param tab The new tab
-	 */
-	public void setTab(Tab tab) {
-		if (active != null) {
+		
+		if (newSelected != null) {
 			clearContent();
-		}
-		if (tab != null) {
-			active = tab;
+			selected = newSelected;
 			for (Tab t : tabs) {
-				t.setIndex(tabs.indexOf(t));
 				t.getButton().setBorder(null);
 			}
-			active.getButton().setBorder(BorderFactory.createLineBorder(Color.GRAY));
-			add(tab.getContent(), BorderLayout.CENTER);
+			selected.getButton().setBorder(BorderFactory.createLineBorder(Color.GRAY));
+			add(selected.getContent(), BorderLayout.CENTER);
+			selected.getContent().revalidate();
 			revalidate();
 		}
 	}
@@ -201,7 +161,7 @@ public class BotTabPane extends JPanel {
 	 * @return
 	 */
 	public Tab getTab() {
-		return active;
+		return selected;
 	}
 	
 	public int getTabCount() {
@@ -213,6 +173,10 @@ public class BotTabPane extends JPanel {
 		private int index;
 		private JPanel button;
 		private BotPanel content;
+		
+		public Tab() {
+			
+		}
 		
 		public Tab(int index, JPanel button, BotPanel content) {
 			this.index = index;

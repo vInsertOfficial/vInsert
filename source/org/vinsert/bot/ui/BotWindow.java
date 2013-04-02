@@ -44,9 +44,6 @@ public class BotWindow {
 			public void run() {
 				try {
 					//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-					UIManager.setLookAndFeel(new SubstanceGraphiteGlassLookAndFeel());
-					JFrame.setDefaultLookAndFeelDecorated(true);
-					JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 
 					frame = new JFrame(Configuration.BOT_NAME + " " + Configuration.BOT_VERSION_MAJOR+"."+Configuration.BOT_VERSION_MINOR);
 
@@ -119,11 +116,11 @@ public class BotWindow {
 	}
 
 	public static void error(String title, String message) {
-		JOptionPane.showMessageDialog(Application.getBotWindow().getFrame(), message, title, JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(Application.window.getFrame(), message, title, JOptionPane.ERROR_MESSAGE);
 	}
 
 	public static void warn(String title, String message) {
-		JOptionPane.showMessageDialog(Application.getBotWindow().getFrame(), message, title, JOptionPane.WARNING_MESSAGE);
+		JOptionPane.showMessageDialog(Application.window.getFrame(), message, title, JOptionPane.WARNING_MESSAGE);
 	}
 
 }
