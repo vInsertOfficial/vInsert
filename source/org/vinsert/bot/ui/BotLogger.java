@@ -149,13 +149,13 @@ public class BotLogger extends JList<String> {
 	      }
 
 	      if (wlr.record.getLevel() == Level.WARNING) {
-	    	  result.setForeground(Color.BLACK);
+	    	  result.setForeground(Color.WHITE);
 	      }
 
 	      if ((wlr.record.getLevel() == Level.FINE)
 	          || (wlr.record.getLevel() == Level.FINER)
 	          || (wlr.record.getLevel() == Level.FINEST)) {
-	    	  result.setForeground(Color.BLACK);
+	    	  result.setForeground(Color.WHITE);
 	      }
 
 	      return result;
