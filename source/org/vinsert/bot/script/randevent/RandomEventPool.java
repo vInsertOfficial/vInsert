@@ -8,6 +8,7 @@ import org.vinsert.bot.Bot;
 import org.vinsert.bot.script.ScriptContext;
 import org.vinsert.bot.script.randevent.impl.AutoLogin;
 import org.vinsert.bot.script.randevent.impl.BankPin;
+import org.vinsert.bot.script.randevent.impl.ClickToPlay;
 
 /**
  * Checks for random event
@@ -30,6 +31,7 @@ public class RandomEventPool {
 		this.bot = bot;
 		register(new AutoLogin());
                 register(new BankPin());
+                register(new ClickToPlay());
 	}
 	
 	/**

@@ -10,6 +10,7 @@ import org.vinsert.bot.script.randevent.RandomEvent;
 
 /**
  * Auto login, written very fast, doesn't use widgets
+ * now it does, ;)
  *
  * @author tommo
  *
@@ -18,7 +19,6 @@ import org.vinsert.bot.script.randevent.RandomEvent;
 public class AutoLogin extends RandomEvent {
 
     private Rectangle userRect = new Rectangle(398, 278, 129, 12);
-    private Rectangle playRect = new Rectangle(280, 300, 212, 75);
     private boolean clicked = false;
 
     @Override
@@ -47,13 +47,8 @@ public class AutoLogin extends RandomEvent {
                 sleep(500, 1200);
                 keyboard.type(account.getPassword(), true);
                 sleep(4000, 8000);
-                Widget w = getClickToLogin();
-                if (w != null) {
-                    w.click();
-                }
             }
-        } else if (game.getGameState() == GameState.INGAME && widgets.get(328, 12) != null && widgets.get(328, 12).isValid()) {
-            mouse.click(playRect.x, playRect.y, playRect.x + playRect.width, playRect.y + playRect.height);
+        } else if (game.getGameState() == GameState.INGAME) {
             requestExit();
         }
         return 500;
@@ -66,15 +61,5 @@ public class AutoLogin extends RandomEvent {
     @Override
     public RandomEventPriority priority() {
         return RandomEventPriority.HIGH;
-    }
-
-    public Widget getClickToLogin() {
-        for (Widget w : widgets.getValidated()) {
-            if (w.getText().equalsIgnoreCase("click here to play")) {
-                System.out.println(w.getParentId() + " , " + w.getId());
-                return w;
-            }
-        }
-        return null;
     }
 }
