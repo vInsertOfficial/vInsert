@@ -20,6 +20,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import org.pushingpixels.substance.api.skin.SubstanceGraphiteGlassLookAndFeel;
 import org.vinsert.Application;
 import org.vinsert.Configuration;
 import org.vinsert.bot.Bot;
@@ -52,7 +53,9 @@ public class BotWindow {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+					//UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+					UIManager.setLookAndFeel(new SubstanceGraphiteGlassLookAndFeel());
+					JFrame.setDefaultLookAndFeelDecorated(true);
 					JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 
 					frame = new JFrame(Configuration.BOT_NAME + " " + Configuration.BOT_VERSION_MAJOR+"."+Configuration.BOT_VERSION_MINOR);
