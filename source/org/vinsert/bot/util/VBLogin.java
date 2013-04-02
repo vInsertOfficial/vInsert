@@ -156,6 +156,7 @@ public class VBLogin {
             final VBLogin login = new VBLogin("", "");
             login.usergroupId = 0;
             login.userId = 0;
+            login.logged = true;
             self = login;
         }
         if (self != null) {

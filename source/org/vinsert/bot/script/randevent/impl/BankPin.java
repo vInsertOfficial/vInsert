@@ -7,6 +7,8 @@ import org.vinsert.bot.script.randevent.RandomEvent;
 /**
  *
  * @author tholomew
+ * yes I know this sucks, but I can make a MUCH smarter one with a widget explorer
+ * I don't actually NEED an explorer, but i'm lazy
  */
 @ScriptManifest(name = "Bank Pin", authors = { "tholomew" }, description = "Bank Pin Handler", version = 1.0)
 public class BankPin extends RandomEvent{
@@ -17,10 +19,14 @@ public class BankPin extends RandomEvent{
     @Override
     public boolean init() {
         for (Widget w : widgets.getValidated()) {
-            System.out.println(w.getParentId());
             if (w.getParentId() == 13) {
                 log("Parsing bank pin.");
-                bankPin = parseBankPin(getContext().getAccount().getPin());
+                String sPin = getContext().getAccount().getPin();
+                if (sPin.length() < 4 || sPin.equals("null")) {
+                    log("You must enter a valid bank pin in accounts!");
+                    return false;
+                }
+                bankPin = parseBankPin(sPin);
                 return true;
             }
         }
@@ -29,19 +35,22 @@ public class BankPin extends RandomEvent{
 
     @Override
     public int pulse() {
-        log("Entering pin");
-        for (Widget w : widgets.get(13)) {  //finds the widget that contains the number
-            String num = w.getText();
-            if (bankPin[bankPinIndex].equals(num)) {
-                w.click();
-                bankPinIndex++;
-                break;
+        if (bankPinIndex < 4) {
+            log("Entering pin number " + bankPin[bankPinIndex]);
+            for (Widget w : widgets.get(13)) {  //finds the widget that contains the number
+                String num = w.getText();
+                if (bankPin[bankPinIndex].equals(num)) {
+                    w.click();
+                    sleep(1500, 2000);
+                    bankPinIndex++;
+                    break;
+                }
             }
         }
         if (bankPinIndex >= 4) {
-            close();
+            requestExit();
         }
-        return random(1000, 1500);
+        return random(100, 150);
     }
 
     @Override

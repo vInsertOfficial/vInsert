@@ -187,7 +187,7 @@ public class BotToolBar extends JToolBar {
 	    });
 	    newBotButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				window.addNewBot();
+				window.addNewBot(log);
 			}
 		});
 	    runScriptButton.addActionListener(new ActionListener() {

@@ -88,12 +88,12 @@ public class BotWindow {
 	 * Adds and initializes a new bot instance
 	 *
 	 */
-	public void addNewBot() {
+	public void addNewBot(final boolean log) {
 		if (VBLogin.self == null) {
 			return;
 		}
 		
-		final Bot bot = new Bot();
+		final Bot bot = new Bot(log);
 		final BotPanel panel = new BotPanel(bot);
 		int usergroup = VBLogin.self.getUsergroupId();
 		if (usergroup != VBLogin.auth_admin && usergroup != VBLogin.auth_vip && usergroup != VBLogin.auth_sw && usergroup != VBLogin.auth_sm
