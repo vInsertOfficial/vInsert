@@ -2,6 +2,7 @@ package org.vinsert.bot;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -85,7 +86,18 @@ public class IOHelper {
 	}
 
 	public static String downloadAsString(final URL url) throws Exception {
-		return downloadAsString(getConnection(url));
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		DataInputStream in = new DataInputStream(url.openStream());
+		byte b;
+		try {
+			while ((b = in.readByte()) != -1) {
+				out.write(b);
+			}
+		} catch (EOFException eof) {
+			//
+		}
+		return new String(out.toByteArray(), "UTF-8");
+//		return downloadAsString(getConnection(url));
 	}
 
 	public static String downloadAsString(final HttpURLConnection con) throws Exception {

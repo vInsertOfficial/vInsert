@@ -28,14 +28,14 @@ public class BotPanel extends JPanel {
 		setLayout(new BorderLayout());
 		logger = new BotLogger();
 		loading = new BotLoadingIcon();
-		loading.setPreferredSize(new Dimension(Configuration.BOT_UI_WIDTH, Configuration.BOT_UI_HEIGHT));
+		loading.setPreferredSize(new Dimension(Configuration.BOT_APPLET_WIDTH, Configuration.BOT_APPLET_HEIGHT));
 		add(loading, BorderLayout.CENTER);
 		add(logger.createScrollPane(), BorderLayout.SOUTH);
 	}
 	
 	public void loadApplet() {
 		remove(loading);
-		bot.getApplet().setPreferredSize(new Dimension(Configuration.BOT_UI_WIDTH, Configuration.BOT_UI_HEIGHT));
+		bot.getApplet().setPreferredSize(new Dimension(Configuration.BOT_APPLET_WIDTH, Configuration.BOT_APPLET_HEIGHT));
 		add(bot.getApplet(), BorderLayout.CENTER);
         try {
             Thread.sleep(3000);

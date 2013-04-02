@@ -5,21 +5,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
-import org.vinsert.Application;
+import org.vinsert.Configuration;
 import org.vinsert.bot.Bot;
 import org.vinsert.bot.script.Script;
 import org.vinsert.bot.util.PasteScript;
@@ -101,11 +101,11 @@ public class BotToolBar extends JToolBar {
 	private JMenuItem miscVarbitSettings = new JMenuItem("Detect Varbit Settings");
 	private JMenuItem exit = new JMenuItem("Exit");
 	
-	private ImageIcon tickIcon = icon("res/icon_tick_small.png");
-	private ImageIcon inputEnabled = icon("res/icon_input_small.png");
-	private ImageIcon inputEnabledHighlighted = icon("res/icon_input_small_highlighted.png");
-	private ImageIcon inputDisabled = icon("res/icon_input_small_disabled.png");
-	private ImageIcon inputDisabledHighlighted = icon("res/icon_input_small_disabled_highlighted.png");
+	private ImageIcon tickIcon = Configuration.icon("res/icon_tick_small.png");
+	private ImageIcon inputEnabled = Configuration.icon("res/icon_input_small.png");
+	private ImageIcon inputEnabledHighlighted = Configuration.icon("res/icon_input_small_highlighted.png");
+	private ImageIcon inputDisabled = Configuration.icon("res/icon_input_small_disabled.png");
+	private ImageIcon inputDisabledHighlighted = Configuration.icon("res/icon_input_small_disabled_highlighted.png");
 
 	public BotToolBar(BotWindow window, final boolean log) {
 		this.window = window;
@@ -117,6 +117,7 @@ public class BotToolBar extends JToolBar {
 		miscFps.setEnabled(false);
 		miscFloor.setEnabled(false);
 		
+		setPreferredSize(new Dimension(Configuration.BOT_TOOLBAR_WIDTH, Configuration.BOT_TOOLBAR_HEIGHT));
 		setFloatable(false);
 		
 		settings.add(accounts);
@@ -155,30 +156,30 @@ public class BotToolBar extends JToolBar {
 		settings.addSeparator();
 		settings.add(exit);
 		
-		newBotButton.setIcon(icon("res/icon_plus_small.png"));
+		newBotButton.setIcon(Configuration.icon("res/icon_plus_small.png"));
 		newBotButton.setContentAreaFilled(false);
 		newBotButton.setRolloverEnabled(true);
-		newBotButton.setRolloverIcon(icon("res/icon_plus_small_highlighted.png"));
-	    runScriptButton.setIcon(icon("res/icon_start_small.png"));
+		newBotButton.setRolloverIcon(Configuration.icon("res/icon_plus_small_highlighted.png"));
+	    runScriptButton.setIcon(Configuration.icon("res/icon_start_small.png"));
 	    runScriptButton.setContentAreaFilled(false);
 	    runScriptButton.setRolloverEnabled(true);
-	    runScriptButton.setRolloverIcon(icon("res/icon_start_small_highlighted.png"));
-	    pauseScriptButton.setIcon(icon("res/icon_pause_small.png"));
+	    runScriptButton.setRolloverIcon(Configuration.icon("res/icon_start_small_highlighted.png"));
+	    pauseScriptButton.setIcon(Configuration.icon("res/icon_pause_small.png"));
 	    pauseScriptButton.setContentAreaFilled(false);
 	    pauseScriptButton.setRolloverEnabled(true);
-	    pauseScriptButton.setRolloverIcon(icon("res/icon_pause_small_highlighted.png"));
-	    stopScriptButton.setIcon(icon("res/icon_stop_small.png"));
+	    pauseScriptButton.setRolloverIcon(Configuration.icon("res/icon_pause_small_highlighted.png"));
+	    stopScriptButton.setIcon(Configuration.icon("res/icon_stop_small.png"));
 	    stopScriptButton.setContentAreaFilled(false);
 	    stopScriptButton.setRolloverEnabled(true);
-	    stopScriptButton.setRolloverIcon(icon("res/icon_stop_small_highlighted.png"));
+	    stopScriptButton.setRolloverIcon(Configuration.icon("res/icon_stop_small_highlighted.png"));
 	    inputButton.setIcon(inputEnabled);
 	    inputButton.setContentAreaFilled(false);
 	    inputButton.setRolloverEnabled(true);
 	    inputButton.setRolloverIcon(inputEnabledHighlighted);
-	    settingsButton.setIcon(icon("res/icon_settings_small.png"));
+	    settingsButton.setIcon(Configuration.icon("res/icon_settings_small.png"));
 	    settingsButton.setContentAreaFilled(false);
 	    settingsButton.setRolloverEnabled(true);
-	    settingsButton.setRolloverIcon(icon("res/icon_settings_small_highlighted.png"));
+	    settingsButton.setRolloverIcon(Configuration.icon("res/icon_settings_small_highlighted.png"));
 	    
 	    accounts.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -193,8 +194,11 @@ public class BotToolBar extends JToolBar {
 	    runScriptButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (window.getActiveBot() == null) return;
-				new BotScriptSelector(log).setVisible(true);
+				//if (window.getActiveBot() == null) return;
+				final BotScriptViewer bsv = new BotScriptViewer();
+				bsv.load();
+				
+				//new BotScriptSelector(log).setVisible(true);
 //				Bot bot = window.getActiveBot();
 //				if (bot != null) {
 //					String scriptname = JOptionPane.showInputDialog("Enter script class name: ");
@@ -390,6 +394,20 @@ public class BotToolBar extends JToolBar {
 			}
         });
         
+        updateComponents(null);
+	}
+	
+	/**
+	 * Removes and re-adds all components in the toolbar
+	 * @param components Extra components to be appended at the front
+	 */
+	public void updateComponents(List<JComponent> components) {
+        removeAll();
+        if (components != null) {
+	        for (JComponent c : components) {
+	        	add(c);
+	        }
+        }
 	    add(newBotButton);
 	    add(Box.createHorizontalGlue());
 		add(runScriptButton);
@@ -397,6 +415,7 @@ public class BotToolBar extends JToolBar {
 		add(stopScriptButton);
 		add(inputButton);
 		add(settingsButton);
+		revalidate();
 	}
 	
 	private void toggleDebugger(JMenuItem src, Class<?> listener) {
@@ -435,20 +454,5 @@ public class BotToolBar extends JToolBar {
 				}
 			}
 		}
-	}
-	
-	public static ImageIcon icon(String path) {
-		ImageIcon icon = null;
-		try {
-			icon = new ImageIcon(ImageIO.read(Application.class.getClassLoader().getResource(path)));
-		} catch (IllegalArgumentException e) {
-		} catch (IOException e) {
-		}
-		
-		if (icon == null) {
-			icon = new ImageIcon(path);
-		}
-		
-		return icon;
 	}
 }
