@@ -186,6 +186,7 @@ public class VBLogin {
         center.add(pass, BorderLayout.CENTER);
         pass.setBounds(63, 85, 120, 20);
         final JCheckBox rememberMe = new JCheckBox("Remember Me");
+        rememberMe.setEnabled(false);
         final File account = new File(Configuration.STORAGE_DIR + File.separator + "Account.txt");
         if (account.exists()) {
             try {
