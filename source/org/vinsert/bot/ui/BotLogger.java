@@ -67,6 +67,7 @@ public class BotLogger extends JList<String> {
 		setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
 		setAutoscrolls(true);
 		setCellRenderer(new Renderer());
+		setOpaque(false);
 		scroller = new JScrollPane(this,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -125,6 +126,7 @@ public class BotLogger extends JList<String> {
 
 	    private final Border EMPTY_BORDER = new EmptyBorder(1, 1, 1, 1);
 	    private final Border SELECTED_BORDER = BorderFactory.createLineBorder(Color.GRAY, 1);
+	    private final Color BACKGROUND = new Color(0x4d4d4d);
 
 	    public Component getListCellRendererComponent(final JList list,
 	                            final Object value, final int index, final boolean isSelected,
@@ -139,8 +141,8 @@ public class BotLogger extends JList<String> {
 	      result.setBorder(cellHasFocus || isSelected ? SELECTED_BORDER
 	          : EMPTY_BORDER);
 
-	      result.setForeground(Color.GRAY);
-	      result.setBackground(Color.WHITE);
+	      result.setForeground(Color.LIGHT_GRAY);
+	      result.setBackground(BACKGROUND);
 
 	      if (wlr.record.getLevel() == Level.SEVERE) {
 	    	  result.setForeground(Color.red.darker());
