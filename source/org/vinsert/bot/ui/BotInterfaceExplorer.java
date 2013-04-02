@@ -144,18 +144,18 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
 
     private void setInformation(int par, int chi) {
         widgetInformation.setText("<font face=\"Calibri\">"
-                + "<b>Parent Index:</b> " + getParentIndex(par, chi) + "<br>"
-                + "<b>Index:</b> " + getIndex(par, chi) + "<br>"
                 + "<b>Parent ID:</b> " + getParentId(par, chi) + "<br>"
                 + "<b>ID:</b> " + getId(par, chi) + "<br>"
                 + "<b>Child Count:</b> " + getChildCount(par, chi) + "<br>"
                 + "<b>Model ID:</b> " + getModelId(par, chi) + "<br>"
                 + "<b>Text:</b> " + getText(par, chi) + "<br>"
-                + "<b>Selected Action:</b> " + getSelAction(par, chi) + "<br>"
                 + "<b>Name:</b> " + getName(par, chi) + "<br>"
                 + "<b>Spell Name:</b> " + getSpellName(par, chi) + "<br>"
                 + "<b>Tooltip:</b> " + getTooltip(par, chi) + "<br>"
-                + "</font>");
+                + "<b>Selected Action:</b> " + getSelAction(par, chi) + "<br>");
+        
+        
+        widgetInformation.setText(widgetInformation.getText() + "</font>");
         selWid = c.widgets.get(par, chi);
 
     }
@@ -188,16 +188,8 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
         return c.widgets.get(par, chi).getId();
     }
 
-    private int getParentIndex(int par, int chi) {
-        return c.widgets.get(par, chi).getParentIndex();
-    }
-
     private int getParentId(int par, int chi) {
         return c.widgets.get(par, chi).getParentId();
-    }
-
-    private int getIndex(int par, int chi) {
-        return c.widgets.get(par, chi).getIndex();
     }
 
     private int getChildCount(int par, int chi) {
