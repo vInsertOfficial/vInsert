@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.vinsert.bot.script.randevent.impl;
 
 import org.vinsert.bot.script.ScriptManifest;
@@ -10,7 +6,7 @@ import org.vinsert.bot.script.randevent.RandomEvent;
 
 /**
  *
- * @author Tanner
+ * @author tholomew
  */
 @ScriptManifest(name = "Click To Play", authors = {"tholomew"}, description = "Click to play, made for the sole purpose of disconnects", version = 1.0)
 public class ClickToPlay extends RandomEvent {
