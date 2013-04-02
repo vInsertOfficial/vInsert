@@ -45,6 +45,10 @@ public class BotPanel extends JPanel {
         validate();
 	}
 	
+	public void removeApplet() {
+		this.remove(bot.getApplet());
+	}
+	
 	public Bot getBot() {
 		return bot;
 	}

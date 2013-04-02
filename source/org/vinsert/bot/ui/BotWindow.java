@@ -131,6 +131,7 @@ public class BotWindow {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Bot b = bots.get(index);
+				((BotPanel) botTabs.getSelectedComponent()).removeApplet();
 				b.exit();
 				botTabs.remove(panel);
 			}
