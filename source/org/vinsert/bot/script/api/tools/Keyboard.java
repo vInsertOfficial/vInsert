@@ -121,7 +121,9 @@ public class Keyboard {
 	 */
 	public void type(String text, boolean enter) {
 		type(text);
-		enter();
+                if (enter) {
+                    enter();
+                }
 	}
 	
 	/**
