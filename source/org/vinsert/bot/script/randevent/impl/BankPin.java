@@ -6,19 +6,19 @@ import org.vinsert.bot.script.randevent.RandomEvent;
 
 /**
  *
- * @author tholomew yes I know this sucks, but I can make a MUCH smarter one
- * with a widget explorer I don't actually NEED an explorer, but i'm lazy
+ * @author tholomew
+ * @version 1.1: now finds the correct widget that a human would most likely click, rather than a tiny box
+ *      also enters in the pin based on what window is showing
  */
-@ScriptManifest(name = "Bank Pin", authors = {"tholomew"}, description = "Bank Pin Handler", version = 1.0)
+@ScriptManifest(name = "Bank Pin", authors = {"tholomew"}, description = "Bank Pin Handler", version = 1.1)
 public class BankPin extends RandomEvent {
 
     private String[] bankPin;
-    private int bankPinIndex = 0;
+    private final int PARENT_ID = 13;
 
     @Override
     public boolean init() {
-        for (Widget w : widgets.getValidated()) {
-            if (w.getParentId() == 13) {
+        if (isPinWindowOpen()) {
                 log("Parsing bank pin.");
                 String sPin = getContext().getAccount().getPin();
                 if (sPin.length() < 4 || sPin.equals("null")) {
@@ -28,28 +28,26 @@ public class BankPin extends RandomEvent {
                 bankPin = parseBankPin(sPin);
                 return true;
             }
-        }
         return false;
     }
 
     @Override
     public int pulse() {
-        if (bankPinIndex < 4) {
-            log("Entering pin number " + bankPin[bankPinIndex]);
-            for (Widget w : widgets.get(13)) {  //finds the widget that contains the number
-                String num = w.getText();
-                if (bankPin[bankPinIndex].equals(num)) {
-                    w.click();
-                    sleep(1500, 2000);
-                    bankPinIndex++;
-                    break;
-                }
+        int digit = getDigitToTypeIndex();
+        if (digit >= 0 && digit <= 3) {
+            Widget click = getEnterDigit(bankPin[digit]);
+            if (click.isValid()) {
+                click.click();
+            } else {
+                requestExit();
+                sleep(1000, 1500);
             }
         }
-        if (bankPinIndex >= 4) {
+        if (!isPinWindowOpen()) {
             requestExit();
+            sleep(1000, 1500);
         }
-        return random(100, 150);
+        return random(1000, 1500);
     }
 
     @Override
@@ -70,5 +68,40 @@ public class BankPin extends RandomEvent {
             numPin[i] = String.valueOf(pin[i]);
         }
         return numPin;
+    }
+
+    public Widget getEnterDigit(String n) {
+        for (int i = 110; i < 120; i++) {
+            if (widgets.get(PARENT_ID, i).getText().equals(n)) {
+                return widgets.get(PARENT_ID, i - 10);
+            }
+        }
+        return null;
+    }
+
+    public int getDigitToTypeIndex() {
+        Widget clickText = widgets.get(PARENT_ID, 151);
+        if (clickText != null) {
+            switch (clickText.getText()) {
+                case "First click the FIRST digit.":
+                    return 0;
+                case "Now click the SECOND digit.":
+                    return 1;
+                case "Time for the THIRD digit.":
+                    return 2;
+                case "Finally, the FOURTH digit.":
+                    return 3;
+            }
+        }
+        return -1;  //shouldn't ever get here
+    }
+    
+    public boolean isPinWindowOpen() {
+        for (Widget w : widgets.getValidated()) {
+            if (w.getParentId() == PARENT_ID) {
+                return true;
+            }
+        }
+        return false;
     }
 }
