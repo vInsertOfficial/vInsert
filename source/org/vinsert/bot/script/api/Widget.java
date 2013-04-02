@@ -164,14 +164,14 @@ public class Widget {
 	 * @return The widget's id
 	 */
 	public int getId() {
-		return widget.getId();
+		return widget.getId() & 0xFFFF;
 	}
 	
 	/**
 	 * @return The widget's parent id
 	 */
 	public int getParentId() {
-		return widget.getParentId();
+		return widget.getId() >> 16;
 	}
 	
 	/**
