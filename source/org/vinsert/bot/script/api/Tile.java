@@ -72,16 +72,22 @@ public class Tile {
 		return new Tile(x, y);
 	}
 	
+	/**
+	 * Compares the coordinates of a tile to another tile
+	 * @param tile
+	 * @return If coordinates are equal
+	 */
+	public boolean equals(Tile tile) {
+        	if (tile == null)
+                	return false;
+        	return tile.getX() == x && tile.getY() == y;
+	}
+	
 	@Override
 	public String toString() {
 		return "[" + x + ", " + y + "]";
 	}
-	
-	@Override
-	public boolean equals(Object other) {
-		if (!(other instanceof Tile)) return false;
-		Tile o = (Tile) other;
-		return (o.getX() == x && o.getY() == y);
-	}
+
+    }
 	
 }
