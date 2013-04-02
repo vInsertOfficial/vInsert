@@ -1,22 +1,14 @@
 package org.vinsert.bot.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -25,7 +17,6 @@ import org.vinsert.Application;
 import org.vinsert.Configuration;
 import org.vinsert.bot.Bot;
 import org.vinsert.bot.util.Callback;
-import org.vinsert.bot.util.VBLogin;
 
 
 /**
@@ -42,8 +33,7 @@ public class BotWindow {
 	private Map<Integer, Bot> bots = new HashMap<Integer, Bot>();
 
 	private JFrame frame;
-	private JTabbedPane botTabs;
-	private BotToolBar toolBar;
+	private BotTabPane tabs;
 
 	public BotWindow() {
 
@@ -68,7 +58,7 @@ public class BotWindow {
 					frame.pack();
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
-					VBLogin.create(log);
+					//VBLogin.create(log);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -77,14 +67,8 @@ public class BotWindow {
 	}
 
 	private void initComponents(final boolean log) {
-		botTabs = new JTabbedPane();
-		toolBar = new BotToolBar(this, log);
-		toolBar.setPreferredSize(new Dimension(Configuration.BOT_TOOLBAR_WIDTH, Configuration.BOT_TOOLBAR_HEIGHT));
-		botTabs.setBorder(null);
-		botTabs.setBackground(Color.DARK_GRAY);
-		botTabs.setPreferredSize(new Dimension(Configuration.BOT_APPLET_WIDTH + 8, Configuration.BOT_APPLET_HEIGHT + Configuration.BOT_LOGGER_HEIGHT + 40));
-		frame.add(toolBar, BorderLayout.NORTH);
-		frame.add(botTabs, BorderLayout.CENTER);
+		tabs = new BotTabPane(this, log);
+		frame.add(tabs, BorderLayout.CENTER);
 	}
 
 	/**
@@ -92,53 +76,21 @@ public class BotWindow {
 	 *
 	 */
 	public void addNewBot(final boolean log) {
-		if (VBLogin.self == null) {
-			return;
-		}
+//		if (VBLogin.self == null) {
+//			return;
+//		}
 		
 		final Bot bot = new Bot(log);
 		final BotPanel panel = new BotPanel(bot);
-		int usergroup = VBLogin.self.getUsergroupId();
-		if (usergroup != VBLogin.auth_admin && usergroup != VBLogin.auth_vip && usergroup != VBLogin.auth_sw && usergroup != VBLogin.auth_sm
-				&& usergroup != VBLogin.auth_mod && usergroup != VBLogin.auth_contrib && usergroup != VBLogin.auth_sponsor && usergroup != VBLogin.auth_dev
-				&& botTabs.getTabCount() >= 2) {
-			warn("Oops!", "Reached maximum amount of allowed tabs! Become a VIP or Sponsor to have unlimited tabs.");
-			return;
-		}
+//		int usergroup = VBLogin.self.getUsergroupId();
+//		if (usergroup != VBLogin.auth_admin && usergroup != VBLogin.auth_vip && usergroup != VBLogin.auth_sw && usergroup != VBLogin.auth_sm
+//				&& usergroup != VBLogin.auth_mod && usergroup != VBLogin.auth_contrib && usergroup != VBLogin.auth_sponsor && usergroup != VBLogin.auth_dev
+//				&& tabs.getTabCount() >= 2) {
+//			warn("Oops!", "Reached maximum amount of allowed tabs! Become a VIP or Sponsor to have unlimited tabs.");
+//			return;
+//		}
 
-		/*
-		 * Ugly tab formatting code
-		 */
-		botTabs.addTab(null, panel);
-		final int index = botTabs.indexOfComponent(panel);
-		bot.setBotIndex(index);
-		JPanel tabPanel = new JPanel();
-		tabPanel.setPreferredSize(new Dimension(90, 20));
-		tabPanel.setLayout(new BorderLayout());
-		tabPanel.setOpaque(false);
-		tabPanel.setFocusable(false);
-		JLabel tabLabel = new JLabel("Bot " + (botTabs.getTabCount()));
-		tabLabel.setForeground(Color.GRAY);
-		JButton tabClose = new JButton();
-		tabClose.setIcon(null);
-		tabClose.setIcon(BotToolBar.icon("res/icon_exit_small_greyed.png"));
-		tabClose.setRolloverIcon(BotToolBar.icon("res/icon_exit_small.png"));
-		tabClose.setContentAreaFilled(false);
-		tabClose.setRolloverEnabled(true);
-		tabClose.setBorderPainted(false);
-		tabClose.setFocusable(false);
-		tabPanel.add(tabLabel, BorderLayout.CENTER);
-		tabPanel.add(tabClose, BorderLayout.EAST);
-		botTabs.setTabComponentAt(index, tabPanel);
-		tabClose.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Bot b = bots.get(index);
-				b.exit();
-				botTabs.remove(panel);
-			}
-		});
-		botTabs.setSelectedComponent(panel);
+		final int index = tabs.addTab(panel);
 
 		panel.getLogger().log(new LogRecord(Level.INFO, "Loading new bot..."));
 		bot.setCallback(new Callback() {
@@ -149,15 +101,17 @@ public class BotWindow {
 			}
 		});
 		Thread t = new Thread(bot);
-		t.setName("bot" + index);
+		t.setName("bot-thread-" + index);
 		bot.setThread(t);
 		bots.put(index, bot);
 		t.start();
 	}
 
 	public Bot getActiveBot() {
-		if (botTabs.getSelectedComponent() == null) return null;
-		return (Bot) ((BotPanel)botTabs.getSelectedComponent()).getBot();
+		BotPanel panel = tabs.getTab();
+		if (panel == null) return null;
+		
+		return panel.getBot();
 	}
 
 	public JFrame getFrame() {

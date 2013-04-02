@@ -2,6 +2,10 @@ package org.vinsert;
 
 
 import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 import org.vinsert.bot.loader.arch.ArchiveClassLoader;
 import org.vinsert.bot.ui.BotWindow;
@@ -127,5 +131,20 @@ public class Configuration {
 	}
 
 	public static final boolean JAR = false;
+
+	public static ImageIcon icon(String path) {
+		ImageIcon icon = null;
+		try {
+			icon = new ImageIcon(ImageIO.read(Application.class.getClassLoader().getResource(path)));
+		} catch (IllegalArgumentException e) {
+		} catch (IOException e) {
+		}
+		
+		if (icon == null) {
+			icon = new ImageIcon(path);
+		}
+		
+		return icon;
+	}
 
 }
