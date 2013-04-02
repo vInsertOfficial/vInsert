@@ -54,11 +54,11 @@ public class ArchiveClassLoader extends ClassLoader {
 	 */
 	private Map<String, JSONObject> mappings = new HashMap<String, JSONObject>();
 
-	public ArchiveClassLoader(Archive<?> archive) throws IOException {
+	public ArchiveClassLoader(Archive<?> archive, final boolean log) throws IOException {
 		this.archive = archive;
 		Permissions permissions = getAppletPermissions();
 		this.domain = new ProtectionDomain(new CodeSource(null, (Certificate[]) null), permissions);
-		loadMappings();
+		loadMappings(log);
 
 //		for (ClassNode c : (Archive<ClassNode>) archive) {
 //			modify(c);
@@ -104,11 +104,13 @@ public class ArchiveClassLoader extends ClassLoader {
 	    rbc.close();
 	}
 	
-	private void loadMappings() {
+	private void loadMappings(final boolean log) {
 		try {
 			if(Configuration.getMinor() != getLocalMinorVersion() || !getLocalInsertionsFile().exists()) {
-				fetch(Configuration.vesrionfile); //lazy as fuck
-				fetch(Configuration.jsonfile);
+                            if (log) {
+                                    fetch(Configuration.vesrionfile); //lazy as fuck
+                                    fetch(Configuration.jsonfile);
+                            }
 			}
 			System.out.println(Configuration.jsonfile);
 			BufferedInputStream in = new BufferedInputStream(new FileInputStream(getLocalInsertionsFile()));

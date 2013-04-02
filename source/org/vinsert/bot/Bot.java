@@ -99,17 +99,23 @@ public class Bot implements Runnable {
 	 * The VB Login instance
 	 */
 	private VBLogin login;
+        
+        /*
+         * Should the bot check for scripts
+         */
+        private boolean log;
 
     private boolean initialized;
 
-    public Bot() {
+    public Bot(final boolean l) {
 		this.bot = this;
+                this.log = l;
 	}
 
 	@Override
 	public void run() {
 		try {
-			loader = HijackLoader.create(Language.ENGLISH, true);
+			loader = HijackLoader.create(Language.ENGLISH, true, log);
 			callback.call();
 		} catch (Exception e) {
 			e.printStackTrace();
