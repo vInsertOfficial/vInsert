@@ -18,8 +18,7 @@ public class Configuration {
 	
 	public static final String BOT_NAME = "vInsert";
 	public static final int BOT_VERSION_MAJOR = 2;
-	public static final int BOT_VERSION_MINOR = 17;
-	public static final String BOT_DESC = "Written by Discardedx2 & Tommo";
+	public static final int BOT_VERSION_MINOR = 18;
 	
 	public static int remote_major;
 	public static int remote_minor;

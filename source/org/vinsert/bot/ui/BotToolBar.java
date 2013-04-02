@@ -18,7 +18,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
-import javax.swing.SwingUtilities;
 
 import org.vinsert.Configuration;
 import org.vinsert.bot.Bot;

@@ -87,6 +87,9 @@ public class BotTabPane extends JPanel {
 		closeItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				closeTab(tab);
+				tab.getContent().getApplet().stop();
+				tab.getContent().getApplet().destroy();
+				tab.getContent().getBot().getThread().stop();
 			}
 		});
 		closeMenu.add(closeItem);
