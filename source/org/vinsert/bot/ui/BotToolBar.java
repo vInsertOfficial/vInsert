@@ -18,6 +18,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 
 import org.vinsert.Configuration;
 import org.vinsert.bot.Bot;
@@ -195,7 +196,14 @@ public class BotToolBar extends JToolBar {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (window.getActiveBot() == null) return;
-				new BotScriptSelector(log).setVisible(true);
+				final BotScriptViewer bsv = new BotScriptViewer();
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						bsv.load();
+					}
+				});
+				
+				//new BotScriptSelector(log).setVisible(true);
 //				Bot bot = window.getActiveBot();
 //				if (bot != null) {
 //					String scriptname = JOptionPane.showInputDialog("Enter script class name: ");

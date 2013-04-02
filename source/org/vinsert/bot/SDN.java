@@ -27,7 +27,7 @@ public class SDN {
 			final List<ScriptInfo> definitions = new ArrayList<ScriptInfo>();
 			final List<String[]> jars = getData(String.valueOf(VBLogin.self.getUserId()));
 			final List<byte[]> scriptList = getScriptByteList();
-            System.out.println(scriptList.size());
+            //System.out.println(scriptList.size());
 			if (jars != null) {
 				for (int i = 0; i < scriptList.size(); i++) {
 					try {
@@ -48,7 +48,7 @@ public class SDN {
 		return null;
 	}
 
-	private static List<String[]> getData(final String user) throws IOException {
+	public static List<String[]> getData(final String user) throws IOException {
 		final List<String[]> data = new ArrayList<String[]>();
 		final URL url = new URL("http://www.vinsert.org/repo/info.php");
 		final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -79,7 +79,7 @@ public class SDN {
 		return data;
 	}
 
-	private static List<byte[]> getScriptByteList() throws Exception {
+	public static List<byte[]> getScriptByteList() throws Exception {
 		final List<byte[]> bytes = new ArrayList<byte[]>();
 		final String userid = String.valueOf(VBLogin.self.getUserId());
 		final List<String[]> data = getData(userid);

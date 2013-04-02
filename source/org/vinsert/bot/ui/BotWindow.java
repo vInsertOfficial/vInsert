@@ -8,15 +8,13 @@ import java.util.logging.LogRecord;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
-import org.pushingpixels.substance.api.skin.SubstanceGraphiteGlassLookAndFeel;
 import org.vinsert.Application;
 import org.vinsert.Configuration;
 import org.vinsert.bot.Bot;
 import org.vinsert.bot.util.Callback;
+import org.vinsert.bot.util.VBLogin;
 
 
 /**
@@ -55,7 +53,7 @@ public class BotWindow {
 					frame.pack();
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
-					//VBLogin.create(log);
+					VBLogin.create(log);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -73,19 +71,19 @@ public class BotWindow {
 	 *
 	 */
 	public void addNewBot(final boolean log) {
-//		if (VBLogin.self == null) {
-//			return;
-//		}
+		if (VBLogin.self == null) {
+			return;
+		}
 		
 		final Bot bot = new Bot(log);
 		final BotPanel panel = new BotPanel(bot);
-//		int usergroup = VBLogin.self.getUsergroupId();
-//		if (usergroup != VBLogin.auth_admin && usergroup != VBLogin.auth_vip && usergroup != VBLogin.auth_sw && usergroup != VBLogin.auth_sm
-//				&& usergroup != VBLogin.auth_mod && usergroup != VBLogin.auth_contrib && usergroup != VBLogin.auth_sponsor && usergroup != VBLogin.auth_dev
-//				&& tabs.getTabCount() >= 2) {
-//			warn("Oops!", "Reached maximum amount of allowed tabs! Become a VIP or Sponsor to have unlimited tabs.");
-//			return;
-//		}
+		int usergroup = VBLogin.self.getUsergroupId();
+		if (usergroup != VBLogin.auth_admin && usergroup != VBLogin.auth_vip && usergroup != VBLogin.auth_sw && usergroup != VBLogin.auth_sm
+				&& usergroup != VBLogin.auth_mod && usergroup != VBLogin.auth_contrib && usergroup != VBLogin.auth_sponsor && usergroup != VBLogin.auth_dev
+				&& tabs.getTabCount() >= 2) {
+			warn("Oops!", "Reached maximum amount of allowed tabs! Become a VIP or Sponsor to have unlimited tabs.");
+			return;
+		}
 
 		final int index = tabs.addTab(panel);
 
