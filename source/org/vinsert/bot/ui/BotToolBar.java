@@ -107,12 +107,12 @@ public class BotToolBar extends JToolBar {
 	private ImageIcon inputDisabled = icon("res/icon_input_small_disabled.png");
 	private ImageIcon inputDisabledHighlighted = icon("res/icon_input_small_disabled_highlighted.png");
 
-	public BotToolBar(BotWindow window) {
+	public BotToolBar(BotWindow window, final boolean log) {
 		this.window = window;
-		init();
+		init(log);
 	}
 	
-	private void init() {
+	private void init(final boolean log) {
 		miscLogin.setEnabled(false);
 		miscFps.setEnabled(false);
 		miscFloor.setEnabled(false);
@@ -194,7 +194,7 @@ public class BotToolBar extends JToolBar {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (window.getActiveBot() == null) return;
-				new BotScriptSelector().setVisible(true);
+				new BotScriptSelector(log).setVisible(true);
 //				Bot bot = window.getActiveBot();
 //				if (bot != null) {
 //					String scriptname = JOptionPane.showInputDialog("Enter script class name: ");
