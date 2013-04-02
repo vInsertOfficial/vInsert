@@ -56,7 +56,7 @@ public class BotScriptSelector extends JDialog {
 
     private String path = Configuration.COMPILED_DIR;
 
-    public BotScriptSelector() {
+    public BotScriptSelector(final boolean log) {
         setTitle("Script Selector");
         setModal(true);
         setBackground(Color.BLACK);
@@ -94,7 +94,7 @@ public class BotScriptSelector extends JDialog {
                 }
                 scriptPathLabel.setText(sp.getAbsolutePath());
                 try {
-                    load(sp);
+                    load(sp, log);
                 } catch (Exception err) {
                     err.printStackTrace();
                 }
@@ -125,16 +125,18 @@ public class BotScriptSelector extends JDialog {
         add(bottom, BorderLayout.SOUTH);
         try {
             final List<ScriptInfo> allScripts = new ArrayList<ScriptInfo>();
-            for (ScriptInfo script : SDN.getScriptDefinitions()) {
-                System.out.println(script.getName());
-                allScripts.add(script);
+            if (log) {
+                for (ScriptInfo script : SDN.getScriptDefinitions()) {
+                    System.out.println(script.getName());
+                    allScripts.add(script);
+                }
             }
             for (ScriptInfo script : scripts) {
                 allScripts.add(script);
             }
             final DefaultTableModel model = new CustomTableModel(new Object[]{
                     "Script", "Version", "Description", "Author"}, 0);
-            load(new File(path));
+            load(new File(path), log);
             search.addKeyListener(new KeyAdapter() {
                 public void keyReleased(final KeyEvent e) {
                     final String text = search.getText();
@@ -280,15 +282,17 @@ public class BotScriptSelector extends JDialog {
         }
     }
 
-    private void load(final File directory) throws ClassNotFoundException,
+    private void load(final File directory, final boolean log) throws ClassNotFoundException,
             InstantiationException, IllegalAccessException,
             FileNotFoundException, IOException {
         scripts.clear();
         final DefaultTableModel model = new CustomTableModel(new Object[]{
                 "Script", "Version", "Description", "Author"}, 0);
         ScriptClassLoader.loadLocal(scripts, directory);
-        for (ScriptInfo info : SDN.getScriptDefinitions()) {
-            scripts.add(info);
+        if (log) {
+            for (ScriptInfo info : SDN.getScriptDefinitions()) {
+                scripts.add(info);
+            }
         }
         for (final ScriptInfo definition : scripts) {
             currentScripts.add(definition);
