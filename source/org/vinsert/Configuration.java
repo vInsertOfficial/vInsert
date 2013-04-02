@@ -2,9 +2,10 @@ package org.vinsert;
 
 
 import java.io.File;
+import java.io.IOException;
 
-import org.vinsert.bot.loader.arch.ArchiveClassLoader;
-import org.vinsert.bot.ui.BotWindow;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 /**
  * Configuration variables
@@ -17,11 +18,10 @@ public class Configuration {
 	
 	public static final String BOT_NAME = "vInsert";
 	public static final int BOT_VERSION_MAJOR = 2;
-	public static final int BOT_VERSION_MINOR = 17;
-	public static final String BOT_DESC = "Written by Discardedx2 & Tommo";
+	public static final int BOT_VERSION_MINOR = 18;
 	
-	private static int remote_major;
-	private static int remote_minor;
+	public static int remote_major;
+	public static int remote_minor;
 
 	/* 		
 	 * 		vinsert.org
@@ -92,25 +92,6 @@ public class Configuration {
 	public static String composeres() {
 		return decode(RES_HEAD) + decode(RES_BODY) + decode(RES_TAIL);
 	}
-    
-    public static boolean checkVersion() {
-    	try {
-			String str = ArchiveClassLoader.getText(composeres() + vesrionfile);
-			String[] strargs = str.split(",");
-			remote_major = Integer.parseInt(strargs[0]);
-			remote_minor = Integer.parseInt(strargs[1]);
-            System.out.println("Local version: " + BOT_VERSION_MAJOR + "." + BOT_VERSION_MINOR);
-			System.out.println("Remote version: " + remote_major + "." + remote_minor);
-			if (remote_major > BOT_VERSION_MAJOR || remote_minor > BOT_VERSION_MINOR) {
-				BotWindow.error("Out of date!", "Vinsert has been updated, re-download the new version at http://www.vinsert.org/");
-				System.exit(0);
-			}
-                        return true;
-    	} catch (Exception e) {
-    		BotWindow.warn("Connection error", "Could not verify bot version from server, entering offline mode.");
-    		return false;
-    	}
-    }
 
     public static void mkdirs() {
         final String[] dirs = {STORAGE_DIR, SCRIPTS_DIR, ACCOUNTS_DIR, SCREENSHOTS_DIR, SOURCE_DIR, COMPILED_DIR};
@@ -127,5 +108,20 @@ public class Configuration {
 	}
 
 	public static final boolean JAR = false;
+
+	public static ImageIcon icon(String path) {
+		ImageIcon icon = null;
+		try {
+			icon = new ImageIcon(ImageIO.read(Application.class.getClassLoader().getResource(path)));
+		} catch (IllegalArgumentException e) {
+		} catch (IOException e) {
+		}
+		
+		if (icon == null) {
+			icon = new ImageIcon(path);
+		}
+		
+		return icon;
+	}
 
 }

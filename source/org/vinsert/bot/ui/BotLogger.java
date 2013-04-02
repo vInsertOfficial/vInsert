@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
-import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
@@ -58,15 +57,17 @@ public class BotLogger extends JList<String> {
 	};
 
 	private static final long serialVersionUID = -402184203325742570L;
-	private static DefaultListModel model = new DefaultListModel();
+	private DefaultListModel model = new DefaultListModel();
 	private JScrollPane scroller;
 
 	public BotLogger() {
-		super(model);
+		super();
+		setModel(model);
 		setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
 		setAutoscrolls(true);
 		setCellRenderer(new Renderer());
+		setOpaque(false);
 		scroller = new JScrollPane(this,
 				JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -125,6 +126,7 @@ public class BotLogger extends JList<String> {
 
 	    private final Border EMPTY_BORDER = new EmptyBorder(1, 1, 1, 1);
 	    private final Border SELECTED_BORDER = BorderFactory.createLineBorder(Color.GRAY, 1);
+	    private final Color BACKGROUND = new Color(0x4d4d4d);
 
 	    public Component getListCellRendererComponent(final JList list,
 	                            final Object value, final int index, final boolean isSelected,
@@ -139,21 +141,21 @@ public class BotLogger extends JList<String> {
 	      result.setBorder(cellHasFocus || isSelected ? SELECTED_BORDER
 	          : EMPTY_BORDER);
 
-	      result.setForeground(Color.GRAY);
-	      result.setBackground(Color.WHITE);
+	      result.setForeground(Color.LIGHT_GRAY);
+	      result.setBackground(BACKGROUND);
 
 	      if (wlr.record.getLevel() == Level.SEVERE) {
 	    	  result.setForeground(Color.red.darker());
 	      }
 
 	      if (wlr.record.getLevel() == Level.WARNING) {
-	    	  result.setForeground(Color.BLACK);
+	    	  result.setForeground(Color.WHITE);
 	      }
 
 	      if ((wlr.record.getLevel() == Level.FINE)
 	          || (wlr.record.getLevel() == Level.FINER)
 	          || (wlr.record.getLevel() == Level.FINEST)) {
-	    	  result.setForeground(Color.BLACK);
+	    	  result.setForeground(Color.WHITE);
 	      }
 
 	      return result;

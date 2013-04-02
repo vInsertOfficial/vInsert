@@ -14,7 +14,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +28,6 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import org.vinsert.Configuration;
-import org.vinsert.bot.Crypter;
 import org.vinsert.bot.IOHelper;
 
 /**
@@ -136,9 +134,7 @@ public class VBLogin {
                         file.createNewFile();
                     }
                     final BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-                    final String key = Crypter.randkey();
-                    final String encPass = Crypter.crypt(login.password, key);
-                    bw.write(login.getUsername() + ":" + encPass + ":" + key);
+                    bw.write(login.getUsername());
                     bw.close();
                 } catch (IOException e1) {
                     e1.printStackTrace();
@@ -197,9 +193,9 @@ public class VBLogin {
                 }
                 br.close();
                 content = content.replaceAll("\n", "");
-                final String[] split = content.split(":");
-                user.setText(split[0]);
-                pass.setText(Crypter.crypt(split[1], split[2]));
+                user.setText(content);
+                pass.requestFocus();
+                pass.requestFocusInWindow();
                 rememberMe.setSelected(true);
             } catch (Throwable e1) {
             	 e1.printStackTrace();
