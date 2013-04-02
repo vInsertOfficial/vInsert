@@ -108,7 +108,7 @@ public class BotWindow {
 	}
 
 	public Bot getActiveBot() {
-		BotPanel panel = tabs.getTab();
+		BotPanel panel = tabs.getTab().getContent();
 		if (panel == null) return null;
 		
 		return panel.getBot();

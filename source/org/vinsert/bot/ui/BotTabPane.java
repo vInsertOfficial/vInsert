@@ -1,6 +1,7 @@
 package org.vinsert.bot.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
@@ -31,14 +33,9 @@ public class BotTabPane extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The tab buttons
+	 * The tab list
 	 */
-	private List<JPanel> buttons = new LinkedList<JPanel>();
-	
-	/**
-	 * The tab components
-	 */
-	private List<BotPanel> tabs = new LinkedList<BotPanel>();
+	private List<Tab> tabs = new LinkedList<Tab>();
 	
 	/**
 	 * The panel toolbar
@@ -46,24 +43,20 @@ public class BotTabPane extends JPanel {
 	private BotToolBar toolbar;
 	
 	/**
-	 * The content panel
+	 * The active tab
 	 */
-	private JPanel contentPanel;
+	private Tab active;
 	
 	public BotTabPane(BotWindow window, boolean log) {
 		setPreferredSize(new Dimension(Configuration.BOT_APPLET_WIDTH + 8, Configuration.BOT_APPLET_HEIGHT + Configuration.BOT_LOGGER_HEIGHT + 40));
 		setBorder(null);
 		toolbar = new BotToolBar(window, log);
-		contentPanel = new JPanel();
-		contentPanel.setLayout(new BorderLayout());
-		contentPanel.setBorder(null);
 		add(toolbar, BorderLayout.NORTH);
-		add(contentPanel, BorderLayout.CENTER);
 	}
 	
-	public JPanel createTabButton(final BotPanel botPanel) {
+	public JPanel createTabButton(final int index, final BotPanel botPanel) {
 		final JPanel panel = new JPanel();
-		final JButton button = new JButton("Bot " + (tabs.size()));
+		final JButton button = new JButton("Bot " + (index + 1));
 		final JPopupMenu closeMenu = new JPopupMenu();
 		final JMenuItem closeItem = new JMenuItem("Close");
 		
@@ -71,7 +64,11 @@ public class BotTabPane extends JPanel {
 		button.setBounds(0, 0, 84, 24);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setContent(botPanel);
+				for (Tab tab : tabs) {
+					if (tab.getContent().equals(botPanel)) {
+						setTab(tab);
+					}
+				}
 			}
 		});
 		button.addMouseListener(new MouseAdapter() {
@@ -92,7 +89,7 @@ public class BotTabPane extends JPanel {
 		
 		closeItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO tab closing
+				closeTab(index);
 			}
 		});
 		closeMenu.add(closeItem);
@@ -106,42 +103,146 @@ public class BotTabPane extends JPanel {
 	}
 	
 	/**
+	 * Returns the index of the tab panel
+	 * @param tab The tab
+	 * @return The index, or -1 if not existent
+	 */
+	public int indexOfTab(Tab tab) {
+		for (Tab t : tabs) {
+			if (t.getIndex() == tab.getIndex()) {
+				return t.getIndex();
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * Closes a tab
+	 * @param index The tab index
+	 */
+	public void closeTab(int index) {
+		for (Tab tab : tabs) {
+			if (tab.getIndex() == index) {
+				closeTab(tab);
+			}
+		}
+	}
+	
+	/**
+	 * Closes a tab
+	 * @param tab The tab to close
+	 */
+	public void closeTab(Tab tab) {
+		tabs.remove(tab);
+		if (active != null && active.getIndex() == tab.getIndex()) {
+			clearContent();
+		}
+		updateTabs();
+	}
+	
+	public void clearContent() {
+		if (active != null) {
+			remove(active.getContent());
+			active = null;
+			revalidate();
+			repaint();
+		}
+	}
+	
+	/**
 	 * Adds a new tab to the tab pane
 	 * @param panel The bot panel
 	 * @return The index of the new tab
 	 */
 	public int addTab(BotPanel panel) {
-		tabs.add(panel);
-		buttons.add(createTabButton(panel));
-		
+		int index = tabs.size();
+		Tab tab = new Tab(index, createTabButton(index, panel), panel);
+		tabs.add(tab);
+		active = tab;
+		updateTabs();
+		return index;
+	}
+	
+	/**
+	 * Updates the tab buttons
+	 * @param active The active bot panel
+	 */
+	public void updateTabs() {
 		List<JComponent> components = new ArrayList<JComponent>();
-		components.addAll(buttons);
+		for (Tab t : tabs) {
+			components.add(t.getButton());
+		}
 		toolbar.updateComponents(components);
-		setContent(panel);
-		return tabs.size();
+		setTab(active);
 	}
 	
 	/**
 	 * Sets the active content panel
-	 * @param panel The new content panel
+	 * @param tab The new tab
 	 */
-	public void setContent(JPanel panel) {
-		remove(contentPanel);
-		contentPanel = panel;
-		add(contentPanel, BorderLayout.CENTER);
-		revalidate();
+	public void setTab(Tab tab) {
+		if (active != null) {
+			clearContent();
+		}
+		if (tab != null) {
+			active = tab;
+			for (Tab t : tabs) {
+				t.setIndex(tabs.indexOf(t));
+				t.getButton().setBorder(null);
+			}
+			active.getButton().setBorder(BorderFactory.createLineBorder(Color.GRAY));
+			add(tab.getContent(), BorderLayout.CENTER);
+			revalidate();
+		}
 	}
 	
 	/**
 	 * Returns the selected bot tab
 	 * @return
 	 */
-	public BotPanel getTab() {
-		return (BotPanel) contentPanel;
+	public Tab getTab() {
+		return active;
 	}
 	
 	public int getTabCount() {
 		return tabs.size();
+	}
+	
+	public static class Tab {
+		
+		private int index;
+		private JPanel button;
+		private BotPanel content;
+		
+		public Tab(int index, JPanel button, BotPanel content) {
+			this.index = index;
+			this.button = button;
+			this.content = content;
+		}
+
+		public int getIndex() {
+			return index;
+		}
+
+		public JPanel getButton() {
+			return button;
+		}
+
+		public BotPanel getContent() {
+			return content;
+		}
+
+		public void setIndex(int index) {
+			this.index = index;
+		}
+
+		public void setButton(JPanel button) {
+			this.button = button;
+		}
+
+		public void setContent(BotPanel content) {
+			this.content = content;
+		}
 	}
 
 }
