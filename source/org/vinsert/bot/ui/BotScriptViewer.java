@@ -108,12 +108,17 @@ public class BotScriptViewer extends JDialog {
 							if (accIndex > -1) {
 								account = AccountManager.getAccounts().get(accIndex);
 							}
+							Script s;
 							try {
-								Script s = scripts.get(scriptIndex).getClazz().asSubclass(Script.class)
+								s = scripts.get(scriptIndex).getClazz().asSubclass(Script.class)
 										.newInstance();
 								bot.pushScript(s, false, account);
-							} catch (Exception e) {
-								BotWindow.error("Oops!", "Error starting script!");
+							} catch (InstantiationException e) {
+								e.printStackTrace();
+								BotWindow.error("Error loading script", "Cannot instantiate script - Script has no no-args constructor!");
+							} catch (IllegalAccessException e) {
+								e.printStackTrace();
+								BotWindow.error("Error loading script", "Illegal class access!");
 							}
 						}
 					}
