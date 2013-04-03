@@ -26,7 +26,7 @@ import org.vinsert.insertion.IWallDecoration;
 /**
  * Wraps the SceneObject class in the client
  * @author tommo
- * @author `Discardedx2
+ * @author `Discardedx2, Nissan Nut, tommo
  */
 public class GameObject implements Interactable, Hullable {
 
@@ -158,9 +158,9 @@ public class GameObject implements Interactable, Hullable {
 	public Point[] getPoints() {
 		Model model = getModel();
 
-		if (model == null || !model.isValid()) {
+		if (model == null || !model.isValid())
 			return null;
-		}
+
 		List<Point> points = new ArrayList<Point>();
 		/*
 		 * Generate a list of all model vertices
@@ -197,15 +197,15 @@ public class GameObject implements Interactable, Hullable {
 	public Polygon hull() {
 		Point[] points = getPoints();
 		Model model = getModel();
-		if (points == null || model == null || !model.isValid()) return null;
+		if (points == null || model == null || !model.isValid()) 
+			return null;
 
 		/*
 		 * Generate a convex hull from the model vertices
 		 */
 		Point[] hull = ConvexHull.getConvexHull(points);
-		if (hull == null || hull.length == 0) {
+		if (hull == null || hull.length == 0)
 			return null;
-		}
 
 		/*
 		 * Convert the hull into a polygon
@@ -230,7 +230,8 @@ public class GameObject implements Interactable, Hullable {
 	 * @return
 	 */
 	public Point centerPoint(Polygon poly) {
-		if (poly == null) return new Point(-1, -1);
+		if (poly == null) 
+			return new Point(-1, -1);
 		
 		int xaccum = 0;
 		int yaccum = 0;
@@ -250,7 +251,8 @@ public class GameObject implements Interactable, Hullable {
 	 * @return
 	 */
 	public Point hullPoint(Polygon poly) {
-		if (poly == null) return new Point(-1, -1);
+		if (poly == null) 
+			return new Point(-1, -1);
 		//Point centroid = centerPoint(poly);
 		/*
 		 * Find the minimum x, y and maximum x, y vertices
