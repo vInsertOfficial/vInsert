@@ -98,7 +98,10 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
             vIds = c.widgets.getValidParentIds();
         } else {
             for (Widget wid : c.widgets.getValidated()) {
-                if (wid.getText().toLowerCase().contains(query.toLowerCase()) || wid.getTooltip().toLowerCase().contains(query.toLowerCase())) {
+                if (wid.getText().toLowerCase().contains(query.toLowerCase()) 
+                        || wid.getTooltip().toLowerCase().contains(query.toLowerCase()) 
+                        || wid.getSelectedAction().toLowerCase().contains(query.toLowerCase())
+                        || getActions(wid.getParentId(), wid.getId()).contains(query)) {
                     if (!vIds.contains(wid.getParentId())) {
                         vIds.add(wid.getParentId());
                     }
@@ -137,8 +140,8 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
                     }
                 }
             }
-        } catch (Exception e) {
-            //we don't give a shit
+        } catch (NullPointerException e) {
+            System.out.println("Hi I'm a GUI and I return null pointers all the fucking time");
         }
     }
 
@@ -152,7 +155,10 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
                 + "<b>Name:</b> " + getName(par, chi) + "<br>"
                 + "<b>Spell Name:</b> " + getSpellName(par, chi) + "<br>"
                 + "<b>Tooltip:</b> " + getTooltip(par, chi) + "<br>"
-                + "<b>Selected Action:</b> " + getSelAction(par, chi) + "<br>");
+                + "<b>Selected Action:</b> " + getSelAction(par, chi) + "<br>"
+                + "<b>Actions:</b> " + getActions(par, chi) + "<br>"
+                + "<b>Slot Contents:</b> " + getSlotContents(par, chi) + "<br>"
+                + "<b>Slot Sizes:</b> " + getSlotSizes(par, chi) + "<br>");
         
         
         widgetInformation.setText(widgetInformation.getText() + "</font>");
@@ -194,6 +200,50 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
 
     private int getChildCount(int par, int chi) {
         return c.widgets.get(par, chi).getChildCount();
+    }
+    
+    private String getActions(int par, int chi) {
+        String actionLine = "";
+        if (c.widgets.get(par, chi).getActions() != null) {
+            String[] actions = c.widgets.get(par, chi).getActions();
+            for (int i = 0; i < actions.length; i++) {
+                if (!actions[i].startsWith(" ") || !actions[i].isEmpty()) {
+                    actionLine = actionLine + actions[i];
+                    if (i < actions.length-1) {
+                        actionLine = actionLine + ", ";
+                    }
+                }
+            }
+        }
+        return actionLine;
+    }
+    
+    private String getSlotContents(int par, int chi) {
+        String scLine = "";
+        if (c.widgets.get(par, chi).getSlotContents() != null) {
+            int[] contents = c.widgets.get(par, chi).getSlotContents();
+            for (int i = 0; i < contents.length; i++) {
+                scLine = scLine + contents[i];
+                if (i < contents.length-1) {
+                    scLine = scLine + ", ";
+                }
+            }
+        }
+        return scLine;
+    }
+    
+    private String getSlotSizes(int par, int chi) {
+        String ssLine = "";
+        if (c.widgets.get(par, chi).getSlotSizes() != null) {
+            int[] sizes = c.widgets.get(par, chi).getSlotSizes();
+            for (int i = 0; i < sizes.length; i++) {
+                ssLine = ssLine + sizes[i];
+                if (i < sizes.length-1) {
+                    ssLine = ssLine + ", ";
+                }
+            }
+        }
+        return ssLine;
     }
 
     @Override
