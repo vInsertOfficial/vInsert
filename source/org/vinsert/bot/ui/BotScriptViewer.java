@@ -32,7 +32,6 @@ import org.vinsert.bot.accounts.AccountManager;
 import org.vinsert.bot.script.Script;
 import org.vinsert.bot.script.ScriptInfo;
 import org.vinsert.bot.util.ScriptClassLoader;
-import org.vinsert.bot.util.Settings;
 import org.vinsert.bot.util.VBLogin;
 
 /**
@@ -212,11 +211,7 @@ public class BotScriptViewer extends JDialog {
 		@Override
 		protected Void doInBackground() throws Exception {
 			List<ScriptInfo> locals = new ArrayList<ScriptInfo>();
-			try {
-				ScriptClassLoader.loadLocal(locals, new File(Settings.get("script_dir")));
-			} catch(Exception e) {
-				ScriptClassLoader.loadLocal(locals, new File(Configuration.COMPILED_DIR));
-			}
+			ScriptClassLoader.loadLocal(locals, new File(Configuration.COMPILED_DIR));
 			
 			for (ScriptInfo si : locals) {
 				firePropertyChange("script", null, si);

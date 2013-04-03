@@ -19,7 +19,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import org.vinsert.Configuration;
-import org.vinsert.bot.util.Utils;
 
 /**
  * A tabbedpane workaround using buttons and a content panel
@@ -48,10 +47,7 @@ public class BotTabPane extends JPanel {
 	 */
 	private Tab selected;
 	
-	private BotWindow window;
-	
 	public BotTabPane(BotWindow window, boolean log) {
-		this.window = window;
 		setPreferredSize(new Dimension(Configuration.BOT_APPLET_WIDTH + 8, Configuration.BOT_APPLET_HEIGHT + Configuration.BOT_LOGGER_HEIGHT + 40));
 		setBorder(null);
 		toolbar = new BotToolBar(window, log);
@@ -120,8 +116,6 @@ public class BotTabPane extends JPanel {
 			clearContent();
 		}
 		updateTabs(null);
-		tab.getContent().getApplet().stop();
-		tab.getContent().remove(tab.getContent().getApplet());
 	}
 	
 	public void clearContent() {
@@ -143,7 +137,7 @@ public class BotTabPane extends JPanel {
 		Tab tab = new Tab();
 		tab.setIndex(index);
 		tab.setContent(panel);
-		tab.setButton(new BotTabButton(this, tab));
+		tab.setButton(createTabButton(tab));
 		tabs.add(tab);
 		updateTabs(tab);
 		return index;
@@ -184,14 +178,14 @@ public class BotTabPane extends JPanel {
 	public static class Tab {
 		
 		private int index;
-		private BotTabButton button;
+		private JPanel button;
 		private BotPanel content;
 		
 		public Tab() {
 			
 		}
 		
-		public Tab(int index, BotTabButton button, BotPanel content) {
+		public Tab(int index, JPanel button, BotPanel content) {
 			this.index = index;
 			this.button = button;
 			this.content = content;
@@ -201,7 +195,7 @@ public class BotTabPane extends JPanel {
 			return index;
 		}
 
-		public BotTabButton getButton() {
+		public JPanel getButton() {
 			return button;
 		}
 
@@ -213,7 +207,7 @@ public class BotTabPane extends JPanel {
 			this.index = index;
 		}
 
-		public void setButton(BotTabButton button) {
+		public void setButton(JPanel button) {
 			this.button = button;
 		}
 
