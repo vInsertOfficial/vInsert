@@ -88,10 +88,12 @@ public class BotTabPane extends JPanel {
 			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent e) {
 				closeTab(tab);
-				tab.getContent().getApplet().stop();
-				tab.getContent().getApplet().destroy();
-				tab.getContent().getBot().getThread().interrupt();
-				tab.getContent().getBot().getThread().stop();
+				if (tab.getContent().getApplet() != null) {
+					tab.getContent().getApplet().stop();
+					tab.getContent().getApplet().destroy();
+					tab.getContent().getBot().getThread().interrupt();
+					tab.getContent().getBot().getThread().stop();
+				}
 			}
 		});
 		closeMenu.add(closeItem);

@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import org.vinsert.Application;
 import org.vinsert.Configuration;
 import org.vinsert.bot.Bot;
 import org.vinsert.bot.util.Callback;
@@ -77,7 +76,7 @@ public class BotWindow {
 			return;
 		}
 		
-		final Bot bot = new Bot(log);
+		final Bot bot = new Bot(this, log);
 		final BotPanel panel = new BotPanel(bot);
 		int usergroup = VBLogin.self.getUsergroupId();
 		if (usergroup != VBLogin.auth_admin && usergroup != VBLogin.auth_vip && usergroup != VBLogin.auth_sw && usergroup != VBLogin.auth_sm
@@ -97,11 +96,8 @@ public class BotWindow {
 				panel.getLogger().log(new LogRecord(Level.INFO, "Bot successfully loaded!"));
 			}
 		});
-		Thread t = new Thread(bot);
-		t.setName("bot-thread-" + index);
-		bot.setThread(t);
+		bot.load();
 		bots.put(index, bot);
-		t.start();
 	}
 
 	public Bot getActiveBot() {

@@ -1,5 +1,6 @@
 package org.vinsert.bot.script;
 
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.logging.Level;
 
 import org.vinsert.bot.script.api.Player;
@@ -19,6 +20,7 @@ import org.vinsert.bot.script.api.tools.Players;
 import org.vinsert.bot.script.api.tools.Settings;
 import org.vinsert.bot.script.api.tools.Skills;
 import org.vinsert.bot.script.api.tools.Widgets;
+import org.vinsert.bot.script.randevent.RandomEventPool;
 import org.vinsert.bot.util.Utils;
 import org.vinsert.bot.util.VBLogin;
 import org.vinsert.component.ProjectionListener;
@@ -30,7 +32,7 @@ import org.vinsert.component.ProjectionListener;
  * @author `Discardedx2
  *
  */
-public abstract class Script implements ProjectionListener {
+public abstract class Script implements ProjectionListener, Runnable {
 
 	/**
 	 * This script's manifest
@@ -51,6 +53,16 @@ public abstract class Script implements ProjectionListener {
 	 * Is the script currently paused
 	 */
 	private boolean paused = false;
+	
+	/**
+	 * The time signalling when next to execute the script
+	 */
+	private long nextExecutionTime = -1;
+	
+	/**
+	 * The thread this script is executing in
+	 */
+	private Thread thread;
 	
 	/**
 	 * The context's script classes
@@ -148,6 +160,100 @@ public abstract class Script implements ProjectionListener {
 	 * Called when the script is exited, any final logic happens here.
 	 */
 	public abstract void close();
+	
+	@Override
+	public void run() {
+		/*
+		 * Install a default exception handler which prints to the logger
+		 */
+		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
+			public void uncaughtException(Thread t, Throwable e) {
+				/*
+				 * Thread interruptions will always throw a thread death exception, and since thread.stop()
+				 * is called from another thread, this default exception handler always receives the throwable, even if thread.stop is surrounded
+				 * by a try-catch.
+				 * TLDR; dont print em...
+				 */
+				if (e instanceof ThreadDeath) return;
+				log(Level.SEVERE, e.getClass().getSimpleName() + " caught in thread " + t.getName() + ": " + e.getMessage());
+				for (StackTraceElement ste : e.getStackTrace()) {
+					log(Level.SEVERE, ste.toString());
+				}
+			}
+		});
+		/*
+		 * Load the random event pool
+		 */
+		context.randomEvents = new RandomEventPool(context);
+		
+		/*
+		 * Check if the script wants to execute
+		 */
+		try {
+			boolean initialized = init();
+			if (!initialized) {
+				log(Level.WARNING, "Script " + manifest.name() + " refused to start.");
+				context.getBot().popScript();
+				return;
+			}
+		} catch (Exception exc) {
+			//ignore it
+		}
+		
+		/*
+		 * Start the loop
+		 */
+		while (true) {
+			context.randomEvents.check();
+			if (isExitRequested()) {
+				context.getBot().popScript();
+			}
+			if (!paused) {
+				long time = System.currentTimeMillis();
+				if (time >= nextExecutionTime) {
+					int delay = pulse();
+					if (delay < 0)
+						context.getBot().popScript();
+					nextExecutionTime = time + delay;
+				}
+			}
+
+			try {
+				if (nextExecutionTime > 0) {
+					long sleep = nextExecutionTime - System.currentTimeMillis();
+					if (sleep > 0)
+						Thread.sleep(nextExecutionTime
+								- System.currentTimeMillis());
+				} else {
+					Thread.sleep(200);
+				}
+			} catch (InterruptedException e1) {
+				// ignore the exception, because interrupting is normal
+			}
+		}
+	}
+	
+	/**
+	 * Calls close() and destroys the script thread
+	 */
+	public void destroy() {
+		try {
+			close();
+			if (thread != null) {
+				thread.stop();
+			}
+		} catch (ThreadDeath death) {
+			//ignore
+		}
+	}
+
+	public synchronized Thread getThread() {
+		return thread;
+	}
+
+	public synchronized void setThread(Thread thread) {
+		this.thread = thread;
+	}
 
 	/**
 	 * Logs the message to the bot logger

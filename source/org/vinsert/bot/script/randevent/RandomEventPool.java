@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.vinsert.bot.Bot;
 import org.vinsert.bot.script.ScriptContext;
 import org.vinsert.bot.script.randevent.impl.AutoLogin;
 import org.vinsert.bot.script.randevent.impl.BankPin;
@@ -17,21 +16,18 @@ import org.vinsert.bot.script.randevent.impl.ClickToPlay;
  */
 public class RandomEventPool {
 	
-	/**
-	 * The bot instance
-	 */
-	private Bot bot;
+	private ScriptContext ctx;
 	
 	/**
 	 * High priority handlers
 	 */
 	private List<RandomEvent> handlers = new ArrayList<RandomEvent>();
 	
-	public RandomEventPool(Bot bot) {
-		this.bot = bot;
+	public RandomEventPool(ScriptContext ctx) {
+		this.ctx = ctx;
 		register(new AutoLogin());
-                register(new BankPin());
-                register(new ClickToPlay());
+        register(new BankPin());
+        register(new ClickToPlay());
 	}
 	
 	/**
@@ -39,7 +35,7 @@ public class RandomEventPool {
 	 * @param e The random event solver
 	 */
 	public void register(RandomEvent e) {
-		e.create(new ScriptContext(bot, bot.getLoader().getClient(), bot.getLastAccount()));
+		e.create(new ScriptContext(ctx.getBot(), ctx.getClient(), ctx.getBot().getLastAccount()));
 		handlers.add(e);
 	}
 	
@@ -48,9 +44,9 @@ public class RandomEventPool {
 	 */
 	public void check() {
 		for (RandomEvent rand : getHandlers()) {
-			rand.getContext().setAccount(bot.getLastAccount());
-			if (!bot.isScriptStackEmpty() && bot.peekScript() != rand && rand.init()) {
-				bot.pushScript(rand, true, bot.getLastAccount());
+			rand.getContext().setAccount(ctx.getBot().getLastAccount());
+			if (!ctx.getBot().isScriptStackEmpty() && ctx.getBot().peekScript() != rand && rand.init()) {
+				ctx.getBot().pushScript(rand, true, ctx.getBot().getLastAccount());
 				return;
 			}
 		}

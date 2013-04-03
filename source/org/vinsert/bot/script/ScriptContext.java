@@ -18,6 +18,7 @@ import org.vinsert.bot.script.api.tools.Players;
 import org.vinsert.bot.script.api.tools.Settings;
 import org.vinsert.bot.script.api.tools.Skills;
 import org.vinsert.bot.script.api.tools.Widgets;
+import org.vinsert.bot.script.randevent.RandomEventPool;
 import org.vinsert.insertion.IClient;
 
 
@@ -62,6 +63,7 @@ public class ScriptContext {
 	public Skills skills;
 	public Settings settings;
 	public Equipment equipment;
+	public RandomEventPool randomEvents;
 
 	public ScriptContext(Bot bot, IClient client, Account account) {
 		this.bot = bot;
