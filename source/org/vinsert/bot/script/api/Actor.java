@@ -2,6 +2,7 @@ package org.vinsert.bot.script.api;
 
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -344,18 +345,13 @@ public abstract class Actor extends Renderable implements Interactable {
 	 */
 	public Point centerPoint(Polygon poly) {
 		if (poly == null) return new Point(-1, -1);
-		
-		int xaccum = 0;
-		int yaccum = 0;
-		for (int i = 0; i < poly.npoints; i++) {
-			xaccum += poly.xpoints[i];
-			yaccum += poly.ypoints[i];
+		Point2D[] points = new Point2D.Double[poly.npoints];
+		for (int i = 0; i < points.length; i++) {
+			points[i] = new Point2D.Double(poly.xpoints[i], poly.ypoints[i]);
 		}
-		xaccum /= poly.npoints;
-		yaccum /= poly.npoints;
-		return new Point(xaccum, yaccum);
+		Point2D center = Utils.centerOfMass(points);
+		return new Point((int) center.getX(), (int) center.getY());
 	}
-
 
 	/**
 	 * Generates a random click point within the given convex hull polygon
