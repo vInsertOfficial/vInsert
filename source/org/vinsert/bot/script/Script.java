@@ -239,7 +239,9 @@ public abstract class Script implements ProjectionListener, Runnable {
 	public void destroy() {
 		try {
 			close();
-			thread.stop();
+			if (thread != null) {
+				thread.stop();
+			}
 		} catch (ThreadDeath death) {
 			//ignore
 		}

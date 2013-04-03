@@ -156,6 +156,7 @@ public class Bot {
 			log(Bot.class, Level.FINE, "Starting script: " + script.getManifest().name());
 			
 			Thread thread = new Thread(script);
+			script.setThread(thread);
 			scriptStack.push(script);
 			getCanvas().getListeners().add(script);
 			inputHandler.setHumanInput(false);
