@@ -106,11 +106,13 @@ public class ArchiveClassLoader extends ClassLoader {
 	
 	private void loadMappings(final boolean log) {
 		try {
-			if(Configuration.getMinor() != getLocalMinorVersion() || !getLocalInsertionsFile().exists()) {
-                            if (log) {
-                                    fetch(Configuration.vesrionfile); //lazy as fuck
-                                    fetch(Configuration.jsonfile);
-                            }
+			if(!Configuration.OFFLINE) {
+				if(Configuration.getMinor() != getLocalMinorVersion() || !getLocalInsertionsFile().exists()) {
+                         	   if (log) {
+                                   	 fetch(Configuration.vesrionfile); //lazy as fuck
+                                   	 fetch(Configuration.jsonfile);
+					}
+				}
 			}
 			System.out.println(Configuration.jsonfile);
 			BufferedInputStream in = new BufferedInputStream(new FileInputStream(getLocalInsertionsFile()));
