@@ -8,7 +8,7 @@ import java.util.List;
  * <p>
  * This class retains the active traversal state, but does no traversal inside.
  * The actual traversal of the path is done by the <code>navigate()</code> method inside the navigation class
- * @author tommo
+ * @author tommo, Nissan Nut
  *
  */
 public class Path {
@@ -48,9 +48,8 @@ public class Path {
 	 * @return The previous tile, or null if out of bounds
 	 */
 	public Tile getPrevious() {
-		if (current - 1 < 0) {
+		if (current - 1 < 0)
 			return null;
-		}
 		return tiles[current - 1];
 	}
 	
@@ -58,9 +57,8 @@ public class Path {
 	 * @return The next tile in the path, or null if the path is finished
 	 */
 	public Tile getNext() {
-		if (current >= tiles.length) {
+		if (current >= tiles.length)
 			return null;
-		}
 		return tiles[current];
 	}
 	
