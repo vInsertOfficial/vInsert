@@ -235,10 +235,6 @@ public class GroundItem extends Item implements Hullable, Interactable {
 
 	@Override
 	public boolean interact(String action) {
-		
-		int speed = ctx.mouse.getSpeed();
-		ctx.mouse.setSpeed(speed - 4);
-		
 		Point point = hullPoint(hull());
 		ctx.mouse.move(point.x, point.y);
 		Utils.sleep(Utils.random(15, 35));
@@ -248,7 +244,6 @@ public class GroundItem extends Item implements Hullable, Interactable {
 		if (index == 0) {
 			ctx.mouse.click();
 			Utils.sleep(Utils.random(200, 400));
-			ctx.mouse.setSpeed(speed);
 			return true;
 		}
 		
@@ -258,11 +253,9 @@ public class GroundItem extends Item implements Hullable, Interactable {
 			Point menuPoint = ctx.menu.getClickPoint(index);
 			ctx.mouse.click(menuPoint.x, menuPoint.y);
 			Utils.sleep(Utils.random(350, 650));
-			ctx.mouse.setSpeed(speed);
 			return true;
 		}
 		
-		ctx.mouse.setSpeed(speed);
 		return false;
 	}
 

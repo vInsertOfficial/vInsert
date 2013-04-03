@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.vinsert.bot.script.ScriptContext;
 import org.vinsert.bot.script.api.generic.Interactable;
@@ -335,6 +336,25 @@ public abstract class Actor extends Renderable implements Interactable {
 		Polygon poly = new Polygon(x, y, x.length);
 		return poly;
 	}
+	
+	/**
+	 * Calculates the centroid point of the polygon
+	 * @param poly
+	 * @return
+	 */
+	public Point centerPoint(Polygon poly) {
+		if (poly == null) return new Point(-1, -1);
+		
+		int xaccum = 0;
+		int yaccum = 0;
+		for (int i = 0; i < poly.npoints; i++) {
+			xaccum += poly.xpoints[i];
+			yaccum += poly.ypoints[i];
+		}
+		xaccum /= poly.npoints;
+		yaccum /= poly.npoints;
+		return new Point(xaccum, yaccum);
+	}
 
 
 	/**
@@ -344,6 +364,7 @@ public abstract class Actor extends Renderable implements Interactable {
 	 */
 	public Point hullPoint(Polygon poly) {
 		if (poly == null) return new Point(-1, -1);
+		//Point centroid = centerPoint(poly);
 		/*
 		 * Find the minimum x, y and maximum x, y vertices
 		 */
@@ -370,8 +391,8 @@ public abstract class Actor extends Renderable implements Interactable {
 		//safety checks
 		if (minX <= 0) minX = 1;
 		if (minY <= 0) minY = 1;
-		if (maxX <= 0) maxX = 2;
-		if (maxY <= 0) maxY = 2;
+		if (maxX <= 1) maxX = 2;
+		if (maxY <= 1) maxY = 2;
 
 		/*
 		 * Generate a random point within the polygon in regards
@@ -379,11 +400,15 @@ public abstract class Actor extends Renderable implements Interactable {
 		 */
 		Point gen = null;
 		long start = System.currentTimeMillis();
+		Random rand = new Random();
+		int wdev = (maxX - minX) / 4;
+		int hdev = (maxY - minY) / 4;
+		Point centroid = centerPoint(poly);
 		while (gen == null) {
-			int rndX = Utils.random(minX, maxX);
-			int rndY = Utils.random(minY, maxY);
-			if (poly.contains(rndX, rndY) && Perspective.on_screen(rndX, rndY)) {
-				gen = new Point(rndX, rndY);
+			int dx = (int) Math.round(rand.nextGaussian() * wdev + centroid.x);
+			int dy = (int) Math.round(rand.nextGaussian() * hdev + centroid.y);
+			if (poly.contains(dx, dy) && Perspective.on_screen(dx, dy)) {
+				gen = new Point(dx, dy);
 			}
 			if (System.currentTimeMillis() - start > 10) {
 				//to avoid deadlocks for uncalculateable points

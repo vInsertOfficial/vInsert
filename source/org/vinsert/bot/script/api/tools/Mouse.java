@@ -22,9 +22,9 @@ public class Mouse {
 	private InputHandler handler;
 	
 	/**
-	 * The mouse speed
+	 * The default speed factor
 	 */
-	private int speed = MouseUtils.DEFAULT_MOUSE_SPEED;
+	private double speed = 0.5;
 	
 	public Mouse(ScriptContext ctx) {
 		this.ctx = ctx;
@@ -50,7 +50,7 @@ public class Mouse {
 	 * @param y The y coordinate
 	 */
 	public void move(int x, int y) {
-		handler.windMouse(x, y, 0.25D);
+		handler.windMouse(x, y, speed);
 	}
 	
 	/**
@@ -153,16 +153,16 @@ public class Mouse {
 	
 	/**
 	 * Sets the mouse speed
-	 * @param speed Normally a value between 1-10, lower is faster
+	 * @param speed A value between 0.2-2.5 is reccomended, 0.5 is default
 	 */
-	public void setSpeed(int speed) {
+	public void setSpeed(double speed) {
 		this.speed = speed;
 	}
 	
 	/**
-	 * @return The mouse speed, normally in range 1-10, lower is faster
+	 * @return The mouse speed, normally in range -0.2-2.5
 	 */
-	public int getSpeed() {
+	public double getSpeed() {
 		return speed;
 	}
 	
