@@ -15,7 +15,7 @@ import org.vinsert.insertion.IWidgetNode;
 
 /**
  * Wraps the widget (aka Interface) class in the client
- * @author tommo
+ * @author tommo, Nissan Nut
  */
 public class Widget {
 	
@@ -95,13 +95,11 @@ public class Widget {
 	 * @return <b>true</b> if found, <b>false</b> if not.
 	 */
 	public boolean containsAction(final String phrase) {
-		if (widget.getActions() == null || widget.getActions().length == 0) {
-			return false;
-		}
-		
-		for (int i = 0; i < widget.getActions().length; i++) {
-			if (widget.getActions()[i] != null && widget.getActions()[i].contains(phrase)) {
-				return true;
+		if (!(widget.getActions() == null || widget.getActions().length == 0)) {
+			for (int i = 0; i < widget.getActions().length; i++) {
+				if (widget.getActions()[i] != null && widget.getActions()[i].contains(phrase)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -113,10 +111,8 @@ public class Widget {
 	 * @return The child widget, if not null
 	 */
 	public Widget getChild(final int id) {
-		if (widget.getChildren() == null) {
+		if (widget.getChildren() == null)
 			return null;
-		}
-		
 		return new Widget(ctx, widget.getChildren()[id]);
 	}
 	
@@ -134,15 +130,13 @@ public class Widget {
 	public List<Widget> getChildren(Filter<Widget> filter) {
 		List<Widget> children = new ArrayList<Widget>();
 		
-		if (widget.getChildren() == null || widget.getChildren().length == 0) {
-			return children;
-		}
-		
-		for (int i = 0; i < widget.getChildren().length; i++) {
-			if (widget.getChildren()[i] != null) {
-				Widget w = new Widget(ctx, widget.getChildren()[i]);
-				if (filter == null || filter.accept(w)) {
-					children.add(w);
+		if (!(widget.getChildren() == null || widget.getChildren().length == 0)) {
+			for (int i = 0; i < widget.getChildren().length; i++) {
+				if (widget.getChildren()[i] != null) {
+					Widget w = new Widget(ctx, widget.getChildren()[i]);
+					if (filter == null || filter.accept(w)) {
+						children.add(w);
+					}
 				}
 			}
 		}
@@ -153,11 +147,10 @@ public class Widget {
 	 * @return The widget's child count
 	 */
 	public int getChildCount() {
-		if (widget.getChildren() == null) {
+		if (widget.getChildren() == null)
 			return 0;
-		} else {
+		else 
 			return widget.getChildren().length;
-		}
 	}
 	
 	/**
@@ -204,9 +197,8 @@ public class Widget {
 	 * @return
 	 */
 	public int getX() {
-		if (widget == null) {
+		if (widget == null)
 			return -1;
-		}
 		
 		Widget parent = getParent();
 		int x = 0;
@@ -289,9 +281,9 @@ public class Widget {
 	 * @return The widget's parent, may be null
 	 */
 	public Widget getParent() {
-        if (widget == null) {
+        if (widget == null)
             return null;
-        }
+      
         int uid = getParentId();
         if (uid == -1) {
             int groupIdx = getId() >>> 16;
@@ -302,9 +294,10 @@ public class Widget {
                 }
             }
         }
-        if (uid == -1) {
+        
+        if (uid == -1) 
             return null;
-        }
+        
         int parent = uid >> 16;
         int child = uid & 0xffff;
         return ctx.widgets.get(parent, child);
