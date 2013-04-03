@@ -33,6 +33,55 @@ public abstract class Actor extends Renderable implements Interactable {
 	}
 
 
+	public boolean isFacing(int Direction) {
+		/**
+		 * @Author Soxs
+		 * Checks if an Actor (entity?) is facing a navigation direction.
+		 * Useful for minigames such as sorceress garden.
+		 */
+		Player me = new Player(ctx, ctx.getClient().getLocalPlayer());
+		if (actor != null && isMoving()) {
+			Tile first = getLocation();
+			int currentX = first.getX();
+			int currentY = first.getY();
+			int dis = getLocation().distanceTo(me.getLocation());
+			long now = System.currentTimeMillis();
+			while (actor != null && dis == getLocation().distanceTo(me.getLocation())) {
+				Utils.sleep(75, 100);
+				//-NPC n did not move.
+				if (System.currentTimeMillis() - now > 2000) {
+					return false; //waited for more than 2 seconds, times out. (lag etc)
+				}
+			}
+			Tile second = getLocation();
+			int X = second.getX();
+			int Y = second.getY();
+
+			int result = -1;
+			if (X == currentX && Y > currentY) {
+				result = Directions.NORTH.value; //north
+			} else if (X > currentX && Y == currentY) {
+				result = Directions.EAST.value; //east
+			} else if (X == currentX && Y < currentY) {
+				result = Directions.SOUTH.value; //south
+			} else if (X < currentX && Y == currentY) {
+				result = Directions.WEST.value; //west
+			} else if (X > currentX && Y > currentY) {
+				result = Directions.NORTHE.value;
+			} else if (X < currentX && Y > currentY) {
+				result = Directions.NORTHW.value;
+			} else if (X > currentX && Y < currentY) {
+				result = Directions.SOUTHE.value;				
+			} else if (X < currentX && Y < currentY) {
+				result = Directions.SOUTHW.value;
+			}
+
+			if (result == Direction) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public int getDirectionTo(Tile t) {
 		/**
