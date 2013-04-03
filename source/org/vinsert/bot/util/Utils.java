@@ -21,7 +21,7 @@ public class Utils {
 	 * @return The random value between the min and max values.
 	 */
 	public static int random(int min, int max) {
-		return random.nextInt(max - min) + min;
+		return random.nextInt(Math.abs(max - min)) + min;
 	}
 	
 	/**
