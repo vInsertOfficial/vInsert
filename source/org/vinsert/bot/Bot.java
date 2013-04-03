@@ -148,6 +148,7 @@ public class Bot {
 			if (!stack) {
 				popScript();
 			} else if (!initialized) {
+				log(Bot.class, Level.SEVERE, "Bot not initialized!");
                 return;
             }
 			this.lastAccount = account;

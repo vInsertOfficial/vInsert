@@ -120,10 +120,16 @@ public class BotScriptViewer extends JDialog {
 								e.printStackTrace();
 								BotWindow.error("Error loading script", "Illegal class access!");
 							}
+						} else {
+							BotWindow.warn("Oops", "Invalid selected script!");
 						}
+					} else {
+						BotWindow.warn("Oops!", "Invalid bot instance!");
 					}
 				}
 			 });
+		 } else {
+			 BotWindow.warn("Oops!", "Please select a script to execute.");
 		 }
 	}
 	
