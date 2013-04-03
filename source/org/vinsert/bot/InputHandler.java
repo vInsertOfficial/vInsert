@@ -263,7 +263,7 @@ public class InputHandler implements MouseListener, MouseMotionListener, KeyList
 	 * @result The actual end point
 	 */
 	public synchronized Point windMouse(int x, int y, final double speedFactor) {
-		double speed = (Math.random() * 15D + 15D) / 10D;
+		double speed = (org.vinsert.bot.util.Utils.randomD() * 15D + 15D) / 10D;
 		speed *= speedFactor;
 		return windMouseImpl(position.x, position.y, x, y, 9D, 3D, 5D / speed, 10D / speed,
 					10D * speed, 8D * speed);
