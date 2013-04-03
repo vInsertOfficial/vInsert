@@ -6,7 +6,7 @@ import org.vinsert.insertion.INpc;
 
 /**
  * Wraps the {@link INpc} class in the client.
- * @author tommo
+ * @author tommo, Nissan Nut
  *
  */
 public class Npc extends Actor {
@@ -22,7 +22,8 @@ public class Npc extends Actor {
 	 * @return The npc's name, or null if not applicable
 	 */
 	public String getName() {
-		if (npc == null || npc.getComposite() == null) return null;
+		if (npc == null || npc.getComposite() == null) 
+			return null;
 		return npc.getComposite().getName();
 	}
 	
@@ -30,7 +31,8 @@ public class Npc extends Actor {
 	 * @return The npc id, or -1 if not applicable
 	 */
 	public int getId() {
-		if (npc == null || npc.getComposite() == null) return -1;
+		if (npc == null || npc.getComposite() == null) 
+			return -1;
 		return npc.getComposite().getId();
 	}
 	
@@ -40,13 +42,11 @@ public class Npc extends Actor {
 	 * @return <b>true</b> if an action matches the phrase, <b>false</b> if not
 	 */
 	public boolean containsAction(String phrase) {
-		if (npc.getComposite() == null || npc.getComposite().getActions() == null || npc.getComposite().getActions().length == 0) {
-			return false;
-		}
-		
-		for (int i = 0; i < npc.getComposite().getActions().length; i++) {
-			if (npc.getComposite().getActions()[i] != null && npc.getComposite().getActions()[i].contains(phrase)) {
-				return true;
+		if (!(npc.getComposite() == null || npc.getComposite().getActions() == null || npc.getComposite().getActions().length == 0)) {
+			for (int i = 0; i < npc.getComposite().getActions().length; i++) {
+				if (npc.getComposite().getActions()[i] != null && npc.getComposite().getActions()[i].contains(phrase)) {
+					return true;
+				}
 			}
 		}
 		return false;
