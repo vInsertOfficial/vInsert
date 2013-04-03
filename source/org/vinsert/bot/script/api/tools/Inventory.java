@@ -410,4 +410,14 @@ public class Inventory {
 		return true;
 	}
 	
+	public boolean dropItem(Item item) {
+		return interact(indexOf(item), "Drop");
+	}
+	
+	public void dropAll() {
+		for (Item i : getItems()) {
+			dropItem(i);
+		}
+	}
+	
 }
