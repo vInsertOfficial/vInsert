@@ -27,6 +27,7 @@ import org.vinsert.bot.script.Script;
 import org.vinsert.bot.script.ScriptContext;
 import org.vinsert.bot.script.api.tools.Game.GameState;
 import org.vinsert.bot.util.PasteScript;
+import org.vinsert.bot.util.SettingsDialog;
 import org.vinsert.component.HijackCanvas;
 import org.vinsert.component.ProjectionListener;
 import org.vinsert.component.debug.DebugCameraInfo;
@@ -73,6 +74,7 @@ public class BotToolBar extends JToolBar {
 	
 	private JPopupMenu settings = new JPopupMenu("Settings");
 	private JMenuItem accounts = new JMenuItem("Accounts");
+	private JMenuItem options = new JMenuItem("Settings");
     private JMenuItem pasteScript = new JMenuItem("New Script");
 	private JMenu interfaces = new JMenu("Interfaces");
 	private JMenuItem interfacesInventory = new JMenuItem("Draw Inventory");
@@ -127,6 +129,7 @@ public class BotToolBar extends JToolBar {
 		setFloatable(false);
 		
 		settings.add(accounts);
+		settings.add(options);
 		settings.addSeparator();
         settings.add(pasteScript);
 		interfaces.add(interfacesInventory);
@@ -193,6 +196,12 @@ public class BotToolBar extends JToolBar {
 				new BotAccountManager().setVisible(true);
 			}
 	    });
+	    options.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		new SettingsDialog(window.getFrame()).setVisible(true);
+	    	}
+	    });
+	    
 	    newBotButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				window.addNewBot(log);
