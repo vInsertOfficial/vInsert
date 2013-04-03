@@ -19,7 +19,7 @@ import org.vinsert.insertion.ISceneTile;
 
 /**
  * A representation of an item laying on the ground.
- * @author `Discardedx2
+ * @author `Discardedx2, Nissan Nut
  */
 public class GroundItem extends Item implements Hullable, Interactable {
 
@@ -61,14 +61,12 @@ public class GroundItem extends Item implements Hullable, Interactable {
 
 		ISceneTile tile = ctx.getClient().getScene().getSceneTiles()[ctx.getClient().getPlane()][x][y];
 
-		if (tile == null) {
+		if (tile == null)
 			return null;
-		}
 
 		IGroundLayer layer = tile.getGroundLayer();
-		if (layer == null) {
+		if (layer == null)
 			return null;
-		}
 
 		IRenderable rend = null;
 
@@ -84,9 +82,8 @@ public class GroundItem extends Item implements Hullable, Interactable {
 			break;
 		}
 
-		if (rend == null) {
+		if (rend == null)
 			return null;
-		}
 
 		this.height = rend.getModelHeight();
 		return new Model(PersistentModelCache.table.get(rend));
@@ -99,9 +96,9 @@ public class GroundItem extends Item implements Hullable, Interactable {
 	public Point[] getPoints() {
 		Model model = getModel(ModelStackType.TOP);
 
-		if (model == null || !model.isValid()) {
+		if (model == null || !model.isValid())
 			return null;
-		}
+		
 		List<Point> points = new ArrayList<Point>();
 		/*
 		 * Generate a list of all model vertices
@@ -140,15 +137,16 @@ public class GroundItem extends Item implements Hullable, Interactable {
 	public Polygon hull() {
 		Point[] points = getPoints();
 		Model model = getModel(ModelStackType.TOP);
-		if (points == null || model == null || !model.isValid()) return null;
+		
+		if (points == null || model == null || !model.isValid()) 
+			return null;
 
 		/*
 		 * Generate a convex hull from the model vertices
 		 */
 		Point[] hull = ConvexHull.getConvexHull(points);
-		if (hull == null || hull.length == 0) {
+		if (hull == null || hull.length == 0)
 			return null;
-		}
 
 		/*
 		 * Convert the hull into a polygon
@@ -240,13 +238,13 @@ public class GroundItem extends Item implements Hullable, Interactable {
 		Utils.sleep(Utils.random(15, 35));
 
 		int index = ctx.menu.getIndex(action);
-		
+
 		if (index == 0) {
 			ctx.mouse.click();
 			Utils.sleep(Utils.random(200, 400));
 			return true;
 		}
-		
+
 		ctx.mouse.click(true);
 
 		if (index != -1) {
@@ -255,7 +253,7 @@ public class GroundItem extends Item implements Hullable, Interactable {
 			Utils.sleep(Utils.random(350, 650));
 			return true;
 		}
-		
+
 		return false;
 	}
 
