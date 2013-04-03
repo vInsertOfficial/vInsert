@@ -6,7 +6,6 @@ import java.awt.Polygon;
 import org.vinsert.bot.InputHandler;
 import org.vinsert.bot.script.ScriptContext;
 import org.vinsert.bot.script.api.Actor;
-import org.vinsert.bot.util.MouseUtils;
 import org.vinsert.bot.util.Utils;
 
 

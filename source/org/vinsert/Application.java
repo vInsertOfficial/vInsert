@@ -18,7 +18,6 @@ public class Application {
 		if(args.length == 1 && args[0].equals("-dev"))
 			Configuration.OFFLINE = true;
 
-		
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {

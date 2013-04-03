@@ -4,7 +4,6 @@ import java.applet.Applet;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -14,8 +13,8 @@ import org.vinsert.bot.loader.HijackLoader;
 import org.vinsert.bot.loader.Language;
 import org.vinsert.bot.script.Script;
 import org.vinsert.bot.script.ScriptContext;
-import org.vinsert.bot.script.randevent.RandomEventPool;
 import org.vinsert.bot.ui.BotLogger;
+import org.vinsert.bot.ui.BotWindow;
 import org.vinsert.bot.util.Callback;
 import org.vinsert.bot.util.Utils;
 import org.vinsert.bot.util.VBLogin;
@@ -27,7 +26,7 @@ import org.vinsert.component.HijackCanvas;
  * @author tommo
  *
  */
-public class Bot implements Runnable {
+public class Bot {
 
 	/**
 	 * The client loader
@@ -71,129 +70,72 @@ public class Bot implements Runnable {
 	private int botIndex;
 	
 	/**
-	 * The next script execution timestamp
-	 */
-	private long nextExecutionTime = -1;
-	
-	/**
 	 * The last account used to execute a script
 	 */
 	private Account lastAccount;
 	
 	/**
-	 * This bot's random event pool
-	 */
-	private RandomEventPool randomEventPool;
-	
-	/**
 	 * The thread the bot is running in
 	 */
 	public Thread thread;
-	
-	/**
-	 * Shall the bot exit
-	 */
-	private boolean exit = false;
 
 	/**
 	 * The VB Login instance
 	 */
 	private VBLogin login;
         
-        /*
-         * Should the bot check for scripts
-         */
-        private boolean log;
+   /**
+    * Should the bot check for scripts
+    */
+    private boolean log;
+    
+    /**
+     * The bot window containing this bot instance
+     */
+    private BotWindow window;
 
     private boolean initialized;
 
-    public Bot(final boolean l) {
+    public Bot(final BotWindow window, final boolean l) {
+    	this.window = window;
 		this.bot = this;
-                this.log = l;
+        this.log = l;
 	}
-
-	@Override
-	public void run() {
-		try {
-			loader = HijackLoader.create(Language.ENGLISH, true, log);
-			callback.call();
-		} catch (Exception e) {
-			e.printStackTrace();
-			log(Bot.class, Level.SEVERE, "Error loading bot!");
-		}
-        initialized = true;
-		log(Bot.class, "Bot now active.");
-		
-		//just loop until canvas is initialized
-		HijackCanvas c;
-		while((c = getCanvas()) == null) {
-            Utils.sleep(1);
-		}
-		
-		/*
-		 * Initialize
-		 */
-		canvas = c;
-		inputHandler = new InputHandler(this, canvas);
-		randomEventPool = new RandomEventPool(this);
-		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-			public void uncaughtException(Thread t, Throwable e) {
-				synchronized (scriptStack) {
-					String tag = scriptStack.isEmpty() ? "Exception" : scriptStack.peek().getClass().getSimpleName();
-					log(tag, Level.SEVERE, e.getClass().getSimpleName() + " caught in thread " + t.getName() + ": " + e.getMessage());
-					for (StackTraceElement ste : e.getStackTrace()) {
-						log(tag, Level.SEVERE, ste.toString());
-					}
+    
+    /**
+     * Starts a new thread for loading the bot client
+     */
+    public void load() {
+    	new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					loader = HijackLoader.create(Language.ENGLISH, true, log);
+					callback.call();
+				} catch (Exception e) {
+					e.printStackTrace();
+					log(Bot.class, Level.SEVERE, "Error loading bot!");
 				}
-			}
-		});
-
-		/*
-		 * Start the main bot cycle
-		 */
-		while (!exit) {
-			synchronized (scriptStack) {
-                randomEventPool.check();
-                if (!scriptStack.isEmpty() && scriptStack.peek() != null) {
-                    Script active = scriptStack.peek();
-                    if (active.isExitRequested()) {
-                        popScript();
-                    }
-                    if (!active.isPaused()) {
-                        long time = System.currentTimeMillis();
-                        if (time >= nextExecutionTime) {
-                            try {
-                                int delay = active.pulse();
-                                if (delay < 0) popScript();
-                                nextExecutionTime = time + delay;
-                            } catch (final Throwable t) {
-                                //prevent the bot thread from stopping if the script throws an exception (shit scripter failsafe)
-                                log(active, t);
-                                Utils.sleep(1000);
-                            }
-                        }
-                    } else {
-                        Utils.sleep(1000);
-                    }
-                }
-			}
-			
-			try {
-				if (nextExecutionTime > 0) {
-					long sleep = nextExecutionTime - System.currentTimeMillis();
-					if (sleep > 0)
-						Thread.sleep(nextExecutionTime - System.currentTimeMillis());
-				} else {
-					Thread.sleep(200);
+		        initialized = true;
+				log(Bot.class, "Bot now active.");
+				
+				while((canvas = getCanvas()) == null) {
+		            Utils.sleep(1);
 				}
-			} catch (InterruptedException e1) {
-				//ignore the exception, because interrupting is normal
+				
+				inputHandler = new InputHandler(Bot.this, canvas);
+				canvas.setBot(Bot.this);
 			}
-		}
-		
+    	}).start();
+    }
+    
+    /**
+     * Destroys the applet backing this bot instance
+     */
+    public void exit() {
 		loader.getApplet().stop();
 		loader.getApplet().destroy();
-	}
+    }
 
 	/**
 	 * Executes the script, and cancels the currently running script if applicable
@@ -223,6 +165,9 @@ public class Bot implements Runnable {
 				scriptStack.push(script);
 				getCanvas().getListeners().add(script);
 				inputHandler.setHumanInput(false);
+				Thread thread = new Thread(script);
+				script.setThread(thread);
+				thread.start();
 			} else {
 				log(Bot.class, Level.WARNING, "Script " + script.getManifest().name() + " refused to start.");
 			}
@@ -243,6 +188,8 @@ public class Bot implements Runnable {
                 } catch (final Throwable t) {
                     log(script, t);
                 }
+                
+                script.destroy();
 				getCanvas().getListeners().remove(script);
 				if (scriptStack.isEmpty()) {
 					inputHandler.setHumanInput(true);
@@ -251,13 +198,6 @@ public class Bot implements Runnable {
 			}
 		}
 		return null;
-	}
-	
-	/**
-	 * Causes the bot to exit
-	 */
-	public void exit() {
-		exit = true;
 	}
 
 	public synchronized void log(Class<?> source, String msg) {
@@ -312,7 +252,7 @@ public class Bot implements Runnable {
 		if (canvas != null) {
 			return canvas;
 		}
-		if (!(loader.getApplet().getComponentAt(100, 100) instanceof HijackCanvas)) {
+		if (loader == null || loader.getApplet() == null || !(loader.getApplet().getComponentAt(100, 100) instanceof HijackCanvas)) {
 			return null;
 		}
 		return (HijackCanvas) loader.getApplet().getComponentAt(100, 100);
@@ -364,8 +304,12 @@ public class Bot implements Runnable {
 		return thread;
 	}
 
-	public RandomEventPool getRandomEvents() {
-		return randomEventPool;
+	public synchronized BotWindow getWindow() {
+		return window;
+	}
+
+	public synchronized void setWindow(BotWindow window) {
+		this.window = window;
 	}
 
 }
