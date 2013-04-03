@@ -181,7 +181,28 @@ public abstract class Script implements ProjectionListener, Runnable {
 				}
 			}
 		});
+		/*
+		 * Load the random event pool
+		 */
 		context.randomEvents = new RandomEventPool(context);
+		
+		/*
+		 * Check if the script wants to execute
+		 */
+		try {
+			boolean initialized = init();
+			if (!initialized) {
+				log(Level.WARNING, "Script " + manifest.name() + " refused to start.");
+				context.getBot().popScript();
+				return;
+			}
+		} catch (Exception exc) {
+			//ignore it
+		}
+		
+		/*
+		 * Start the loop
+		 */
 		while (true) {
 			context.randomEvents.check();
 			if (isExitRequested()) {

@@ -25,11 +25,17 @@ public class Application {
 			@Override
 			public void run() {
 				try {
+					/*
+					 * Must disable the strict EDT checking for substance
+					 * (almost must be set before the LAF is changed)
+					 */
+			       	System.setProperty("insubstantial.checkEDT", "false");
+			       	System.setProperty("insubstantial.logEDT", "false");
 					UIManager.setLookAndFeel(new SubstanceGraphiteGlassLookAndFeel());
 					JFrame.setDefaultLookAndFeelDecorated(true);
 					JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 			       		System.setSecurityManager(new VSecruityManager());
-			       		
+			       	
 			       	Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 						@Override
 						public void uncaughtException(final Thread t, final Throwable e) {

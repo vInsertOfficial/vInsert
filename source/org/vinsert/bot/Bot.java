@@ -154,24 +154,12 @@ public class Bot {
 			this.lastAccount = account;
 			script.create(new ScriptContext(bot, loader.getClient(), account));
 			log(Bot.class, Level.FINE, "Starting script: " + script.getManifest().name());
-
-            boolean init;
-            try {
-                init = script.init();
-            } catch (final Throwable t) {
-                log(script, t);
-                init = false;
-            }
-            if (init) {
-				scriptStack.push(script);
-				getCanvas().getListeners().add(script);
-				inputHandler.setHumanInput(false);
-				Thread thread = new Thread(script);
-				script.setThread(thread);
-				thread.start();
-			} else {
-				log(Bot.class, Level.WARNING, "Script " + script.getManifest().name() + " refused to start.");
-			}
+			
+			Thread thread = new Thread(script);
+			scriptStack.push(script);
+			getCanvas().getListeners().add(script);
+			inputHandler.setHumanInput(false);
+			thread.start();
 		}
 	}
 
