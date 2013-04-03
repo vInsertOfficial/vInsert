@@ -23,12 +23,14 @@ public class AutoLogin extends RandomEvent {
 
     @Override
     public boolean init() {
-        if (getContext().getAccount() == null || getContext().getAccount().getUsername().equals("null")
-                || getContext().getAccount().getPassword().equals("null")) {
-            log("You must have an account saved to use Auto Login. Make sure you press the save button. You can also try editing the Accounts.txt in your vInsert folder.");
-            return false;
-        } else if (game.getGameState() == GameState.LOGIN) {
-            return true;
+        if (game.getGameState() == GameState.LOGIN) {
+        	if (getContext().getAccount() == null || getContext().getAccount().getUsername().equals("null")
+                    || getContext().getAccount().getPassword().equals("null")) {
+                log("You must have an account saved to use Auto Login. Make sure you press the save button. You can also try editing the Accounts.txt in your vInsert folder.");
+                return false;
+        	} else {
+        		return true;
+        	}
         }
         return false;
     }
