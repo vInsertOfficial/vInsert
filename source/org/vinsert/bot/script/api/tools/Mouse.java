@@ -49,7 +49,7 @@ public class Mouse {
 	 * @param y The y coordinate
 	 */
 	public void move(int x, int y) {
-		handler.windMouse(x, y, speed);
+		handler.windMouse(x, y, speed / 2);
 	}
 	
 	/**
