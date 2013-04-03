@@ -2,7 +2,7 @@ package org.vinsert.bot.script.api;
 
 /**
  * A rectangular area defined by 2 points, the bottom left and bottom right
- * @author tommo
+ * @author tommo, Nissan Nut
  *
  */
 public class Area {
@@ -49,12 +49,8 @@ public class Area {
 	 * @return true if the tile is inside, false if not
 	 */
 	public boolean contains(Tile loc) {
-		if (loc.getX() >= bottomLeft.getX() && loc.getX() <= topRight.getX()
-				&& loc.getY() >= bottomLeft.getY() && loc.getY() <= topRight.getY()) {
-			return true;
-		} else {
-			return false;
-		}
+		return (loc.getX() >= bottomLeft.getX() && loc.getX() <= topRight.getX()
+				&& loc.getY() >= bottomLeft.getY() && loc.getY() <= topRight.getY());
 	}
 	
 	/**
