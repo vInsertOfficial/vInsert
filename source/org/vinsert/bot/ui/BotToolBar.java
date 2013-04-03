@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -19,24 +21,37 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
-import java.awt.event.*;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-
 import org.vinsert.Configuration;
 import org.vinsert.bot.Bot;
 import org.vinsert.bot.script.Script;
 import org.vinsert.bot.script.ScriptContext;
-import org.vinsert.bot.script.api.tools.Game;
 import org.vinsert.bot.script.api.tools.Game.GameState;
 import org.vinsert.bot.util.PasteScript;
 import org.vinsert.component.HijackCanvas;
 import org.vinsert.component.ProjectionListener;
-import org.vinsert.component.debug.*;
+import org.vinsert.component.debug.DebugCameraInfo;
+import org.vinsert.component.debug.DebugCursor;
+import org.vinsert.component.debug.DebugGroundHulls;
+import org.vinsert.component.debug.DebugGroundInfos;
+import org.vinsert.component.debug.DebugGroundModels;
+import org.vinsert.component.debug.DebugInventory;
+import org.vinsert.component.debug.DebugMenu;
+import org.vinsert.component.debug.DebugMouseInfo;
+import org.vinsert.component.debug.DebugNpcHulls;
+import org.vinsert.component.debug.DebugNpcInfo;
+import org.vinsert.component.debug.DebugNpcModels;
+import org.vinsert.component.debug.DebugObjectHulls;
+import org.vinsert.component.debug.DebugObjectInfo;
+import org.vinsert.component.debug.DebugObjectModels;
+import org.vinsert.component.debug.DebugPlayerHulls;
+import org.vinsert.component.debug.DebugPlayerInfo;
+import org.vinsert.component.debug.DebugPlayerModels;
+import org.vinsert.component.debug.DebugPlayersInfo;
+import org.vinsert.component.debug.DebugTiles;
+import org.vinsert.component.debug.DebugVarbitSettings;
+import org.vinsert.component.debug.DebugWidgetSettings;
+import org.vinsert.component.debug.DebugWidgets;
+import org.vinsert.component.debug.Debugger;
 import org.vinsert.insertion.IClient;
 
 

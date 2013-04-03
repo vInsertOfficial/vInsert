@@ -424,7 +424,7 @@ public abstract class Actor extends Renderable implements Interactable {
 	public boolean interact(String action) {
 		Point point = hullPoint(hull());
 		ctx.mouse.move(point.x, point.y);
-		Utils.sleep(Utils.random(150, 250));
+		Utils.sleep(Utils.random(250, 400));
 
 		int index = ctx.menu.getIndex(action);
 
@@ -441,7 +441,7 @@ public abstract class Actor extends Renderable implements Interactable {
 			Utils.sleep(Utils.random(350, 650));
 			return true;
 		}
-
+		
 		return false;
 	}
 

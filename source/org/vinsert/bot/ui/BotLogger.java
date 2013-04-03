@@ -91,8 +91,7 @@ public class BotLogger extends JList<String> {
 				 * Remove the first index to prevent the list becoming gigantic
 				 */
 				if (model.getSize() >= MAX_LIST_SIZE) {
-					// TODO
-					// model.remove(0);
+					//model.
 				}
 
 				model.addElement(new LogEntry(record));

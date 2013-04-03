@@ -35,6 +35,11 @@ public class Utils {
 			byte mask_1 = (byte) (current);
 			byte mask_2 = (byte) (current << 8);
 			
+			if (mac.length < 5) {
+				System.err.println("Unable to grab MAC address.");
+				return new java.util.Random();
+			}
+			
 			seed = (mask_1 << 56) + 
 					(mac[1] << 48) +
 					(mac[5] << 40) +
