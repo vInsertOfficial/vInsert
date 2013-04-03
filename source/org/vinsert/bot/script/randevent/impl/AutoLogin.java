@@ -4,7 +4,6 @@ import java.awt.Rectangle;
 
 import org.vinsert.bot.accounts.Account;
 import org.vinsert.bot.script.ScriptManifest;
-import org.vinsert.bot.script.api.Widget;
 import org.vinsert.bot.script.api.tools.Game.GameState;
 import org.vinsert.bot.script.randevent.RandomEvent;
 

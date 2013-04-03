@@ -82,16 +82,14 @@ public class BankPin extends RandomEvent {
     public int getDigitToTypeIndex() {
         Widget clickText = widgets.get(PARENT_ID, 151);
         if (clickText != null) {
-            switch (clickText.getText()) {
-                case "First click the FIRST digit.":
-                    return 0;
-                case "Now click the SECOND digit.":
-                    return 1;
-                case "Time for the THIRD digit.":
-                    return 2;
-                case "Finally, the FOURTH digit.":
-                    return 3;
-            }
+            if (clickText.equals("First click the FIRST digit."))
+            	return 0;
+            else if (clickText.equals("Now click the SECOND digit."))
+            	return 1;
+            else if (clickText.equals("Time for the THIRD digit."))
+            	return 2;
+            else if (clickText.equals("Finally, the FOURTH digit."))
+            	return 3;
         }
         return -1;  //shouldn't ever get here
     }
