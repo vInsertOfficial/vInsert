@@ -1,6 +1,9 @@
 package org.vinsert.bot.util;
 
 import java.util.Random;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 
 /**
  * Generic utilities
@@ -9,7 +12,46 @@ import java.util.Random;
  */
 public class Utils {
 	
-	private static Random random = new Random();
+	private static final Random random;
+
+	static {
+		random = getMachineSeededRandom();
+	}
+
+
+
+	private static final java.util.Random getMachineSeededRandom() {
+		long seed = 0L;
+		try {
+			byte[] mac = null;
+			Enumeration<NetworkInterface> network = NetworkInterface.getNetworkInterfaces();
+			while(network.hasMoreElements()) {
+				NetworkInterface n = network.nextElement();
+				byte[] addr = n.getHardwareAddress();
+				if(addr != null) { mac = addr; break; }
+			}
+			
+			long current = System.currentTimeMillis();
+			byte mask_1 = (byte) (current);
+			byte mask_2 = (byte) (current << 8);
+			
+			seed = (mask_1 << 56) + 
+					(mac[1] << 48) +
+					(mac[5] << 40) +
+					(mac[3] << 32) +
+					(mac[4] << 24) +
+					(mac[2] << 16) +
+					(mac[0] << 8) +
+					mask_2;
+								
+		} catch (SocketException e) {
+			System.err.println("Couldn't generate machine seeded random!");
+			return new java.util.Random();
+		}
+		return new java.util.Random(seed);		  
+	}
+
+
 
 	/**
 	 * Generates a random number between a min and max.
@@ -22,6 +64,10 @@ public class Utils {
 	 */
 	public static int random(int min, int max) {
 		return random.nextInt(Math.abs(max - min)) + min;
+	}
+
+	public static double randomD() {
+		return random.nextDouble();
 	}
 	
 	/**
