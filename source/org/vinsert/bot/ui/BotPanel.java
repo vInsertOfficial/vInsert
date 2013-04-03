@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import org.vinsert.Configuration;
 import org.vinsert.bot.Bot;
@@ -34,15 +35,20 @@ public class BotPanel extends JPanel {
 	}
 	
 	public void loadApplet() {
-		remove(loading);
-		bot.getApplet().setPreferredSize(new Dimension(Configuration.BOT_APPLET_WIDTH, Configuration.BOT_APPLET_HEIGHT));
-		add(bot.getApplet(), BorderLayout.CENTER);
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        validate();
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				remove(loading);
+				bot.getApplet().setPreferredSize(new Dimension(Configuration.BOT_APPLET_WIDTH, Configuration.BOT_APPLET_HEIGHT));
+				add(bot.getApplet(), BorderLayout.CENTER);
+		        try {
+		            Thread.sleep(3000);
+		        } catch (InterruptedException e) {
+		            e.printStackTrace();
+		        }
+		        validate();
+			}
+		});
 	}
 	
 	public Bot getBot() {
