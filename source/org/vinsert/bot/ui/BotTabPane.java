@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import org.vinsert.Configuration;
+import org.vinsert.bot.util.Utils;
 
 /**
  * A tabbedpane workaround using buttons and a content panel
@@ -47,61 +48,14 @@ public class BotTabPane extends JPanel {
 	 */
 	private Tab selected;
 	
+	private BotWindow window;
+	
 	public BotTabPane(BotWindow window, boolean log) {
+		this.window = window;
 		setPreferredSize(new Dimension(Configuration.BOT_APPLET_WIDTH + 8, Configuration.BOT_APPLET_HEIGHT + Configuration.BOT_LOGGER_HEIGHT + 40));
 		setBorder(null);
 		toolbar = new BotToolBar(window, log);
 		add(toolbar, BorderLayout.NORTH);
-	}
-	
-	public JPanel createTabButton(final Tab tab) {
-		final JPanel panel = new JPanel();
-		final JButton button = new JButton("Bot");
-		final JPopupMenu closeMenu = new JPopupMenu();
-		final JMenuItem closeItem = new JMenuItem("Close");
-		
-		button.setIcon(Configuration.icon("res/icon_tab_small.png"));
-		button.setBounds(0, 0, 84, 24);
-		button.setFocusable(false);
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				updateTabs(tab);
-			}
-		});
-		button.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				checkForTriggerEvent(e);
-			}
-
-			public void mouseReleased(MouseEvent e) {
-				checkForTriggerEvent(e);
-			}
-
-			private void checkForTriggerEvent(MouseEvent e) {
-				if (e.isPopupTrigger()) {
-					closeMenu.show(e.getComponent(), e.getX(), e.getY());
-				}
-			}
-		});
-		
-		closeItem.addActionListener(new ActionListener() {
-			@SuppressWarnings("deprecation")
-			public void actionPerformed(ActionEvent e) {
-				closeTab(tab);
-				tab.getContent().getApplet().stop();
-				tab.getContent().getApplet().destroy();
-				tab.getContent().getBot().getThread().interrupt();
-				tab.getContent().getBot().getThread().stop();
-			}
-		});
-		closeMenu.add(closeItem);
-		
-		panel.setPreferredSize(new Dimension(84, 32));
-		panel.setMinimumSize(new Dimension(84, 32));
-		panel.setMaximumSize(new Dimension(84, 32));
-		panel.setLayout(null);
-		panel.add(button);
-		return panel;
 	}
 	
 	/**
@@ -114,6 +68,8 @@ public class BotTabPane extends JPanel {
 			clearContent();
 		}
 		updateTabs(null);
+		tab.getContent().getApplet().stop();
+		tab.getContent().remove(tab.getContent().getApplet());
 	}
 	
 	public void clearContent() {
@@ -135,7 +91,7 @@ public class BotTabPane extends JPanel {
 		Tab tab = new Tab();
 		tab.setIndex(index);
 		tab.setContent(panel);
-		tab.setButton(createTabButton(tab));
+		tab.setButton(new BotTabButton(this, tab));
 		tabs.add(tab);
 		updateTabs(tab);
 		return index;
@@ -176,14 +132,14 @@ public class BotTabPane extends JPanel {
 	public static class Tab {
 		
 		private int index;
-		private JPanel button;
+		private BotTabButton button;
 		private BotPanel content;
 		
 		public Tab() {
 			
 		}
 		
-		public Tab(int index, JPanel button, BotPanel content) {
+		public Tab(int index, BotTabButton button, BotPanel content) {
 			this.index = index;
 			this.button = button;
 			this.content = content;
@@ -193,7 +149,7 @@ public class BotTabPane extends JPanel {
 			return index;
 		}
 
-		public JPanel getButton() {
+		public BotTabButton getButton() {
 			return button;
 		}
 
@@ -205,7 +161,7 @@ public class BotTabPane extends JPanel {
 			this.index = index;
 		}
 
-		public void setButton(JPanel button) {
+		public void setButton(BotTabButton button) {
 			this.button = button;
 		}
 

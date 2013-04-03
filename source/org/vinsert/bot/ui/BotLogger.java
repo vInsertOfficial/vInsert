@@ -24,6 +24,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import org.vinsert.Configuration;
+import org.vinsert.bot.util.Settings;
 
 
 /**
@@ -41,6 +42,7 @@ public class BotLogger extends JList<String> {
 	private static final Formatter formatter = new Formatter() {
 		private final SimpleDateFormat dateFormat = new SimpleDateFormat(
 				"h:mm");
+
 
 		@Override
 		public String format(final LogRecord record) {
@@ -73,6 +75,14 @@ public class BotLogger extends JList<String> {
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroller.setBorder(null);
 		scroller.setPreferredSize(new Dimension(Configuration.BOT_LOGGER_WIDTH, Configuration.BOT_LOGGER_HEIGHT));
+		switch(Settings.get("theme")) {
+			case "System":
+				this.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+				break;
+			case "Graphite":
+				this.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+				break;
+		}
 	}
 
 	public JScrollPane createScrollPane() {
@@ -126,7 +136,6 @@ public class BotLogger extends JList<String> {
 
 	    private final Border EMPTY_BORDER = new EmptyBorder(1, 1, 1, 1);
 	    private final Border SELECTED_BORDER = BorderFactory.createLineBorder(Color.GRAY, 1);
-	    private final Color BACKGROUND = new Color(0x4d4d4d);
 
 	    public Component getListCellRendererComponent(final JList list,
 	                            final Object value, final int index, final boolean isSelected,
@@ -141,8 +150,16 @@ public class BotLogger extends JList<String> {
 	      result.setBorder(cellHasFocus || isSelected ? SELECTED_BORDER
 	          : EMPTY_BORDER);
 
-	      result.setForeground(Color.LIGHT_GRAY);
-	      result.setBackground(BACKGROUND);
+	      switch(Settings.get("theme")) {
+	      case "Graphite":
+	    	  result.setForeground(Color.LIGHT_GRAY);
+		      result.setBackground(new Color(0x4d4d4d));
+		      break;
+	      case "System":
+	    	  result.setForeground(Color.DARK_GRAY);
+	    	  result.setBackground(new Color(0xf0f0f0));
+	    	  break;
+	      }
 
 	      if (wlr.record.getLevel() == Level.SEVERE) {
 	    	  result.setForeground(Color.red.darker());
