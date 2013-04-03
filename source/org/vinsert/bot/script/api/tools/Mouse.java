@@ -84,7 +84,7 @@ public class Mouse {
 	public void click(int x, int y, boolean rightClick) {
 		move(x, y);
 		Utils.sleep(Utils.random(50, 150));
-		click(true);
+		click(rightClick);
 	}
 	
 	/**
