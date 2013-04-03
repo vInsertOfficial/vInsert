@@ -19,35 +19,25 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
+import java.awt.event.*;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+
 import org.vinsert.Configuration;
 import org.vinsert.bot.Bot;
 import org.vinsert.bot.script.Script;
+import org.vinsert.bot.script.ScriptContext;
+import org.vinsert.bot.script.api.tools.Game;
+import org.vinsert.bot.script.api.tools.Game.GameState;
 import org.vinsert.bot.util.PasteScript;
 import org.vinsert.component.HijackCanvas;
 import org.vinsert.component.ProjectionListener;
-import org.vinsert.component.debug.DebugCameraInfo;
-import org.vinsert.component.debug.DebugCursor;
-import org.vinsert.component.debug.DebugGroundHulls;
-import org.vinsert.component.debug.DebugGroundInfos;
-import org.vinsert.component.debug.DebugGroundModels;
-import org.vinsert.component.debug.DebugInventory;
-import org.vinsert.component.debug.DebugMenu;
-import org.vinsert.component.debug.DebugMouseInfo;
-import org.vinsert.component.debug.DebugNpcHulls;
-import org.vinsert.component.debug.DebugNpcInfo;
-import org.vinsert.component.debug.DebugNpcModels;
-import org.vinsert.component.debug.DebugObjectHulls;
-import org.vinsert.component.debug.DebugObjectInfo;
-import org.vinsert.component.debug.DebugObjectModels;
-import org.vinsert.component.debug.DebugPlayerHulls;
-import org.vinsert.component.debug.DebugPlayerInfo;
-import org.vinsert.component.debug.DebugPlayerModels;
-import org.vinsert.component.debug.DebugPlayersInfo;
-import org.vinsert.component.debug.DebugTiles;
-import org.vinsert.component.debug.DebugVarbitSettings;
-import org.vinsert.component.debug.DebugWidgetSettings;
-import org.vinsert.component.debug.DebugWidgets;
-import org.vinsert.component.debug.Debugger;
+import org.vinsert.component.debug.*;
+import org.vinsert.insertion.IClient;
 
 
 /**
@@ -73,6 +63,7 @@ public class BotToolBar extends JToolBar {
 	private JMenuItem interfacesInventory = new JMenuItem("Draw Inventory");
 	private JMenuItem interfacesMenu = new JMenuItem("Draw Menu Info");
 	private JMenuItem interfacesWidgets = new JMenuItem("Draw Widgets");
+        private JMenuItem interfaceExplorer = new JMenuItem("Interface Explorer");
 	private JMenu npcs = new JMenu("Npcs");
 	private JMenuItem npcsInfo = new JMenuItem("Info");
 	private JMenuItem npcsModels = new JMenuItem("Models");
@@ -126,6 +117,7 @@ public class BotToolBar extends JToolBar {
 		interfaces.add(interfacesInventory);
 		interfaces.add(interfacesMenu);
 		interfaces.add(interfacesWidgets);
+                interfaces.add(interfaceExplorer);
 		settings.add(interfaces);
 		players.add(playersMy);
 		players.add(playersInfo);
@@ -387,6 +379,32 @@ public class BotToolBar extends JToolBar {
 				toggleDebugger(interfacesWidgets, DebugWidgets.class);
 			}
         });
+        interfaceExplorer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+                    Bot b = window.getActiveBot();
+                    IClient client = (IClient) b.getApplet();
+                    ScriptContext c = new ScriptContext(b, client, null);
+                    if (b != null && c.game.getGameState() == GameState.INGAME) {
+                        final BotInterfaceExplorer bie = new BotInterfaceExplorer(c);
+                        final HijackCanvas canvas = b.getCanvas();
+                        canvas.getListeners().add(bie);
+                        java.awt.EventQueue.invokeLater(new Runnable() {
+
+                            public void run() {
+                                bie.addWindowListener(new WindowAdapter() {
+
+                                    @Override
+                                    public void windowClosing(WindowEvent e) {
+                                        bie.dispose();
+                                        canvas.getListeners().remove(bie);
+                                    }
+                                });
+                                bie.setVisible(true);
+                            }
+                        });
+                    }
+                }
+            });
         exit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

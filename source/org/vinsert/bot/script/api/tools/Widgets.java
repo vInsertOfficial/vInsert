@@ -23,7 +23,20 @@ public class Widgets {
 	public Widgets(ScriptContext ctx) {
 		this.ctx = ctx;
 	}
-
+        
+        /*
+         * returns an array of all valid group ids
+         */
+        public ArrayList<Integer> getValidParentIds() {
+            ArrayList<Integer> ids = new ArrayList<Integer>();
+            for (Widget w : getValidated()) {
+                if (!ids.contains(w.getParentId())) {
+                    ids.add(w.getParentId());
+                }
+            }
+            return ids;
+        }
+        
 	/**
 	 * Returns an array of all of the widgets in a group
 	 * @param group The group index
