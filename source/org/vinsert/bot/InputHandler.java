@@ -8,15 +8,13 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.Random;
-
-import org.vinsert.bot.util.MouseUtils;
 
 
 /**
  * Controls a bot's mouse
  * 
  * @author tommo
+ * @author BenLand100 - WindMouse algorithm
  * 
  */
 public class InputHandler implements MouseListener, MouseMotionListener, KeyListener {
@@ -52,17 +50,6 @@ public class InputHandler implements MouseListener, MouseMotionListener, KeyList
 	 * Is the mouse present in the window
 	 */
 	private boolean present = true;
-
-	/**
-	 * The random instance
-	 */
-	private Random random = new Random();
-
-	/**
-	 * The current drag length
-	 */
-	@SuppressWarnings("unused")
-	private byte dragLength = 0;
 
 	/**
 	 * The client's mouse listener
@@ -175,63 +162,18 @@ public class InputHandler implements MouseListener, MouseMotionListener, KeyList
 		motionListener.mouseMoved(me);
 		position.setLocation(x, y);
 	}
-
+	
 	/**
-	 * Moves the mouse from a position to another position with randomness
-	 * applied.
-	 * 
-	 * @param speed
-	 *            the speed to move the mouse. Anything under
-	 *            {@link #DEFAULT_MOUSE_SPEED} is faster than normal.
-	 * @param x1
-	 *            from x
-	 * @param y1
-	 *            from y
-	 * @param x2
-	 *            to x
-	 * @param y2
-	 *            to y
-	 * @param randX
-	 *            randomness in the x direction
-	 * @param randY
-	 *            randomness in the y direction
+	 * Moves the mouse to the given position and dispatches a mouse moved event
+	 * @param x The x coordinate
+	 * @param y The y coordinate
 	 */
-	public void moveMouse(final int speed, final int x1, final int y1,
-			final int x2, final int y2, int randX, int randY) {
-		if ((x2 == -1) && (y2 == -1))
-			return;
-		if (randX <= 0) {
-			randX = 1;
-		}
-		if (randY <= 0) {
-			randY = 1;
-		}
-		try {
-			if ((x2 == x1) && (y2 == y1))
-				return;
-			final Point[] controls = MouseUtils.generateControls(x1, y1, x2
-					+ random.nextInt(randX), y2 + random.nextInt(randY), 50,
-					120);
-			final Point[] spline = MouseUtils.generateSpline(controls);
-			final long timeToMove = MouseUtils.fittsLaw(
-					Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)), 10);
-			final Point[] path = MouseUtils.applyDynamism(spline,
-					(int) timeToMove, MouseUtils.DEFAULT_MOUSE_SPEED);
-			for (final Point aPath : path) {
-				moveMouse(aPath.x, aPath.y);
-				try {
-					Thread.sleep(Math.max(0, speed - 2 + random.nextInt(4)));
-				} catch (final InterruptedException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		} catch (final Exception e) {
-			// MouseHandler.log.info("Error moving mouse: " + e);
-			// MouseHandler.log.info("Source: " + x1 + "," + y1);
-			// MouseHandler.log.info("Dest:   " + x2 + "," + y2);
-			// MouseHandler.log.info("Randx/Randy: " + randX + "/" + randY);
-			// e.printStackTrace();
-		}
+	public void mouseEnter(final int x, final int y) {
+		final MouseEvent me = new MouseEvent(canvas,
+				MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0, x, y, 0,
+				false);
+		motionListener.mouseMoved(me);
+		position.setLocation(x, y);
 	}
 
 	@Override
@@ -290,7 +232,6 @@ public class InputHandler implements MouseListener, MouseMotionListener, KeyList
 			motionListener.mouseMoved(e);
 		}
 	}
-
 	
 	public Point getPosition() {
 		return position;
@@ -306,6 +247,113 @@ public class InputHandler implements MouseListener, MouseMotionListener, KeyList
 
 	public void setHumanInput(boolean humanInput) {
 		this.humanInput = humanInput;
+	}
+
+	/**
+	 * Moves the mouse from the current position to the specified position.
+	 * Approximates human movement in a way where smoothness and accuracy are
+	 * relative to speed, as it should be.
+	 * 
+	 * @param x
+	 *            The x destination
+	 * @param y
+	 *            The y destination
+	 * @param speedFactor 
+	 * 			   The speed factor
+	 * @result The actual end point
+	 */
+	public synchronized Point windMouse(int x, int y, final double speedFactor) {
+		double speed = (Math.random() * 15D + 15D) / 10D;
+		speed *= speedFactor;
+		return windMouseImpl(position.x, position.y, x, y, 9D, 3D, 5D / speed, 10D / speed,
+					10D * speed, 8D * speed);
+	}
+
+	/**
+	 * Internal mouse movement algorithm. Do not use this without credit to
+	 * either Benjamin J. Land or BenLand100. This is synchronized to prevent
+	 * multiple motions and bannage.
+	 * 
+	 * @param xs
+	 *            The x start
+	 * @param ys
+	 *            The y start
+	 * @param xe
+	 *            The x destination
+	 * @param ye
+	 *            The y destination
+	 * @param gravity
+	 *            Strength pulling the position towards the destination
+	 * @param wind
+	 *            Strength pulling the position in random directions
+	 * @param minWait
+	 *            Minimum relative time per step
+	 * @param maxWait
+	 *            Maximum relative time per step
+	 * @param maxStep
+	 *            Maximum size of a step, prevents out of control motion
+	 * @param targetArea
+	 *            Radius of area around the destination that should trigger
+	 *            slowing, prevents spiraling
+	 * @result The actual end point
+	 */
+	private synchronized Point windMouseImpl(double xs, double ys, double xe,
+			double ye, double gravity, double wind, double minWait,
+			double maxWait, double maxStep, double targetArea) {
+		// System.out.println(targetArea);
+		final double sqrt3 = Math.sqrt(3);
+		final double sqrt5 = Math.sqrt(5);
+		double dist, veloX = 0, veloY = 0, windX = 0, windY = 0;
+		while ((dist = Math.hypot(xs - xe, ys - ye)) >= 1) {
+			wind = Math.min(wind, dist);
+			if (dist >= targetArea) {
+				windX = windX / sqrt3
+						+ (Math.random() * (wind * 2D + 1D) - wind) / sqrt5;
+				windY = windY / sqrt3
+						+ (Math.random() * (wind * 2D + 1D) - wind) / sqrt5;
+			} else {
+				windX /= sqrt3;
+				windY /= sqrt3;
+				if (maxStep < 3) {
+					maxStep = Math.random() * 3 + 3D;
+				} else {
+					maxStep /= sqrt5;
+				}
+				// System.out.println(maxStep + ":" + windX + ";" + windY);
+			}
+			veloX += windX + gravity * (xe - xs) / dist;
+			veloY += windY + gravity * (ye - ys) / dist;
+			double veloMag = Math.hypot(veloX, veloY);
+			if (veloMag > maxStep) {
+				double randomDist = maxStep / 2D + Math.random() * maxStep / 2D;
+				veloX = (veloX / veloMag) * randomDist;
+				veloY = (veloY / veloMag) * randomDist;
+			}
+			xs += veloX;
+			ys += veloY;
+			int mx = (int) Math.round(xs);
+			int my = (int) Math.round(ys);
+			if (position.x != mx || position.y != my) {
+				// Scratch
+				/*
+				 * g.drawLine(cx,cy,mx,my); frame.repaint();
+				 */
+				// MouseJacking
+				/*
+				 * try { Robot r = new Robot(); r.mouseMove(mx,my); } catch
+				 * (Exception e) { }
+				 */
+				moveMouse(mx, my);
+			}
+			double step = Math.hypot(xs - position.x, ys - position.y);
+			try {
+				Thread.sleep(Math.round((maxWait - minWait) * (step / maxStep)
+						+ minWait));
+			} catch (InterruptedException ex) {
+			}
+		}
+		// System.out.println(Math.abs(xe - cx) + ", " + Math.abs(ye - cy));
+		return new Point(position.x, position.y);
 	}
 
 }
