@@ -140,7 +140,11 @@ public abstract class Actor extends Renderable implements Interactable {
 	 * @return The actor's current health percentage
 	 */
 	public int getHealthPercent() {
-		return 100 / (actor.getMaxHealth() / actor.getHealth());
+		
+		if (getMaxHealth() == 0)
+			return 0;
+		
+		return 100 * (getHealth() / getMaxHealth());
 	}
 
 	/**
