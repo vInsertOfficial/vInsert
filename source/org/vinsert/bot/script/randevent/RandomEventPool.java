@@ -5,9 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.vinsert.bot.script.ScriptContext;
-import org.vinsert.bot.script.randevent.impl.AutoLogin;
-import org.vinsert.bot.script.randevent.impl.BankPin;
-import org.vinsert.bot.script.randevent.impl.ClickToPlay;
+import org.vinsert.bot.script.randevent.impl.*;
 
 /**
  * Checks for random event
@@ -26,8 +24,9 @@ public class RandomEventPool {
 	public RandomEventPool(ScriptContext ctx) {
 		this.ctx = ctx;
 		register(new AutoLogin());
-        register(new BankPin());
-        register(new ClickToPlay());
+                register(new BankPin());
+                register(new ClickToPlay());
+                register(new TalkingRandom());
 	}
 	
 	/**

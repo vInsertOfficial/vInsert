@@ -119,7 +119,7 @@ public class Widgets {
 	/**
 	 * @return <tt>RSComponent</tt> containing "Click here to continue";
 	 *         otherwise null.
-	 * @credits PhaseCoder
+	 * @credits PhaseCoder, tholomew
 	 */
 	public Widget getContinueComponent() {
 		if (ctx.getClient().getWidgets() == null) {
@@ -127,15 +127,11 @@ public class Widgets {
 		}
 		List<Widget> valid = getValidated();
 		for (Widget iface : valid) {
-			if (iface.getIndex() != 137) {
-				int len = iface.getChildCount();
-				for (int i = 0; i < len; i++) {
-					Widget child = iface.getChild(i);
-					if (child.containsAction("Click here to continue")
-							&& child.isValid() && child.getRelativeX() > 10
-							&& child.getRelativeY() > 300) {
-						return child;
-					}
+			if (iface.getParentId() != 137) {
+				if (iface.getText().contains("Click here to continue")
+						&& iface.isValid() && iface.getRelativeX() > 10
+						&& iface.getRelativeY() > 300) {
+					return iface;
 				}
 			}
 		}
