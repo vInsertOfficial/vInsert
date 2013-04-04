@@ -31,7 +31,7 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
     DefaultMutableTreeNode widgetsNode = new DefaultMutableTreeNode("Widgets");
     Widget selWid;  //currently selected widget
     static ScriptContext c;
-    ArrayList<DefaultMutableTreeNode> parents = new ArrayList<DefaultMutableTreeNode>();
+    ArrayList<DefaultMutableTreeNode> parents = new ArrayList<>();
 
     public BotInterfaceExplorer(ScriptContext ctx) {
         c = ctx;
@@ -66,6 +66,7 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
         for (int p : c.widgets.getValidParentIds()) {
             parents.add(new DefaultMutableTreeNode("Parent " + p));
             for (Widget w : c.widgets.get(p)) {
+                if (w == null) continue;
                 parents.get(parents.size() - 1).add(new DefaultMutableTreeNode("Child " + w.getId()));
             }
             widgetsNode.add(parents.get(parents.size() - 1));
@@ -99,6 +100,7 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
             for (int p : c.widgets.getValidParentIds()) {
                 parents.add(new DefaultMutableTreeNode("Parent " + p));
                 for (Widget w : c.widgets.get(p)) {
+                    if (w == null) continue;
                     parents.get(parents.size() - 1).add(new DefaultMutableTreeNode("Child " + w.getId()));
                 }
                 widgetsNode.add(parents.get(parents.size() - 1));
@@ -113,6 +115,7 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
                         vIds.add(wid.getParentId());
                         parents.add(new DefaultMutableTreeNode("Parent " + wid.getParentId()));
                         for (Widget w : c.widgets.get(wid.getParentId())) {
+                            if (w == null) continue;
                             if (w.getText().toLowerCase().contains(query.toLowerCase())
                                     || w.getTooltip().toLowerCase().contains(query.toLowerCase())
                                     || w.getSelectedAction().toLowerCase().contains(query.toLowerCase())
