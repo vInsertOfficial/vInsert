@@ -34,10 +34,11 @@ public class BankPin extends RandomEvent {
     @Override
     public int pulse() {
         int digit = getDigitToTypeIndex();
-        if (digit >= 0 && digit <= 3) {
+        if (digit != -1) {
             Widget click = getEnterDigit(bankPin[digit]);
             if (click.isValid()) {
                 click.click();
+                sleep(1000, 1500);
             } else {
                 requestExit();
                 sleep(1000, 1500);
@@ -47,7 +48,7 @@ public class BankPin extends RandomEvent {
             requestExit();
             sleep(1000, 1500);
         }
-        return random(1000, 1500);
+        return random(150, 200);
     }
 
     @Override
@@ -82,13 +83,13 @@ public class BankPin extends RandomEvent {
     public int getDigitToTypeIndex() {
         Widget clickText = widgets.get(PARENT_ID, 151);
         if (clickText != null) {
-            if (clickText.equals("First click the FIRST digit."))
+            if (clickText.getText().equals("First click the FIRST digit."))
             	return 0;
-            else if (clickText.equals("Now click the SECOND digit."))
+            else if (clickText.getText().equals("Now click the SECOND digit."))
             	return 1;
-            else if (clickText.equals("Time for the THIRD digit."))
+            else if (clickText.getText().equals("Time for the THIRD digit."))
             	return 2;
-            else if (clickText.equals("Finally, the FOURTH digit."))
+            else if (clickText.getText().equals("Finally, the FOURTH digit."))
             	return 3;
         }
         return -1;  //shouldn't ever get here
