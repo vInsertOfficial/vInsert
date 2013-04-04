@@ -1,6 +1,12 @@
 package org.vinsert.bot.script.api;
 
+import java.awt.Point;
+import java.awt.Polygon;
+
+import org.vinsert.bot.script.ScriptContext;
+import org.vinsert.bot.util.Perspective;
 import org.vinsert.bot.util.Utils;
+import org.vinsert.insertion.IClient;
 
 /**
  * Represents a tile location in the game world
@@ -47,6 +53,29 @@ public class Tile {
 
 	public int getGy() {
 		return gy;
+	}
+	
+	/**
+	 * @param ctx The current script context
+	 * @return The tile's onscreen polygon
+	 */
+	
+	public Polygon getPolygon(ScriptContext ctx) {
+		IClient client = ctx.getClient();
+		int plane = client.getPlane();
+		
+		Point p1 = Perspective.trans_tile_screen(client, this, 0, 0, plane);
+		Point p2 = Perspective.trans_tile_screen(client, this, 1, 0, plane);
+		Point p3 = Perspective.trans_tile_screen(client, this, 1, 1, plane);
+		Point p4 = Perspective.trans_tile_screen(client, this, 0, 1, plane);
+		
+		Polygon p = new Polygon();
+		p.addPoint(p1.x, p1.y);
+		p.addPoint(p2.x, p2.y);
+		p.addPoint(p3.x, p3.y);
+		p.addPoint(p4.x, p4.y);
+		
+		return p;
 	}
 	
 	/**
