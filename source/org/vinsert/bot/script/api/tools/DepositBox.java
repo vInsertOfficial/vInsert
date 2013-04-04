@@ -9,6 +9,7 @@ import org.vinsert.bot.util.Timer;
 import org.vinsert.bot.util.Utils;
 
 import java.awt.*;
+import org.vinsert.bot.script.api.Item;
 
 /**
  * @author iJava
@@ -19,7 +20,6 @@ public class DepositBox {
     private static final int WIDGET_ID = 11;
     private static final int ITEM_COMP_ID = 61;
     private static final int CLOE_COMP_ID = 62;
-
     /**
      * The script context.
      */
@@ -38,6 +38,7 @@ public class DepositBox {
             return true;
         }
         Widget close = ctx.widgets.getValidated(new Filter<Widget>() {
+
             @Override
             public boolean accept(Widget element) {
                 return element.getParentId() == WIDGET_ID && element.getId() == CLOE_COMP_ID;
@@ -54,8 +55,32 @@ public class DepositBox {
         return !isOpen();
     }
 
+    /**
+     * Deposits all inventory items except for the given ids
+     *
+     * @param exceptions
+     */
+    public void depositAllExcept(Filter<Item> exceptions) {
+        Item[] items = ctx.inventory.getUniqueItems();
+        for (Item item : items) {
+            if (!item.isValid()) {
+                continue;
+            }
+            if (exceptions != null && exceptions.accept(item)) {
+                continue;
+            }
+
+            if (ctx.inventory.getCount(true, item.getId()) > 1) {
+                deposit(item.getId(), 0);
+            } else {
+                deposit(item.getId(), 1);
+            }
+        }
+    }
+
     public boolean deposit(int itemId, int amt) {
         int[] ids = ctx.widgets.getValidated(new Filter<Widget>() {
+
             @Override
             public boolean accept(Widget element) {
                 return element.getParentId() == WIDGET_ID && element.getId() == ITEM_COMP_ID;
@@ -140,6 +165,7 @@ public class DepositBox {
 
     public boolean isOpen() {
         if (ctx.widgets.getValidated(new Filter<Widget>() {
+
             @Override
             public boolean accept(Widget element) {
                 return element.getParentId() == WIDGET_ID && element.getId() == 60;
@@ -148,11 +174,12 @@ public class DepositBox {
             return false;
         }
         return ctx.widgets.getValidated(new Filter<Widget>() {
-                    @Override
-                    public boolean accept(Widget element) {
-                        return element.getParentId() == WIDGET_ID && element.getId() == 60;
-                    }
-                }).get(0).getTooltip().contains("Bank");
+
+            @Override
+            public boolean accept(Widget element) {
+                return element.getParentId() == WIDGET_ID && element.getId() == 60;
+            }
+        }).get(0).getTooltip().contains("Bank");
     }
 
     public boolean open() {
@@ -160,12 +187,13 @@ public class DepositBox {
             return true;
         }
         GameObject box = ctx.objects.getNearest(new Filter<GameObject>() {
+
             @Override
             public boolean accept(GameObject element) {
-                for(int id :DEPOSIT_BOX_IDS) {
-                if(id == element.getId()) {
-                    return true;
-                }
+                for (int id : DEPOSIT_BOX_IDS) {
+                    if (id == element.getId()) {
+                        return true;
+                    }
                 }
                 return false;
             }
@@ -179,5 +207,4 @@ public class DepositBox {
         }
         return isOpen();
     }
-
 }
