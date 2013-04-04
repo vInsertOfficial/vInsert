@@ -11,7 +11,8 @@ public class CapnHand extends RandomEvent {
 	@Override
 	public boolean init() {
 		for (Npc n : npcs.getNpcs(Filters.npcId(NPC_ID))) {
-			if (n.isInteracting() && n.getInteracting() == localPlayer) {
+                    if (n != null)
+			if (n.getSpeech().contains(players.getLocalPlayer().getName())) {
 				return true;
 			}
 		}
