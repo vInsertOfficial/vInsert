@@ -18,10 +18,13 @@ public class TalkingRandom extends RandomEvent {
             if (n != null) {
                 try {
                     if (n.getSpeech().contains(players.getLocalPlayer().getName())) {
-                        npc = n;
-                        npc.interact("Talk-to");
-                        sleep(3000, 5000);
-                        return true;
+                        sleep(3000, 5000);      //sleeps incase it's the old man teleporting you
+                        if (npcs.getNearest(n.getId()) != null) {
+                            npc = n;
+                            npc.interact("Talk-to");
+                            sleep(1500, 2222);
+                            return true;
+                        }
                     }
                 } catch (NullPointerException npe) {
                     return false;
@@ -43,7 +46,7 @@ public class TalkingRandom extends RandomEvent {
                 npc.interact("Talk-to");
                 sleep(3000, 5000);
             }
-        } else if (npcs.getNearest(npc.getId()) == null){
+        } else if (npcs.getNearest(npc.getId()) == null) {
             requestExit();
             sleep(1000, 1500);
         }
