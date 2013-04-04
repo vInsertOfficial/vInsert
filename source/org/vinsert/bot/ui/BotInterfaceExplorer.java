@@ -25,13 +25,13 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
     private JButton filter;
     private JScrollPane jScrollPane1;
     private JScrollPane jScrollPane2;
-    private JTextField filterQuery;
+    private JTextField searchQuery;
     private JTextPane widgetInformation;
     private JTree widgets;
     DefaultMutableTreeNode widgetsNode = new DefaultMutableTreeNode("Widgets");
     Widget selWid;  //currently selected widget
     static ScriptContext c;
-    ArrayList<DefaultMutableTreeNode> parents = new ArrayList<DefaultMutableTreeNode>();
+    ArrayList<DefaultMutableTreeNode> parents = new ArrayList<>();
 
     public BotInterfaceExplorer(ScriptContext ctx) {
         c = ctx;
@@ -41,7 +41,7 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
     @SuppressWarnings("unchecked")
     private void initComponents() {
 
-        filterQuery = new JTextField();
+        searchQuery = new JTextField();
         filter = new JButton();
         jScrollPane1 = new JScrollPane();
         widgetInformation = new JTextPane();
@@ -52,7 +52,7 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
         setTitle("Interface Explorer by tholomew");
         setResizable(false);
 
-        filter.setText("Filter");
+        filter.setText("Search");
         filter.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -66,6 +66,9 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
         for (int p : c.widgets.getValidParentIds()) {
             parents.add(new DefaultMutableTreeNode("Parent " + p));
             for (Widget w : c.widgets.get(p)) {
+                if (w == null) {
+                    continue;
+                }
                 parents.get(parents.size() - 1).add(new DefaultMutableTreeNode("Child " + w.getId()));
             }
             widgetsNode.add(parents.get(parents.size() - 1));
@@ -83,44 +86,65 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addComponent(filterQuery, GroupLayout.PREFERRED_SIZE, 368, GroupLayout.PREFERRED_SIZE).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(filter, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)).addGroup(layout.createSequentialGroup().addContainerGap().addComponent(jScrollPane2).addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 251, GroupLayout.PREFERRED_SIZE).addContainerGap()));
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addComponent(searchQuery, GroupLayout.PREFERRED_SIZE, 368, GroupLayout.PREFERRED_SIZE).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addComponent(filter, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)).addGroup(layout.createSequentialGroup().addContainerGap().addComponent(jScrollPane2).addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED).addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 251, GroupLayout.PREFERRED_SIZE).addContainerGap()));
         layout.setVerticalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(filterQuery, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE).addComponent(filter)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE).addComponent(jScrollPane1)).addContainerGap()));
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(layout.createSequentialGroup().addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE).addComponent(searchQuery, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE).addComponent(filter)).addPreferredGap(LayoutStyle.ComponentPlacement.RELATED).addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING).addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE).addComponent(jScrollPane1)).addContainerGap()));
 
         pack();
     }
 
-    private void filter(String query) {
+    private void search(String query) {
+        long start = System.currentTimeMillis();
         parents.clear();
         widgetsNode.removeAllChildren();
-        ArrayList<Integer> vIds = new ArrayList<Integer>();;
+        ArrayList<Integer> vIds = new ArrayList<Integer>();
         if (query.equals("")) {
-            vIds = c.widgets.getValidParentIds();
+            for (int p : c.widgets.getValidParentIds()) {
+                parents.add(new DefaultMutableTreeNode("Parent " + p));
+                for (Widget w : c.widgets.get(p)) {
+                    if (w == null) {
+                        continue;
+                    }
+                    parents.get(parents.size() - 1).add(new DefaultMutableTreeNode("Child " + w.getId()));
+                }
+                widgetsNode.add(parents.get(parents.size() - 1));
+            }
         } else {
             for (Widget wid : c.widgets.getValidated()) {
-                if (wid.getText().toLowerCase().contains(query.toLowerCase()) 
-                        || wid.getTooltip().toLowerCase().contains(query.toLowerCase()) 
+                if (wid == null) {
+                    continue;
+                }
+                if (wid.getText().toLowerCase().contains(query.toLowerCase())
+                        || wid.getTooltip().toLowerCase().contains(query.toLowerCase())
                         || wid.getSelectedAction().toLowerCase().contains(query.toLowerCase())
-                        || getActions(wid.getParentId(), wid.getId()).contains(query)) {
+                        || getActions(wid.getParentId(), wid.getId()).toLowerCase().contains(query.toLowerCase())) {
                     if (!vIds.contains(wid.getParentId())) {
                         vIds.add(wid.getParentId());
+                        parents.add(new DefaultMutableTreeNode("Parent " + wid.getParentId()));
+                        for (Widget w : c.widgets.get(wid.getParentId())) {
+                            if (w == null) {
+                                continue;
+                            }
+                            if (w.getText().toLowerCase().contains(query.toLowerCase())
+                                    || w.getTooltip().toLowerCase().contains(query.toLowerCase())
+                                    || w.getSelectedAction().toLowerCase().contains(query.toLowerCase())
+                                    || getActions(w.getParentId(), w.getId()).toLowerCase().contains(query.toLowerCase())) {
+                                parents.get(parents.size() - 1).add(new DefaultMutableTreeNode("Child " + w.getId()));
+                            }
+                        }
+                        widgetsNode.add(parents.get(parents.size() - 1));
                     }
                 }
             }
         }
-        for (int p : vIds) {
-            parents.add(new DefaultMutableTreeNode("Parent " + p));
-            for (Widget w : c.widgets.get(p)) {
-                parents.get(parents.size() - 1).add(new DefaultMutableTreeNode("Child " + w.getId()));
-            }
-            widgetsNode.add(parents.get(parents.size() - 1));
-            widgets.setModel(new DefaultTreeModel(widgetsNode));
-        }
+        widgets.setModel(new DefaultTreeModel(widgetsNode));
         pack();
+        long end = System.currentTimeMillis();
+        System.out.println("Completed Search and filter in " + (end - start) + "ms. Keyword: \"" + query + "\"");
     }
 
     private void filterActionPerformed(ActionEvent evt) {
-        filter(filterQuery.getText());
+        search(searchQuery.getText());
     }
 
     private void nodeSelect(TreeSelectionEvent evt) {
@@ -159,8 +183,8 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
                 + "<b>Actions:</b> " + getActions(par, chi) + "<br>"
                 + "<b>Slot Contents:</b> " + getSlotContents(par, chi) + "<br>"
                 + "<b>Slot Sizes:</b> " + getSlotSizes(par, chi) + "<br>");
-        
-        
+
+
         widgetInformation.setText(widgetInformation.getText() + "</font>");
         selWid = c.widgets.get(par, chi);
 
@@ -201,44 +225,46 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
     private int getChildCount(int par, int chi) {
         return c.widgets.get(par, chi).getChildCount();
     }
-    
+
     private String getActions(int par, int chi) {
         String actionLine = "";
-        if (c.widgets.get(par, chi).getActions() != null) {
-            String[] actions = c.widgets.get(par, chi).getActions();
+        String[] actions = c.widgets.get(par, chi).getActions();
+        if (actions != null) {
             for (int i = 0; i < actions.length; i++) {
-                if (!actions[i].startsWith(" ") || !actions[i].isEmpty()) {
-                    actionLine = actionLine + actions[i];
-                    if (i < actions.length-1) {
-                        actionLine = actionLine + ", ";
+                if (actions[i] != null) {
+                    if (!actions[i].startsWith(" ") || !actions[i].isEmpty()) {
+                        actionLine = actionLine + actions[i];
+                        if (i < actions.length - 1) {
+                            actionLine = actionLine + ", ";
+                        }
                     }
                 }
             }
         }
         return actionLine;
     }
-    
+
     private String getSlotContents(int par, int chi) {
         String scLine = "";
-        if (c.widgets.get(par, chi).getSlotContents() != null) {
-            int[] contents = c.widgets.get(par, chi).getSlotContents();
+        int[] contents = c.widgets.get(par, chi).getSlotContents();
+        if (contents != null) {
             for (int i = 0; i < contents.length; i++) {
                 scLine = scLine + contents[i];
-                if (i < contents.length-1) {
+                if (i < contents.length - 1) {
                     scLine = scLine + ", ";
                 }
             }
         }
         return scLine;
     }
-    
+
     private String getSlotSizes(int par, int chi) {
         String ssLine = "";
-        if (c.widgets.get(par, chi).getSlotSizes() != null) {
-            int[] sizes = c.widgets.get(par, chi).getSlotSizes();
+        int[] sizes = c.widgets.get(par, chi).getSlotSizes();
+        if (sizes != null) {
             for (int i = 0; i < sizes.length; i++) {
                 ssLine = ssLine + sizes[i];
-                if (i < sizes.length-1) {
+                if (i < sizes.length - 1) {
                     ssLine = ssLine + ", ";
                 }
             }
