@@ -66,7 +66,9 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
         for (int p : c.widgets.getValidParentIds()) {
             parents.add(new DefaultMutableTreeNode("Parent " + p));
             for (Widget w : c.widgets.get(p)) {
-                if (w == null) continue;
+                if (w == null) {
+                    continue;
+                }
                 parents.get(parents.size() - 1).add(new DefaultMutableTreeNode("Child " + w.getId()));
             }
             widgetsNode.add(parents.get(parents.size() - 1));
@@ -100,13 +102,18 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
             for (int p : c.widgets.getValidParentIds()) {
                 parents.add(new DefaultMutableTreeNode("Parent " + p));
                 for (Widget w : c.widgets.get(p)) {
-                    if (w == null) continue;
+                    if (w == null) {
+                        continue;
+                    }
                     parents.get(parents.size() - 1).add(new DefaultMutableTreeNode("Child " + w.getId()));
                 }
                 widgetsNode.add(parents.get(parents.size() - 1));
             }
         } else {
             for (Widget wid : c.widgets.getValidated()) {
+                if (wid == null) {
+                    continue;
+                }
                 if (wid.getText().toLowerCase().contains(query.toLowerCase())
                         || wid.getTooltip().toLowerCase().contains(query.toLowerCase())
                         || wid.getSelectedAction().toLowerCase().contains(query.toLowerCase())
@@ -115,7 +122,9 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
                         vIds.add(wid.getParentId());
                         parents.add(new DefaultMutableTreeNode("Parent " + wid.getParentId()));
                         for (Widget w : c.widgets.get(wid.getParentId())) {
-                            if (w == null) continue;
+                            if (w == null) {
+                                continue;
+                            }
                             if (w.getText().toLowerCase().contains(query.toLowerCase())
                                     || w.getTooltip().toLowerCase().contains(query.toLowerCase())
                                     || w.getSelectedAction().toLowerCase().contains(query.toLowerCase())
@@ -219,13 +228,15 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
 
     private String getActions(int par, int chi) {
         String actionLine = "";
-        if (c.widgets.get(par, chi).getActions() != null) {
-            String[] actions = c.widgets.get(par, chi).getActions();
+        String[] actions = c.widgets.get(par, chi).getActions();
+        if (actions != null) {
             for (int i = 0; i < actions.length; i++) {
-                if (!actions[i].startsWith(" ") || !actions[i].isEmpty()) {
-                    actionLine = actionLine + actions[i];
-                    if (i < actions.length - 1) {
-                        actionLine = actionLine + ", ";
+                if (actions[i] != null) {
+                    if (!actions[i].startsWith(" ") || !actions[i].isEmpty()) {
+                        actionLine = actionLine + actions[i];
+                        if (i < actions.length - 1) {
+                            actionLine = actionLine + ", ";
+                        }
                     }
                 }
             }
@@ -235,8 +246,8 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
 
     private String getSlotContents(int par, int chi) {
         String scLine = "";
-        if (c.widgets.get(par, chi).getSlotContents() != null) {
-            int[] contents = c.widgets.get(par, chi).getSlotContents();
+        int[] contents = c.widgets.get(par, chi).getSlotContents();
+        if (contents != null) {
             for (int i = 0; i < contents.length; i++) {
                 scLine = scLine + contents[i];
                 if (i < contents.length - 1) {
@@ -249,8 +260,8 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
 
     private String getSlotSizes(int par, int chi) {
         String ssLine = "";
-        if (c.widgets.get(par, chi).getSlotSizes() != null) {
-            int[] sizes = c.widgets.get(par, chi).getSlotSizes();
+        int[] sizes = c.widgets.get(par, chi).getSlotSizes();
+        if (sizes != null) {
             for (int i = 0; i < sizes.length; i++) {
                 ssLine = ssLine + sizes[i];
                 if (i < sizes.length - 1) {
