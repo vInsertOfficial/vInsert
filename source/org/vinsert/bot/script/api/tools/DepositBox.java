@@ -9,6 +9,7 @@ import org.vinsert.bot.util.Timer;
 import org.vinsert.bot.util.Utils;
 
 import java.awt.*;
+import org.vinsert.bot.script.api.Item;
 
 /**
  * @author iJava
@@ -53,6 +54,20 @@ public class DepositBox {
         }
         return !isOpen();
     }
+    
+    public void depositAllExcept(Filter<Item> exceptions) {
+		Item[] items = ctx.inventory.getUniqueItems();
+		for (Item item : items) {
+			if (!item.isValid()) continue;
+			if (exceptions != null && exceptions.accept(item))continue;
+			
+			if (ctx.inventory.getCount(true, item.getId()) > 1) {
+				deposit(item.getId(), 0);
+			} else {
+				deposit(item.getId(), 1);
+			}
+		}
+	}
 
     public boolean deposit(int itemId, int amt) {
         int[] ids = ctx.widgets.getValidated(new Filter<Widget>() {
