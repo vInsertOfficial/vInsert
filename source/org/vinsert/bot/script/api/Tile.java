@@ -1,5 +1,7 @@
 package org.vinsert.bot.script.api;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 
@@ -76,6 +78,19 @@ public class Tile {
 		p.addPoint(p4.x, p4.y);
 		
 		return p;
+	}
+	
+	/**
+	 * Draws the tile on screen
+	 * <tt>Method for use in render method</tt>
+	 * @param g The Graphics
+	 * @param ctx The current script context
+	 */
+	public void draw(Graphics2D g, ScriptContext ctx){
+		g.setColor(new Color(0, 255, 0, 150));
+		g.draw(getPolygon(ctx));
+		g.setColor(new Color(0, 255, 0, 50));
+		g.fill(getPolygon(ctx));
 	}
 	
 	/**
