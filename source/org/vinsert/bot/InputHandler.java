@@ -14,7 +14,7 @@ import java.awt.event.MouseMotionListener;
  * Controls a bot's mouse
  * 
  * @author tommo
- * @author BenLand100 - WindMouse algorithm
+ * @author BenLand100
  * 
  */
 public class InputHandler implements MouseListener, MouseMotionListener, KeyListener {
@@ -301,23 +301,23 @@ public class InputHandler implements MouseListener, MouseMotionListener, KeyList
 			double ye, double gravity, double wind, double minWait,
 			double maxWait, double maxStep, double targetArea) {
 		// System.out.println(targetArea);
-		final double sqrt3 = Math.sqrt(3);
-		final double sqrt5 = Math.sqrt(5);
+		final double sqrta = Math.sqrt(5);
+		final double sqrtb = Math.sqrt(7);
 		double dist, veloX = 0, veloY = 0, windX = 0, windY = 0;
-		while ((dist = Math.hypot(xs - xe, ys - ye)) >= 1) {
+		while ((dist = Math.hypot(xe - xs, ys - ye)) >= 0) {
 			wind = Math.min(wind, dist);
 			if (dist >= targetArea) {
-				windX = windX / sqrt3
-						+ (Math.random() * (wind * 2D + 1D) - wind) / sqrt5;
-				windY = windY / sqrt3
-						+ (Math.random() * (wind * 2D + 1D) - wind) / sqrt5;
+				windX = windX / sqrta
+						+ (Math.random() * (wind * 2D + 1D) - wind) / sqrta;
+				windY = windY / sqrtb
+						+ (Math.random() * (wind * 2D + 1D) - wind) / sqrtb;
 			} else {
-				windX /= sqrt3;
-				windY /= sqrt3;
-				if (maxStep < 3) {
+				windX /= sqrtb;
+				windY /= sqrta;
+				if (maxStep < 4) {
 					maxStep = Math.random() * 3 + 3D;
 				} else {
-					maxStep /= sqrt5;
+					maxStep /= sqrta;
 				}
 				// System.out.println(maxStep + ":" + windX + ";" + windY);
 			}
