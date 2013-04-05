@@ -249,19 +249,6 @@ public class InputHandler implements MouseListener, MouseMotionListener, KeyList
 		this.humanInput = humanInput;
 	}
 
-	/**
-	 * Moves the mouse from the current position to the specified position.
-	 * Approximates human movement in a way where smoothness and accuracy are
-	 * relative to speed, as it should be.
-	 * 
-	 * @param x
-	 *            The x destination
-	 * @param y
-	 *            The y destination
-	 * @param speedFactor 
-	 * 			   The speed factor
-	 * @result The actual end point
-	 */
 	public synchronized Point windMouse(int x, int y, final double speedFactor) {
 		double speed = (org.vinsert.bot.util.Utils.randomD() * 15D + 15D) / 10D;
 		speed *= speedFactor;
