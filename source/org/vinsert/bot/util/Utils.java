@@ -73,39 +73,7 @@ public class Utils {
 	}
 
 	private static final java.util.Random getMachineSeededRandom() {
-		long seed = 0L;
-		try {
-			byte[] mac = null;
-			Enumeration<NetworkInterface> network = NetworkInterface.getNetworkInterfaces();
-			while(network.hasMoreElements()) {
-				NetworkInterface n = network.nextElement();
-				byte[] addr = n.getHardwareAddress();
-				if(addr != null) { mac = addr; break; }
-			}
-			
-			long current = System.currentTimeMillis();
-			byte mask_1 = (byte) (current);
-			byte mask_2 = (byte) (current << 8);
-			
-			if (mac.length < 5) {
-				System.err.println("Unable to grab MAC address.");
-				return new java.util.Random();
-			}
-			
-			seed = (mask_1 << 56) + 
-					(mac[1] << 48) +
-					(mac[5] << 40) +
-					(mac[3] << 32) +
-					(mac[4] << 24) +
-					(mac[2] << 16) +
-					(mac[0] << 8) +
-					mask_2;
-								
-		} catch (SocketException e) {
-			System.err.println("Couldn't generate machine seeded random!");
-			return new java.util.Random();
-		}
-		return new java.util.Random(seed);		  
+		return new java.util.Random();
 	}
 
 
