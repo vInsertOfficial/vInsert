@@ -18,6 +18,7 @@ public class Application {
 	public static BotWindow window;
 
 	public static void main(String[] args) {
+		Configuration.mkdirs();
 		if(args.length == 1 && args[0].equals("-dev"))
 			Configuration.OFFLINE = true;
 
