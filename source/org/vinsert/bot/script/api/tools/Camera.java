@@ -20,12 +20,42 @@ import org.vinsert.bot.util.Utils;
  */
 public class Camera {
 
+	private final Object lock = new Object();
 	private ScriptContext ctx;
 	private InputHandler handler;
 
 	public Camera(ScriptContext ctx) {
 		this.ctx = ctx;
 		this.handler = ctx.getBot().getInputHandler();
+	}
+	
+	/**
+	 * Moves the camera randomly for a given length of time
+	 */ 
+	public void moveRandomly(final int timeout) {
+		moveRandomly(timeout, timeout / 2);
+	}
+	
+	/**
+	 * Moves the camera randomly for a given length of time and a minimum press-release delay
+	 */
+	public void moveRandomly(final int timeout, final int keyHoldLength) {
+		final Timer timer = new Timer(timeout);
+		synchronized (lock) {
+			while (ctx.game.isLoggedIn() && timer.isRunning()) {
+				final int vertical = Random.nextInt(0, 20) < 15 ? KeyEvent.VK_UP : KeyEvent.VK_DOWN;
+				final int horizontal = Random.nextInt(0, 20) < 5 ? KeyEvent.VK_LEFT : KeyEvent.VK_RIGHT;
+				if (Random.nextInt(0, 10) < 8) {
+					ctx.keyboard.press(vertical);
+				}
+				if (Random.nextInt(0, 10) < 8) {
+					ctx.keyboard.press(horizontal);
+				}
+				Task.sleep(0, Math.min(keyHoldLength, (int) timer.getRemaining()));
+				ctx.keyboard.release(vertical);
+				ctx.keyboard.release(horizontal);
+			}
+		}
 	}
 
 	/**
