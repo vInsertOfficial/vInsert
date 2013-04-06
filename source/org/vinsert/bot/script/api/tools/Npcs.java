@@ -15,7 +15,7 @@ import org.vinsert.insertion.INpc;
  * Npc methods
  * @author tommo
  * @author `Discardedx2
- *
+ * @credits P0wnd / Erke
  */
 public class Npcs {
 	
@@ -122,4 +122,15 @@ public class Npcs {
 		return closest;
 	}
 
+	 /***
+	 * @return the npc id from given String
+	 */
+	public int getId(String name) {
+		List<Npc> m = npcs.getAll();
+		for (int i = 0; i < m.size(); i++)
+			if (m.get(i) != null && m.get(i).getName().equals(name))
+				return m.get(i).getId();
+		return -1;
+
+	}
 }
