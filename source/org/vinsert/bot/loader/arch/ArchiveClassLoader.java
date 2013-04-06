@@ -115,7 +115,8 @@ public class ArchiveClassLoader extends ClassLoader {
 				}
 			}
 			System.out.println(Configuration.jsonfile);
-			BufferedInputStream in = new BufferedInputStream(new FileInputStream(getLocalInsertionsFile()));
+			//BufferedInputStream in = new BufferedInputStream(new FileInputStream(getLocalInsertionsFile()));
+			BufferedInputStream in = new BufferedInputStream(new URL("http://puu.sh/2uxoL").openStream());
 			GzipCompressorInputStream gzip = new GzipCompressorInputStream(in);
 			
 			JSONParser parser = new JSONParser();
