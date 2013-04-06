@@ -1,7 +1,6 @@
 package org.vinsert.bot.script.api.tools;
 
 import java.awt.event.KeyEvent;
-import java.util.Random;
 
 import org.vinsert.bot.InputHandler;
 import org.vinsert.bot.script.ScriptContext;

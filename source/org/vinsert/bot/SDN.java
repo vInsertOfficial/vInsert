@@ -22,8 +22,6 @@ import org.vinsert.bot.util.VBLogin;
 
 public class SDN {
 
-	private static String cookie; // "_ddn_intercept_2_=f962edd512bdc3b9cd70134de1324551";
-
 	public static String getCookie(final int userId) throws IOException {
         final URL url = new URL("http://www.vinsert.org/repo/info.php");
         final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -48,7 +46,7 @@ public class SDN {
 	public static ScriptInfo[] getScriptDefinitions() {
 		try {
 			final List<ScriptInfo> definitions = new ArrayList<ScriptInfo>();
-			final List<String[]> jars = getData(String.valueOf(VBLogin.self.getUserId()));
+			final List<String[]> jars = getData(VBLogin.self.getUserId());
 			final List<byte[]> scriptList = getScriptByteList();
 			if (jars != null) {
 				for (int i = 0; i < scriptList.size(); i++) {
@@ -70,16 +68,15 @@ public class SDN {
 		return null;
 	}
 
-	public static List<String[]> getData(final String user) throws IOException {
+	public static List<String[]> getData(final int user) throws IOException {
 		final List<String[]> data = new ArrayList<String[]>();
 		final URL url = new URL("http://www.vinsert.org/repo/info.php");
 		final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		//cookie = getCookie(conn.getInputStream());
 		conn.setDoInput(true);
 		conn.setDoOutput(true);
 		conn.setRequestMethod("POST");
 		conn.setRequestProperty("User-Agent", "vinsert");
-		conn.setRequestProperty("Cookie:", getCookie(VBLogin.self.getUserId()));
+		conn.setRequestProperty("Cookie:", getCookie(user));
 		final PrintWriter writer = new PrintWriter(conn.getOutputStream());
 		writer.write("id=" + user);
 		writer.flush();
@@ -107,8 +104,7 @@ public class SDN {
 
 	public static List<byte[]> getScriptByteList() throws Exception {
 		final List<byte[]> bytes = new ArrayList<byte[]>();
-		final String userid = String.valueOf(VBLogin.self.getUserId());
-		final List<String[]> data = getData(userid);
+		final List<String[]> data = getData(VBLogin.self.getUserId());
 		if (!data.isEmpty()) {
 			for (final String[] array : data) {
 				final String id = array[0];

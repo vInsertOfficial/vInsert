@@ -12,8 +12,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import org.vinsert.bot.script.ScriptContext;
 import org.vinsert.bot.script.api.Widget;
-import org.vinsert.bot.script.api.generic.Filters;
-import org.vinsert.bot.util.Filter;
 import org.vinsert.component.ProjectionListener;
 
 /**
@@ -22,7 +20,11 @@ import org.vinsert.component.ProjectionListener;
  */
 public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
 
-    private JButton filter;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2287588384260930650L;
+	private JButton filter;
     private JScrollPane jScrollPane1;
     private JScrollPane jScrollPane2;
     private JTextField searchQuery;
@@ -38,7 +40,6 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
         initComponents();
     }
 
-    @SuppressWarnings("unchecked")
     private void initComponents() {
 
         searchQuery = new JTextField();

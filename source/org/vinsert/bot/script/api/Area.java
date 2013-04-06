@@ -5,7 +5,6 @@ import java.awt.Rectangle;
 import java.util.Random;
 
 import org.vinsert.bot.script.ScriptContext;
-import org.vinsert.bot.script.api.tools.Players;
 
 /**
  * A rectangular area defined by 2 points, the bottom left and bottom right
