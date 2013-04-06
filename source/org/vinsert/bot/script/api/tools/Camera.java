@@ -43,20 +43,19 @@ public class Camera {
 	 * Moves the camera randomly for a given length of time and a minimum press-release delay
 	 * @throws InterruptedException 
 	 */
-	public void moveRandomly(final int timeout, final int keyHoldLength) throws InterruptedException {
+	public void moveRandomly(final int timeout, final int keyHoldLength) {
 		final Timer timer = new Timer(timeout);
-		final Random rng = new Random();
 		synchronized (lock) {
 			while (ctx.game.isLoggedIn() && timer.isRunning()) {
-				final int vertical = rng.nextInt(20) < 15 ? KeyEvent.VK_UP : KeyEvent.VK_DOWN;
-				final int horizontal = rng.nextInt(20) < 5 ? KeyEvent.VK_LEFT : KeyEvent.VK_RIGHT;
-				if (rng.nextInt(10) < 8) {
+				final int vertical = Utils.random(0,20) < 15 ? KeyEvent.VK_UP : KeyEvent.VK_DOWN;
+				final int horizontal = Utils.random(0,20) < 5 ? KeyEvent.VK_LEFT : KeyEvent.VK_RIGHT;
+				if (Utils.random(0, 10) < 8) {
 					ctx.keyboard.press(vertical);
 				}
-				if (rng.nextInt(10) < 8) {
+				if (Utils.random(0, 10) < 8) {
 					ctx.keyboard.press(horizontal);
 				}
-				Thread.sleep(0, Math.min(keyHoldLength, (int) timer.getRemaining()));
+				Utils.sleep(0, Math.min(keyHoldLength, (int) timer.getRemaining()));
 				ctx.keyboard.release(vertical);
 				ctx.keyboard.release(horizontal);
 			}
