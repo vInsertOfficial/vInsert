@@ -119,7 +119,7 @@ public class Skills {
 	 *         99. Returns -1 if invalid skill or an error occured.
 	 */
 	public int getExperienceToNextLevel(int skill) {
-		int level = getLevel(skill);
+		int level = getBaseLevel(skill);
 		if (level == -1) {
 			return -1;
 		}
