@@ -48,6 +48,8 @@ public class Application {
 						}
 			       	});
 					
+			       	Configuration.mkdirs();
+			       	
 					if(Configuration.OFFLINE) {
 						window = new BotWindow();
 						window.init(false);
