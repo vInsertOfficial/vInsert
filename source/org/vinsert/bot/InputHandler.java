@@ -291,7 +291,7 @@ public class InputHandler implements MouseListener, MouseMotionListener, KeyList
 		final double sqrta = Math.sqrt(5);
 		final double sqrtb = Math.sqrt(7);
 		double dist, veloX = 0, veloY = 0, windX = 0, windY = 0;
-		while ((dist = Math.hypot(xe - xs, ys - ye)) >= 0) {
+		while ((dist = Math.hypot(xe - xs, ys - ye)) >= 1) {
 			wind = Math.min(wind, dist);
 			if (dist >= targetArea) {
 				windX = windX / sqrta
