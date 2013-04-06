@@ -29,6 +29,35 @@ public class Camera {
 	}
 
 	/**
+	 * Moves the camera for a specified length of time
+	 */
+	public void moveRandomly(final int timeout) {
+		moveRandomly(timeout, timeout / 2);
+	}
+
+	/**
+	 * Moves the camera for a specified length of time and holds each rotation for a minimum time.
+	 */
+	public void moveRandomly(final int timeout, final int keyHoldLength) {
+		final Timer timer = new Timer(timeout);
+		synchronized (Keyboard.getLock()) {
+			while (ctx.game.isLoggedIn() && timer.isRunning()) {
+				final int vertical = Random.nextInt(0, 20) < 15 ? KeyEvent.VK_UP : KeyEvent.VK_DOWN;
+				final int horizontal = Random.nextInt(0, 20) < 5 ? KeyEvent.VK_LEFT : KeyEvent.VK_RIGHT;
+				if (Random.nextInt(0, 10) < 8) {
+					Keyboard.pressKey((char) vertical);
+				}
+				if (Random.nextInt(0, 10) < 8) {
+					Keyboard.pressKey((char) horizontal);
+				}
+				Task.sleep(0, Math.min(keyHoldLength, (int) timer.getRemaining()));
+				Keyboard.releaseKey((char) vertical);
+				Keyboard.releaseKey((char) horizontal);
+			}
+		}
+	}
+
+	/**
 	 * Turns the camera to face an actor
 	 * 
 	 * @param actor
