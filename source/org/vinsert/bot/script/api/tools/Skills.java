@@ -179,6 +179,9 @@ public class Skills {
 	* @author Blink
 	*/
 	public String getSkillName(int skill) {
+		if (skill < 0 || skill > SKILLNAMES.length - 1) {
+			return null;
+		}
 		return SKILLNAMES[skill];
 	}
 }
