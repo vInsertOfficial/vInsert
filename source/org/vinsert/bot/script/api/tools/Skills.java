@@ -33,7 +33,6 @@ public class Skills {
 	public static final int RUNECRAFTING = 20;
 	public static final int HUNTER = 21;
 	public static final int CONSTRUCTION = 22;
-	public static final int SUMMONING = 23;
 	
 	public static final int[] EXPERIENCE_TABLE = { 0, 0, 83, 174, 276, 388, 512, 650,
 			801, 969, 1154, 1358, 1584, 1833, 2107, 2411, 2746, 3115, 3523,
@@ -47,6 +46,12 @@ public class Skills {
 			1798808, 1986068, 2192818, 2421087, 2673114, 2951373, 3258594,
 			3597792, 3972294, 4385776, 4842295, 5346332, 5902831, 6517253,
 			7195629, 7944614, 8771558, 9684577, 10692629, 11805606, 13034431 };
+
+	public static final String[] SKILLNAMES = {"Attack", "Defence", "Strength", "Hitpoints",
+			"Range", "Prayer", "Magic", "Cooking", "Woodcutting", "Fletching", "Fishing",
+			"Firemaking", "Crafting", "Smithing", "Mining", "Herblore", "Agility",
+			"Thieving", "Slayer", "Farming", "Runecrafting", "Hunter", "Construction"};
+
 
 	private ScriptContext ctx;
 
@@ -147,22 +152,36 @@ public class Skills {
 	}
 
 	/**
-	 * Gets the percentage until next level
-	 * 
-	 * @param skill
-	 *            skill is constant and starts with SKILL_
-	 * @return integer: 0-100% or -1 if wrong argument or an error occured.
-	 * @Fixed by Fatality
-	 */
+	* Gets the percentage until next level
+	* 
+	* @param skill
+	*            skill is constant and starts with SKILL_
+	* @return integer: 0-100% or -1 if wrong argument or an error occured.
+	* @Fixed by Fatality, Blink
+	*/
 	public int getPercentageToNextLevel(int skill) {
-		int currLvl = getLevel(skill);
+		int currLvl = getBaseLevel(skill);
 		if (currLvl == 99)
 			return 0;
 		int expTot = EXPERIENCE_TABLE[currLvl + 1] - EXPERIENCE_TABLE[currLvl];
 		if (expTot == 0)
 			return 0;
 		int completedXP = getExperience(skill) - EXPERIENCE_TABLE[currLvl];
-		return (100 * completedXP / expTot);
+		return (100 - (100 * completedXP / expTot));
 	}
-
+	
+	/**
+	* Gets the skill name
+	* 
+	* @param skill
+	*            skill is constant and starts with SKILL_
+	* @return String: the skill name.
+	* @author Blink
+	*/
+	public String getSkillName(int skill) {
+		if (skill < 0 || skill > SKILLNAMES.length - 1) {
+			return null;
+		}
+		return SKILLNAMES[skill];
+	}
 }
