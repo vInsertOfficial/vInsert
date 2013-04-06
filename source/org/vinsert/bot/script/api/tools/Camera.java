@@ -1,6 +1,7 @@
 package org.vinsert.bot.script.api.tools;
 
 import java.awt.event.KeyEvent;
+import java.util.Random;
 
 import org.vinsert.bot.InputHandler;
 import org.vinsert.bot.script.ScriptContext;
@@ -9,6 +10,7 @@ import org.vinsert.bot.script.api.GameObject;
 import org.vinsert.bot.script.api.GroundItem;
 import org.vinsert.bot.script.api.Tile;
 import org.vinsert.bot.util.Perspective;
+import org.vinsert.bot.util.Timer;
 import org.vinsert.bot.util.Utils;
 
 
@@ -31,27 +33,29 @@ public class Camera {
 	
 	/**
 	 * Moves the camera randomly for a given length of time
+	 * @throws InterruptedException 
 	 */ 
-	public void moveRandomly(final int timeout) {
+	public void moveRandomly(final int timeout) throws InterruptedException {
 		moveRandomly(timeout, timeout / 2);
 	}
 	
 	/**
 	 * Moves the camera randomly for a given length of time and a minimum press-release delay
+	 * @throws InterruptedException 
 	 */
 	public void moveRandomly(final int timeout, final int keyHoldLength) {
 		final Timer timer = new Timer(timeout);
 		synchronized (lock) {
 			while (ctx.game.isLoggedIn() && timer.isRunning()) {
-				final int vertical = Random.nextInt(0, 20) < 15 ? KeyEvent.VK_UP : KeyEvent.VK_DOWN;
-				final int horizontal = Random.nextInt(0, 20) < 5 ? KeyEvent.VK_LEFT : KeyEvent.VK_RIGHT;
-				if (Random.nextInt(0, 10) < 8) {
+				final int vertical = Utils.random(0,20) < 15 ? KeyEvent.VK_UP : KeyEvent.VK_DOWN;
+				final int horizontal = Utils.random(0,20) < 5 ? KeyEvent.VK_LEFT : KeyEvent.VK_RIGHT;
+				if (Utils.random(0, 10) < 8) {
 					ctx.keyboard.press(vertical);
 				}
-				if (Random.nextInt(0, 10) < 8) {
+				if (Utils.random(0, 10) < 8) {
 					ctx.keyboard.press(horizontal);
 				}
-				Task.sleep(0, Math.min(keyHoldLength, (int) timer.getRemaining()));
+				Utils.sleep(0, Math.min(keyHoldLength, (int) timer.getRemaining()));
 				ctx.keyboard.release(vertical);
 				ctx.keyboard.release(horizontal);
 			}
