@@ -37,6 +37,7 @@ public class ScriptClassLoader {
                 }
             }
         }
+        jar.close();
     }
 
     private static void putClasses(final List<File> classes, final File directory) {
@@ -87,6 +88,7 @@ public class ScriptClassLoader {
                     scripts.add(new ScriptInfo(manifest.name(), manifest.description(), clazz, manifest.authors(), manifest.version(), manifest.type()));
                 }
             }
+            loader.close();
         }
     }
 }
