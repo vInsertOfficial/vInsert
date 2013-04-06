@@ -2,9 +2,6 @@ package org.vinsert.bot.util;
 
 import java.util.Random;
 import java.awt.geom.Point2D;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Enumeration;
 
 /**
  * Generic utilities
