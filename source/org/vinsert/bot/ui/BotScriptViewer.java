@@ -218,7 +218,7 @@ public class BotScriptViewer extends JDialog {
 			}
 			
 			final List<ScriptInfo> definitions = new ArrayList<ScriptInfo>();
-			final List<String[]> jars = SDN.getData(VBLogin.self.getUserId());
+			final List<String[]> jars = SDN.getData(String.valueOf(VBLogin.self.getUserId()));
 			final List<byte[]> scriptList = SDN.getScriptByteList();
 			if (jars != null) {
 				for (int i = 0; i < scriptList.size(); i++) {

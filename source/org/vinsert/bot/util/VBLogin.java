@@ -7,15 +7,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -31,7 +29,7 @@ import org.vinsert.Configuration;
 import org.vinsert.bot.IOHelper;
 
 /**
- * @author iJava, Velox
+ * @author iJava, Velox, Dyn
  */
 public class VBLogin {
 	
@@ -100,12 +98,45 @@ public class VBLogin {
         return key;
     }
 
+    public String getCookie(URL url) {
+        final Pattern COOKIE_PATTERN = Pattern.compile("_ddn_intercept_2_=([^;]+)");
+        try {
+            URLConnection conn = url.openConnection();
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(
+                            conn.getInputStream()));
+            String inputLine;
+            String tmp = "";
+            while ((inputLine = in.readLine()) != null)
+                tmp += inputLine;
+            in.close();
+            Matcher archiveMatcher = COOKIE_PATTERN.matcher(tmp);
+            if (archiveMatcher.find()) {
+                return archiveMatcher.group(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public boolean login() {
         try {
+            String page = "";
             final URL url = new URL("http://www.vinsert.org/repo/sec/login.php?username=" + username + "&password=" + password);
-            url.openConnection();
-            final String page = IOHelper.downloadAsString(url);
-            if (page != null && page.replaceAll(" ", "").length() > 0 && !page.equals("0")) {
+            String cookie = getCookie(new URL(url.toString()));
+            URLConnection conn = url.openConnection();
+            conn.setRequestProperty("Cookie:", cookie);
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(
+                            conn.getInputStream()));
+            String inputLine;
+            while ((inputLine = in.readLine()) != null)
+                page += inputLine;
+            in.close();
+
+            if (page != null && !page.equals("0")) {
                 logged = true;
                 final String[] data = page.split(":");
                 
