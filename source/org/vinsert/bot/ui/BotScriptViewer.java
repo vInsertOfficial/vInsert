@@ -57,6 +57,9 @@ public class BotScriptViewer extends JDialog {
 	public BotScriptViewer() {
 		super(Application.window.getFrame());
 		
+		setModalityType(ModalityType.APPLICATION_MODAL);
+		setModal(true);
+		
 		model = new DefaultTableModel(new Object[] { "Script", "Version", "Description", "Authors" }, 0);
 		table = new JTable();
 		table.setModel(model);
