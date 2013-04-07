@@ -27,7 +27,12 @@ public class ScriptClassLoader {
             final JarEntry e = entries.nextElement();
             final String name = e.getName().replace('/', '.').replace('\\', '.');
             if (name.endsWith(".class")) {
-                final ClassLoader loader = URLClassLoader.newInstance(new URL[]{file.toURI().toURL()});
+                final ClassLoader loader = new URLClassLoader(new URL[]{file.toURI().toURL()}) {
+                    public Class loadClass(String name, final boolean resolve) throws ClassNotFoundException {
+                        name = name.replace('/', '.').replace('\\', '.');
+                        return super.loadClass(name, resolve);
+                    }
+                };
                 final Class<?> clazz = loader.loadClass(name.substring(0, name.length() - 6));
                 if (clazz != null) {
                     if (clazz.isAnnotationPresent(ScriptManifest.class)) {

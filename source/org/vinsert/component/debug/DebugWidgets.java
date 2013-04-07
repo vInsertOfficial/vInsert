@@ -15,10 +15,10 @@ public class DebugWidgets extends Debugger {
 	@Override
 	public void draw(Graphics2D g) {
 		if (group == -1 && !inputRequested) {
-			group = Integer.parseInt(JOptionPane.showInputDialog("Enter group id: "));
-			inputRequested = true;
-		}
-		
+            inputRequested = true;
+            group = Integer.parseInt(JOptionPane.showInputDialog("Enter group id: "));
+        }
+
 		for (Widget widget : getContext().widgets.get(group)) {
 			if (widget == null) continue;
 			

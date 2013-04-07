@@ -12,7 +12,7 @@ public class DebugMenu extends IncrementalDebugger {
 		graphics.setColor(Color.WHITE);
 		StringBuilder text = new StringBuilder();
 		text.append("Menu: x=").append(context.getClient().getMenuX()).append(", y=").append(context.getClient().getMenuY())
-		.append(", choices=").append(Arrays.toString(context.menu.getChoices().toArray(new String[0])));
+		.append(", choices=").append(Arrays.toString(context.menu.getChoices().toArray(new String[context.menu.getChoices().size()])));
 		graphics.drawString(text.toString(), point.x, point.y);
 	}
 

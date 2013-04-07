@@ -22,6 +22,14 @@ public class Area {
 		area = toPolygon(tiles);
 	}
 
+    /*
+	 * Creates an area based on multiple tiles allowing polygonal areas
+	 */
+
+    public Area(Tile sw, Tile ne) {
+        area = toPolygon(sw, ne);
+    }
+
 	/**
 	 * Converts a tile array to a java.awt.Polygon;
 	 */

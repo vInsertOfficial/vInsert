@@ -75,8 +75,9 @@ public class GameObject implements Interactable, Hullable {
 	 * @return The object's model
 	 */
 	public Model getModel() {
-		switch(type) {
+		switch(type) { //TODO remove renderable null checks
 		case INTERACTABLE:
+            if (object.getRenderable() == null) return null;
 			if (object.getRenderable() instanceof IOffScreenModel) {
 				ModelCallback.callback(object.getRenderable(), (IOffScreenModel) object.getRenderable());
 			} else if (object.getRenderable() instanceof IModel) {
@@ -84,16 +85,19 @@ public class GameObject implements Interactable, Hullable {
 			}
 			return new Model(PersistentModelCache.table.get(object.getRenderable()));
 		case FLOOR_DECORATION:
+            if (floorDecoration.getRenderable() == null) return null;
 			if (floorDecoration.getRenderable() instanceof IModel) {
 				ModelCallback.callback(floorDecoration.getRenderable(), (IModel) floorDecoration.getRenderable());
 			}
 			return new Model(PersistentModelCache.table.get(floorDecoration.getRenderable()));
 		case WALL_DECORATION:
+            if (wallDecoration.getRenderable() == null) return null;
 			if (wallDecoration.getRenderable() instanceof IModel) {
 				ModelCallback.callback(wallDecoration.getRenderable(), (IModel) wallDecoration.getRenderable());
 			}
 			return new Model(PersistentModelCache.table.get(wallDecoration.getRenderable()));
 		case BOUNDARY:
+            if (boundary.getRenderable() == null) return null;
 			if (boundary.getRenderable() instanceof IModel) {
 				ModelCallback.callback(boundary.getRenderable(), (IModel) boundary.getRenderable());
 			}
