@@ -42,7 +42,6 @@ public class ScriptClassLoader {
                 }
             }
         }
-        jar.close();
     }
 
     private static void putClasses(final List<File> classes, final File directory) {
