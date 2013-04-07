@@ -207,7 +207,9 @@ public abstract class Script implements ProjectionListener, Runnable {
 		 * Start the loop
 		 */
 		while (true) {
-			context.randomEvents.check();
+            if (context.randomEvents != null) {
+			    context.randomEvents.check();
+            }
 			if (isExitRequested()) {
 				context.getBot().popScript();
 			}
