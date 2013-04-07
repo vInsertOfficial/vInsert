@@ -32,15 +32,13 @@ public class Camera {
 	
 	/**
 	 * Moves the camera randomly for a given length of time
-	 * @throws InterruptedException 
 	 */ 
-	public void moveRandomly(final int timeout) throws InterruptedException {
+	public void moveRandomly(final int timeout) {
 		moveRandomly(timeout, timeout / 2);
 	}
 	
 	/**
 	 * Moves the camera randomly for a given length of time and a minimum press-release delay
-	 * @throws InterruptedException 
 	 */
 	public void moveRandomly(final int timeout, final int keyHoldLength) {
 		final Timer timer = new Timer(timeout);
