@@ -20,9 +20,8 @@ public class SDN {
     public static ScriptInfo[] getScriptDefinitions() {
         try {
             final List<ScriptInfo> definitions = new ArrayList<ScriptInfo>();
-            final List<String[]> jars = getData(VBLogin.self.getUserId());
+            final List<String[]> jars = getData();
             final List<byte[]> scriptList = getScriptByteList();
-            //System.out.println(scriptList.size());
             if (jars != null) {
                 for (int i = 0; i < scriptList.size(); i++) {
                     try {
@@ -42,17 +41,13 @@ public class SDN {
         }
         return null;
     }
-
-    public static String getCookie(final int userId) throws IOException {
-        final URL url = new URL("http://www.vinsert.org/repo/info.php");
+    
+    private static String getCookie(final URL url) throws IOException {
         final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setDoInput(true);
         conn.setDoOutput(true);
         conn.setRequestMethod("POST");
         conn.setRequestProperty("User-Agent", "vinsert");
-        final PrintWriter writer = new PrintWriter(conn.getOutputStream());
-        writer.write("id=" + userId);
-        writer.flush();
         conn.connect();
 
         final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -63,8 +58,8 @@ public class SDN {
         }
         return null;
     }
-
-    public static List<String[]> getData(final int userId) throws IOException {
+    
+    public static List<String[]> getData() throws IOException {
         final List<String[]> data = new ArrayList<String[]>();
         final URL url = new URL("http://www.vinsert.org/repo/info.php");
         final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -72,9 +67,9 @@ public class SDN {
         conn.setDoOutput(true);
         conn.setRequestMethod("POST");
         conn.setRequestProperty("User-Agent", "vinsert");
-        conn.setRequestProperty("Cookie", getCookie(userId));
+        conn.setRequestProperty("Cookie", getCookie(url));
         final PrintWriter writer = new PrintWriter(conn.getOutputStream());
-        writer.write("id=" + userId);
+        writer.write("id=" + VBLogin.self.getUserId());
         writer.flush();
         conn.connect();
         if (conn.getResponseCode() == HttpsURLConnection.HTTP_OK) {
@@ -99,8 +94,7 @@ public class SDN {
 
     public static List<byte[]> getScriptByteList() throws Exception {
         final List<byte[]> bytes = new ArrayList<byte[]>();
-        final int userid = VBLogin.self.getUserId();
-        final List<String[]> data = getData(userid);
+        final List<String[]> data = getData();
         if (!data.isEmpty()) {
             for (final String[] array : data) {
                 final String id = array[0];
@@ -110,6 +104,7 @@ public class SDN {
                 conn.setDoOutput(true);
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("User-Agent", "vinsert");
+                conn.setRequestProperty("Cookie", getCookie(url));
                 final PrintWriter writer = new PrintWriter(conn.getOutputStream());
                 writer.write("pass=13489123417238947128934&id=" + id);
                 writer.flush();
