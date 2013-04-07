@@ -96,7 +96,9 @@ public class ArchiveClassLoader extends ClassLoader {
 		con.setRequestMethod("GET");
 		con.setDoInput(true);
 		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.56 Safari/535.11");
-
+		
+		new File(Configuration.jsonfile).delete();
+		
 		ReadableByteChannel rbc = Channels.newChannel(con.getInputStream());
 	    FileOutputStream fos = new FileOutputStream(Configuration.STORAGE_DIR + File.separator + res);
 	    fos.getChannel().transferFrom(rbc, 0, 1 << 24);
