@@ -156,6 +156,7 @@ public class Bot {
 			log(Bot.class, Level.FINE, "Starting script: " + script.getManifest().name());
 			
 			Thread thread = new Thread(script);
+            thread.setName("Bot-" + bot.getBotIndex() + ": Index-" + scriptStack.size() + 1);
 			script.setThread(thread);
 			scriptStack.push(script);
 			getCanvas().getListeners().add(script);
@@ -173,6 +174,7 @@ public class Bot {
 			if (!scriptStack.isEmpty() && scriptStack.peek() != null) {
 				Script script = scriptStack.pop();
 				log(Bot.class, Level.FINE, "Stopping script " + script.getManifest().name() + "...");
+                new Exception().printStackTrace();
                 try {
                     script.close();
                 } catch (final Throwable t) {

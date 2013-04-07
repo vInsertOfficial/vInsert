@@ -20,6 +20,7 @@ import org.vinsert.bot.script.api.tools.Players;
 import org.vinsert.bot.script.api.tools.Settings;
 import org.vinsert.bot.script.api.tools.Skills;
 import org.vinsert.bot.script.api.tools.Widgets;
+import org.vinsert.bot.script.randevent.RandomEvent;
 import org.vinsert.bot.script.randevent.RandomEventPool;
 import org.vinsert.bot.util.Utils;
 import org.vinsert.bot.util.VBLogin;
@@ -184,7 +185,9 @@ public abstract class Script implements ProjectionListener, Runnable {
 		/*
 		 * Load the random event pool
 		 */
-		context.randomEvents = new RandomEventPool(context);
+        if (!(this instanceof RandomEvent)) {
+		    context.randomEvents = new RandomEventPool(context);
+        }
 		
 		/*
 		 * Check if the script wants to execute
@@ -237,14 +240,9 @@ public abstract class Script implements ProjectionListener, Runnable {
 	 * Calls close() and destroys the script thread
 	 */
 	public void destroy() {
-		try {
-			close();
-			if (thread != null) {
-				thread.stop();
-			}
-		} catch (ThreadDeath death) {
-			//ignore
-		}
+        if (thread != null) {
+            thread.interrupt();
+        }
 	}
 
 	public synchronized Thread getThread() {

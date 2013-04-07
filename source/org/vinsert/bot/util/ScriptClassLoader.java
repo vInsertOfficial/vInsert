@@ -27,12 +27,7 @@ public class ScriptClassLoader {
             final JarEntry e = entries.nextElement();
             final String name = e.getName().replace('/', '.').replace('\\', '.');
             if (name.endsWith(".class")) {
-                final ClassLoader loader = new URLClassLoader(new URL[]{file.toURI().toURL()}) {
-                    public Class loadClass(String name, final boolean resolve) throws ClassNotFoundException {
-                        name = name.replace('/', '.').replace('\\', '.');
-                        return super.loadClass(name, resolve);
-                    }
-                };
+                final ClassLoader loader = URLClassLoader.newInstance(new URL[]{file.toURI().toURL()});
                 final Class<?> clazz = loader.loadClass(name.substring(0, name.length() - 6));
                 if (clazz != null) {
                     if (clazz.isAnnotationPresent(ScriptManifest.class)) {
@@ -78,12 +73,7 @@ public class ScriptClassLoader {
             } else {
                 fileDir = directory.toURI().toURL().toString();
             }
-            final URLClassLoader loader = new URLClassLoader(new URL[]{new URL(fileDir)}) {
-                public Class loadClass(String name, final boolean resolve) throws ClassNotFoundException {
-                    name = name.replace('/', '.').replace('\\', '.');
-                    return super.loadClass(name, resolve);
-                }
-            };
+            final URLClassLoader loader = new URLClassLoader(new URL[]{new URL(fileDir)});
             Class<?> clazz;
             try {
                 clazz = loader.loadClass(className);
@@ -97,7 +87,6 @@ public class ScriptClassLoader {
                     scripts.add(new ScriptInfo(manifest.name(), manifest.description(), clazz, manifest.authors(), manifest.version(), manifest.type()));
                 }
             }
-            loader.close();
         }
     }
 }

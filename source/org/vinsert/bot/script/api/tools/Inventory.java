@@ -135,7 +135,7 @@ public class Inventory {
 	
 	/**
 	 * Returns the first item with a matching id
-	 * @param id The ids to match
+	 * @param ids The ids to match
 	 * @return The item
 	 */
 	public Item getItem(final int ... ids) {
@@ -176,7 +176,7 @@ public class Inventory {
 	
 	/**
 	 * Returns an array of items which match one of the given ids
-	 * @param id The ids to match
+	 * @param ids The ids to match
 	 * @return The items
 	 */
 	public Item[] getItems(final int ... ids) {
