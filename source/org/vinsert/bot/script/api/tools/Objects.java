@@ -20,6 +20,7 @@ import org.vinsert.insertion.IWallDecoration;
  * Object utilities
  * @author tommo
  * @author `Discardedx2
+ * @author IamSharp
  */
 public class Objects {
 
@@ -110,7 +111,24 @@ public class Objects {
 		}
 		return nearest;
 	}
-
+	
+	/**
+	 * Returns the nearest object from the local player which satisfies the id
+	 * @param filter The filter to accept objects
+	 * @return The nearest object returning the id
+	 */
+	public GameObject getNearest(final int ... ids) {
+		return getNearest(new Filter<GameObject>() {
+			public boolean accept(GameObject obj) {
+				for (int id : ids) {
+					if (obj.getId() == id) {
+						return true;
+					}
+				}
+				return false;
+			}
+		});
+	}
 	/**
 	 * Returns an array of all game objects which satisfy the filter
 	 * @param filter The filter
