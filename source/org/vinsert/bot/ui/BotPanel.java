@@ -6,6 +6,7 @@ import java.awt.Dimension;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EtchedBorder;
 
 import org.vinsert.Configuration;
 import org.vinsert.bot.Bot;
@@ -28,6 +29,7 @@ public class BotPanel extends JPanel {
 		setBorder(null);
 		setLayout(new BorderLayout());
 		logger = new BotLogger();
+		logger.setBorder(new EtchedBorder());
 		loading = new BotLoadingIcon();
 		loading.setPreferredSize(new Dimension(Configuration.BOT_APPLET_WIDTH, Configuration.BOT_APPLET_HEIGHT));
 		add(loading, BorderLayout.CENTER);
