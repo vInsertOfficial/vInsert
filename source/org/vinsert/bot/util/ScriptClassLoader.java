@@ -79,7 +79,12 @@ public class ScriptClassLoader {
             } else {
                 fileDir = directory.toURI().toURL().toString();
             }
-            final URLClassLoader loader = new URLClassLoader(new URL[]{new URL(fileDir)});
+            final URLClassLoader loader = new URLClassLoader(new URL[]{new URL(fileDir)}) {
+                public Class loadClass(String name, final boolean resolve) throws ClassNotFoundException {
+                    name = name.replace('/', '.').replace('\\', '.');
+                    return super.loadClass(name, resolve);
+                }
+            };
             Class<?> clazz;
             try {
                 clazz = loader.loadClass(className);
