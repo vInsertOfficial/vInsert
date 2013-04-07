@@ -77,7 +77,10 @@ public class Area {
 	 * Checks if the area contains a tile
 	 */
 	public boolean contains(Tile loc) {
-		return area.contains(new Point(loc.getX(), loc.getY()));
+		if (area.npoints > 2)
+			return area.contains(new Point(loc.getX(), loc.getY()));
+		else
+			return area.getBounds().contains(new Point(loc.getX(), loc.getY()));
 	}
 
 	/**
