@@ -32,15 +32,15 @@ import org.vinsert.bot.IOHelper;
  * @author iJava, Velox, Dyn
  */
 public class VBLogin {
-	
-	public static final int auth_admin = 6;
-	public static final int auth_vip = 10; 
-	public static final int auth_sw = 13;
-	public static final int auth_sm = 5;
-	public static final int auth_mod = 7;
-	public static final int auth_contrib = 12;
-	public static final int auth_sponsor = 11;
-	public static final int auth_dev = 9;
+
+    public static final int auth_admin = 6;
+    public static final int auth_vip = 10;
+    public static final int auth_sw = 13;
+    public static final int auth_sm = 5;
+    public static final int auth_mod = 7;
+    public static final int auth_contrib = 12;
+    public static final int auth_sponsor = 11;
+    public static final int auth_dev = 9;
 
     public static VBLogin self = null;
 
@@ -98,7 +98,7 @@ public class VBLogin {
         return key;
     }
 
-    public String getCookie(URL url) {
+    private String getCookie(URL url) {
         final Pattern COOKIE_PATTERN = Pattern.compile("_ddn_intercept_2_=([^;]+)");
         try {
             URLConnection conn = url.openConnection();
@@ -139,11 +139,11 @@ public class VBLogin {
             if (page != null && !page.equals("0")) {
                 logged = true;
                 final String[] data = page.split(":");
-                
+
                 if (data.length < 2) {
-                	return false;
+                    return false;
                 }
-                
+
                 userId = Integer.parseInt(data[0]);
                 usergroupId = Integer.parseInt(data[1]);
                 return true;
@@ -229,7 +229,7 @@ public class VBLogin {
                 pass.requestFocusInWindow();
                 rememberMe.setSelected(true);
             } catch (Throwable e1) {
-            	 e1.printStackTrace();
+                e1.printStackTrace();
             }
         }
         bottom.add(rememberMe, BorderLayout.CENTER);
@@ -265,5 +265,5 @@ public class VBLogin {
         frame.setAlwaysOnTop(true);
         frame.setVisible(true);
     }
-    
+
 }
