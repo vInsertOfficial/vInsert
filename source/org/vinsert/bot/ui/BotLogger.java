@@ -144,7 +144,7 @@ public class BotLogger extends JList<String> {
 	      result.setBackground(BACKGROUND);
 
 	      if (wlr.record.getLevel() == Level.SEVERE) {
-	    	  result.setForeground(Color.red.darker());
+	    	  result.setForeground(Color.red.brighter());
 	      }
 
 	      if (wlr.record.getLevel() == Level.WARNING) {
