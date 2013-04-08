@@ -19,6 +19,7 @@ import org.objectweb.asm.tree.ClassNode;
 import org.vinsert.bot.loader.arch.Archive;
 import org.vinsert.bot.loader.arch.ArchiveClassLoader;
 import org.vinsert.bot.loader.arch.impl.JarArchive;
+import org.vinsert.bot.ui.BotLoadingIcon;
 import org.vinsert.insertion.IClient;
 
 
@@ -26,6 +27,7 @@ import org.vinsert.insertion.IClient;
 /**
  * A loader used to load the RuneScape client.
  * @author `Discardedx2 (Discardedx2)
+ * @author IamSharp
  */
 public class HijackLoader {
 
@@ -76,6 +78,7 @@ public class HijackLoader {
 	 * @throws Exception
 	 */
 	public static HijackLoader create(Language language, boolean decrypt, final boolean log) throws Exception {
+		BotLoadingIcon.text("Loading Parameters");
 		HijackLoader loader = new HijackLoader();
 		URL srcUrl = new URL("http://oldschool"+getWorld()+".runescape.com");
 		String source = getPageSource(srcUrl);
@@ -85,9 +88,12 @@ public class HijackLoader {
 			stub.setCodeBase(srcUrl);
 			stub.setDocumentBase(srcUrl);
 			logger.info("Opening jar connection...");
+			BotLoadingIcon.text("Opening jar connection...");
 			URL url = new URL(stub.getCodeBase() + "/"+stub.getParameter("archive"));
 			JarURLConnection conn = (JarURLConnection) new URL("jar:"+url.toString()+"!/").openConnection();
+			BotLoadingIcon.text("Grabbing jar file... please wait");
 			JarFile jar = conn.getJarFile();
+			BotLoadingIcon.text("Jar connection opened. Loading jar archive...");
 			logger.info("Jar connection opened. Loading jar archive...");
 
 			if (decrypt) {
