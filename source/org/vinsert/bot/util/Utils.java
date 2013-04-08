@@ -126,5 +126,21 @@ public class Utils {
 		} catch (InterruptedException e) {
 		}
 	}
+        
+        /**
+         * Conditional sleeping
+         * @param timeOut 
+         *      time it will sleep if validate never returns true
+         * 
+         */
+        public static boolean waitFor(final Condition condition, final long timeOut) {
+            Timer timer = new Timer(timeOut);
+            while (timer.isRunning()) {
+                if (condition.validate()) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
 }
