@@ -7,7 +7,6 @@ import org.vinsert.bot.script.api.Widget;
 import org.vinsert.bot.script.api.generic.Filters;
 import org.vinsert.bot.script.randevent.RandomEvent;
 import org.vinsert.bot.script.randevent.RandomEvent.RandomEventPriority;
-import org.vinsert.bot.util.Condition;
 import org.vinsert.bot.util.Utils;
 
 
@@ -79,13 +78,7 @@ public class SandwichLady extends RandomEvent {
     public int pulse() {
         if (widgets.get(297) == null && !players.getLocalPlayer().isInteracting()) {
             npc.interact("Talk-to");
-            Utils.waitFor(new Condition() {
-
-                @Override
-                public boolean validate() {
-                    return players.getLocalPlayer().isInteracting();
-                }
-            }, 1500);
+            Utils.sleep(1500, 2000);
         } else if (widgets.get(297) == null && players.getLocalPlayer().isInteracting()) {
             widgets.clickContinue();
             Utils.sleep(1500, 2000);

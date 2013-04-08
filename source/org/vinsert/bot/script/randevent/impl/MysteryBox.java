@@ -6,7 +6,6 @@ import org.vinsert.bot.script.api.Item;
 import org.vinsert.bot.script.api.Widget;
 import org.vinsert.bot.script.randevent.RandomEvent;
 import org.vinsert.bot.script.randevent.RandomEvent.RandomEventPriority;
-import org.vinsert.bot.util.Condition;
 import org.vinsert.bot.util.Utils;
 
 /**
@@ -35,13 +34,7 @@ public class MysteryBox extends RandomEvent {
         Widget found;
         if (box != null) {
             inventory.interact(inventory.getSlot(box), "Open");
-            Utils.waitFor(new Condition() {
-
-                @Override
-                public boolean validate() {
-                    return widgets.get(PARENT_ID) != null;
-                }
-            }, 1500);
+            Utils.sleep(1500, 2000);
             if (widgets.get(PARENT_ID) != null) {
                 anw = getAnwser();
                 for (int i = 10; i < 13; i++) {
@@ -49,13 +42,7 @@ public class MysteryBox extends RandomEvent {
                     if (found.getText().toLowerCase().contains(anw)) {
                         found.click();
                     }
-                    Utils.waitFor(new Condition() {
-
-                        @Override
-                        public boolean validate() {
-                            return widgets.get(PARENT_ID) == null;
-                        }
-                    }, 1500);
+                    Utils.sleep(1500, 2000);
                 }
             }
         }
