@@ -419,5 +419,12 @@ public class Inventory {
 			dropItem(i);
 		}
 	}
+        
+        public void dropAllExcept(Filter<Item> filter) {
+		for (Item i : getItems()) {
+			if(!filter.accept(i))
+				dropItem(i);
+		}
+	}
 	
 }

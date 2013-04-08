@@ -21,8 +21,6 @@ public class TalkingRandom extends RandomEvent {
                         sleep(3000, 5000);      //sleeps incase it's the old man teleporting you
                         if (npcs.getNearest(n.getId()) != null) {
                             npc = n;
-                            npc.interact("Talk-to");
-                            sleep(1500, 2222);
                             return true;
                         }
                     }

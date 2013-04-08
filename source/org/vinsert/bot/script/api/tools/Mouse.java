@@ -51,6 +51,13 @@ public class Mouse {
 	public void move(int x, int y) {
 		handler.windMouse(x, y, speed / 2);
 	}
+        
+        /**
+         * Moves the mouse to the given Point
+         */
+        public void move(Point p) {
+            move(p.x, p.y);
+        }
 	
 	/**
 	 * Moves the mouse to a position within the given bounds
@@ -73,6 +80,13 @@ public class Mouse {
 		Utils.sleep(Utils.random(50, 150));
 		click();
 	}
+        
+        /*
+         * Clicks the given point
+         */
+        public void click(Point p) {
+            click(p.x, p.y);
+        }
 	
 	/**
 	 * Moves the mouse and clicks at the specified position
