@@ -61,4 +61,14 @@ public class Timer {
         start = System.currentTimeMillis();
         end = start + period;
     }
+    /**
+     * Checks if countdown is finished.
+     * @return True if finished, false if still going.
+     * /
+    public boolean isDone() {
+    	if (endTime <= System.currentTimeMillis()) {
+			return true;
+		}
+		return false;
+	}
 }
