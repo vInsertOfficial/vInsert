@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.Rectangle;
 
 import org.vinsert.bot.script.ScriptContext;
 import org.vinsert.bot.util.Perspective;
@@ -81,16 +82,45 @@ public class Tile {
 	}
 	
 	/**
-	 * Draws the tile on screen
+	 * Draws the tile on screen, if visible
 	 * <tt>Method for use in render method</tt>
 	 * @param g The Graphics
 	 * @param ctx The current script context
 	 */
-	public void draw(Graphics2D g, ScriptContext ctx){
+	public void draw(Graphics2D g, ScriptContext ctx) {
+		if (!Perspective.on_screen(ctx.getClient(), this)) {
+			return;
+		}
 		g.setColor(new Color(0, 255, 0, 150));
 		g.draw(getPolygon(ctx));
 		g.setColor(new Color(0, 255, 0, 50));
 		g.fill(getPolygon(ctx));
+	}
+	
+	/**
+	 * Draws the tile on the minimap, if visible
+	 * @param g The Graphics
+	 * @param ctx The current script context
+	 */
+	public void drawOnMinimap(Graphics2D g, ScriptContext ctx) {
+		if (!Perspective.on_minimap(ctx.getClient(), this)) {
+			return;
+		}
+		Point p = getMinimapPoint(ctx);
+		Rectangle r = new Rectangle(p.x - 1, p.y - 1 , 3, 3);
+		g.setColor(new Color(0, 255, 0, 150));
+		g.drawRect(r.x, r.y, r.width, r.height);
+		g.setColor(new Color(0, 255, 0, 50));
+		g.fillRect(r.x, r.y, r.width, r.height);
+	}
+	
+	/**
+	 * Gets the tile point on the minimap
+	 * @param ctx The current script context
+	 * @return The point on the map
+	 */
+	public Point getMinimapPoint(ScriptContext ctx) {
+		return Perspective.trans_tile_minimap(ctx.getClient(), x, y);
 	}
 	
 	/**
