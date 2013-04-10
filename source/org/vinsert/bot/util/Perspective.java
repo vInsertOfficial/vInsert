@@ -2,6 +2,7 @@ package org.vinsert.bot.util;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.Ellipse2D;
 
 import org.vinsert.bot.script.api.Tile;
 import org.vinsert.insertion.IClient;
@@ -17,6 +18,10 @@ import org.vinsert.insertion.IWidget;
  */
 public class Perspective {
 
+	/**
+	 * The effective minimap 
+	 */
+	public static final Ellipse2D.Double MINIMAP = new Ellipse2D.Double(565, 5, 155, 155);
 	/**
 	 * The effective screen viewport
 	 */
@@ -237,6 +242,38 @@ public class Perspective {
 		return GAMESCREEN.contains(x, y);
 	}
 
+	/**
+	 * Checks to see if an {@link Tile} is on the minimap.
+	 * @param client The client we are checking for.
+	 * @param tile The tile.
+	 * @return {@code true} if the tile is on the minimap.
+	 */
+	public static boolean on_minimap(IClient client, Tile tile) {
+		return on_minimap(trans_tile_minimap(client, tile.getX(), tile.getY()));
+	}
+
+	
+	/**
+	 * Checks to see if a 2D {@link Point} is on the minimap.
+	 * @param client The client we are checking for.
+	 * @param point The point
+	 * @return {@code true} if the point is on the minimap.
+	 */
+	public static boolean on_minimap(Point point) {
+		return MINIMAP.contains(point);
+	}
+
+	/**
+	 * Checks to see if a set of 2D coordinates is on screen.
+	 * @param client The client we are checking for.
+	 * @param x The x coordinate
+	 * @param y The y coordinate
+	 * @return {@code true} if the coordinates are on the minimap.
+	 */
+	public static boolean on_minimap(int x, int y) {
+		return MINIMAP.contains(x, y);
+	}
+	
 	static {
 		for (int i = 0; i < SINE.length; i++) {
 			SINE[i] = (int) (65536.0D * Math.sin((double) i * 0.0030679615D));
