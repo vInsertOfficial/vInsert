@@ -224,8 +224,7 @@ public class Perspective {
 	
 	/**
 	 * Checks to see if a 2D {@link Point} is on screen.
-	 * @param client The client we are checking for.
-	 * @param tile The tile.
+	 * @param point The point to check.
 	 * @return {@code true} if the tile is on screen.
 	 */
 	public static boolean on_screen(Point point) {
@@ -234,8 +233,8 @@ public class Perspective {
 
 	/**
 	 * Checks to see if a set of 2D coordinates is on screen.
-	 * @param client The client we are checking for.
-	 * @param tile The tile.
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
 	 * @return {@code true} if the tile is on screen.
 	 */
 	public static boolean on_screen(int x, int y) {
@@ -255,8 +254,7 @@ public class Perspective {
 	
 	/**
 	 * Checks to see if a 2D {@link Point} is on the minimap.
-	 * @param client The client we are checking for.
-	 * @param point The point
+	 * @param point The point to check.
 	 * @return {@code true} if the point is on the minimap.
 	 */
 	public static boolean on_minimap(Point point) {
@@ -264,10 +262,9 @@ public class Perspective {
 	}
 
 	/**
-	 * Checks to see if a set of 2D coordinates is on screen.
-	 * @param client The client we are checking for.
-	 * @param x The x coordinate
-	 * @param y The y coordinate
+	 * Checks to see if a set of 2D coordinates is on the minimap.
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
 	 * @return {@code true} if the coordinates are on the minimap.
 	 */
 	public static boolean on_minimap(int x, int y) {
