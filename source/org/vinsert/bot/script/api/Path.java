@@ -166,7 +166,7 @@ public class Path {
 			g.setColor(new Color(0, 255, 0, 50));
 			Point current = tiles[i - 1].getMinimapPoint(ctx);
 			Point next = tiles[i].getMinimapPoint(ctx);
-			if (!(Perspective.on_minimap(current) && Perspective.on_minimap(next))) {
+			if (Perspective.on_minimap(current) && Perspective.on_minimap(next)) {
 				g.drawLine(current.x, current.y, next.x, next.y);
 			}
 		}
