@@ -75,15 +75,12 @@ public class GameObject implements Interactable, Hullable {
 	 * @return The object's model
 	 */
 	public Model getModel() {
-		switch(type) { //TODO remove renderable null checks
+		switch(type) {
 		case INTERACTABLE:
-            if (object.getRenderable() == null) return null;
-			if (object.getRenderable() instanceof IOffScreenModel) {
-				ModelCallback.callback(object.getRenderable(), (IOffScreenModel) object.getRenderable());
-			} else if (object.getRenderable() instanceof IModel) {
-				ModelCallback.callback(object.getRenderable(), (IModel) object.getRenderable());
-			}
-			return new Model(PersistentModelCache.table.get(object.getRenderable()));
+            if (object.getRenderable() instanceof IModel) {
+                ModelCallback.callback(object.getRenderable(), (IModel) object.getRenderable());
+            }
+            return new Model(PersistentModelCache.table.get(object.getRenderable()));
 		case FLOOR_DECORATION:
             if (floorDecoration.getRenderable() == null) return null;
 			if (floorDecoration.getRenderable() instanceof IModel) {

@@ -47,7 +47,7 @@ public class Objects {
 	/**
 	 * Returns an array of all game objects within a given distance from the local player
 	 * @param distance The maximum distance, in tiles
-	 * @param the object type mask (all = Objects.TYPE_ALL)
+	 * @param mask object type mask (all = Objects.TYPE_ALL)
 	 * @return
 	 */
 	public GameObject[] getWithinDistance(final int distance, final int mask) {
