@@ -27,6 +27,9 @@ public class RandomEventPool {
                 register(new BankPin());
                 register(new ClickToPlay());
                 register(new TalkingRandom());
+                register(new Ent());
+                register(new SandwichLady());
+                register(new MysteryBox());
 	}
 	
 	/**
