@@ -212,6 +212,7 @@ public abstract class Script implements ProjectionListener, Runnable {
             }
 			if (isExitRequested()) {
 				context.getBot().popScript();
+                break;
 			}
 			if (!paused) {
 				long time = System.currentTimeMillis();
@@ -245,6 +246,7 @@ public abstract class Script implements ProjectionListener, Runnable {
         if (thread != null) {
             thread.interrupt();
         }
+        requestExit();
 	}
 
 	public synchronized Thread getThread() {

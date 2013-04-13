@@ -40,8 +40,11 @@ public class Ent extends RandomEvent {
     }
 
     private boolean isEntThere() {
+        if (players.getLocalPlayer() == null || players.getLocalPlayer().getInteracting() == null) {
+            return false;
+        }
         final Npc ent = (Npc) players.getLocalPlayer().getInteracting();
-        return ent != null && ent instanceof Npc && contains(ENT_IDS, ent.getId());
+        return ent != null && contains(ENT_IDS, ent.getId());
     }
 
     public boolean contains(final int[] y, final int i) {

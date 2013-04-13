@@ -396,10 +396,10 @@ public class BotToolBar extends JToolBar {
         });
         interfaceExplorer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-                    Bot b = window.getActiveBot();
+                Bot b = window.getActiveBot();
+                if (b != null) {
                     IClient client = (IClient) b.getApplet();
                     ScriptContext c = new ScriptContext(b, client, null);
-                    if (b != null && c.game.getGameState() == GameState.INGAME) {
                         final BotInterfaceExplorer bie = new BotInterfaceExplorer(c);
                         final HijackCanvas canvas = b.getCanvas();
                         canvas.getListeners().add(bie);

@@ -48,6 +48,7 @@ public class AutoLogin extends RandomEvent {
                 sleep(500, 1200);
                 keyboard.type(account.getPassword(), true);
                 sleep(4000, 8000);
+                clicked = false;
             }
         } else if (game.getGameState() == GameState.INGAME) {
             requestExit();

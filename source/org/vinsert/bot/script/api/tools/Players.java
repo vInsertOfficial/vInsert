@@ -60,7 +60,8 @@ public class Players {
 	 * @return The local player instance
 	 */
 	public Player getLocalPlayer() {
-		return new Player(ctx, ctx.getClient().getLocalPlayer());
-	}
+        final IPlayer localPlayer = ctx.getClient().getLocalPlayer();
+        return localPlayer == null ? null : new Player(ctx, localPlayer);
+    }
 
 }
