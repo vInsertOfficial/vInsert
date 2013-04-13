@@ -20,7 +20,7 @@ public class Configuration {
 	
 	public static final String BOT_NAME = "vInsert";
 	public static final int BOT_VERSION_MAJOR = 2;
-	public static final int BOT_VERSION_MINOR = 21;
+	public static final int BOT_VERSION_MINOR = 22;
 	
 	public static int remote_major;
 	public static int remote_minor;
