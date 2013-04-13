@@ -11,7 +11,7 @@ public class DebugPlayerInfo extends IncrementalDebugger {
 
 	@Override
 	public void draw(Graphics2D graphics, Point point) {
-		graphics.setColor(Color.WHITE);
+        graphics.setColor(context.players.getLocalPlayer().isInCombat() ? Color.RED : Color.WHITE);
 		StringBuilder text = new StringBuilder();
 		text.append("Player: ");
 		int anim = context.players.getLocalPlayer().getAnimation();

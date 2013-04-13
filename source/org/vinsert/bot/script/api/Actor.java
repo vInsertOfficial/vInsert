@@ -169,7 +169,7 @@ public abstract class Actor extends Renderable implements Interactable {
 	 * @return true if the actor is in combat, false if not
 	 */
 	public boolean isInCombat() {
-		return ctx.getClient().getCycle() < actor.getCycle();
+		return actor.getCycle() > ctx.getClient().getCycle();
 	}
 
 	/**

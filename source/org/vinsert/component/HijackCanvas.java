@@ -1,13 +1,11 @@
 package org.vinsert.component;
 
-import java.awt.Canvas;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import org.vinsert.bot.Bot;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.vinsert.bot.Bot;
 
 public class HijackCanvas extends Canvas {
 	
@@ -55,5 +53,4 @@ public class HijackCanvas extends Canvas {
     public BufferedImage getGameBuffer() {
         return gameBuffer;
     }
-
 }

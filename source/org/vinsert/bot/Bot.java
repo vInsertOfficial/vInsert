@@ -1,9 +1,13 @@
 package org.vinsert.bot;
 
 import java.applet.Applet;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelListener;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.EventListener;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -122,11 +126,16 @@ public class Bot {
 				while((canvas = getCanvas()) == null) {
 		            Utils.sleep(1);
 				}
-				
-				inputHandler = new InputHandler(Bot.this, canvas);
-				canvas.setBot(Bot.this);
+
+                canvas.setBot(Bot.this);
+                Utils.sleep(3000);
+                inputHandler = new InputHandler(bot, canvas);
 			}
     	}).start();
+    }
+
+    public void setInputHandler(final InputHandler inputHandler) {
+        this.inputHandler = inputHandler;
     }
     
     /**
@@ -161,6 +170,9 @@ public class Bot {
 			scriptStack.push(script);
 			getCanvas().getListeners().add(script);
 			inputHandler.setHumanInput(false);
+            if (script instanceof MouseListener || script instanceof MouseMotionListener || script instanceof MouseWheelListener) {
+                inputHandler.addListener((EventListener)  script);
+            }
 			thread.start();
 		}
 	}
@@ -185,6 +197,9 @@ public class Bot {
 				if (scriptStack.isEmpty()) {
 					inputHandler.setHumanInput(true);
 				}
+                if (script instanceof MouseListener || script instanceof MouseMotionListener || script instanceof MouseWheelListener) {
+                    inputHandler.removeListener((EventListener)  script);
+                }
 				return script;
 			}
 		}
@@ -243,10 +258,10 @@ public class Bot {
 		if (canvas != null) {
 			return canvas;
 		}
-		if (loader == null || loader.getApplet() == null || !(loader.getApplet().getComponentAt(100, 100) instanceof HijackCanvas)) {
+		if (loader == null || getApplet() == null || getApplet().getComponentCount() == 0 || !(getApplet().getComponent(0) instanceof HijackCanvas)) {
 			return null;
 		}
-		return (HijackCanvas) loader.getApplet().getComponentAt(100, 100);
+		return (HijackCanvas) getApplet().getComponent(0);
 	}
 
 	public synchronized InputHandler getInputHandler() {

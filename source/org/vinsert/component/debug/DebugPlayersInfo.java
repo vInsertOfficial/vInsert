@@ -20,7 +20,7 @@ public class DebugPlayersInfo extends Debugger {
 			String name = player.getName();
 			graphics.setColor(Color.GREEN);
 			graphics.fillOval(point.x - 2, point.y - 2, 4, 4);
-			graphics.setColor(Color.WHITE);
+			graphics.setColor(player.isInCombat() ? Color.RED : Color.WHITE);
 			graphics.drawString(loc, point.x - metrics.stringWidth(loc) / 2, point.y);
 			graphics.drawString(name, point.x - metrics.stringWidth(name) / 2, point.y + 15);
 		}

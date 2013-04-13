@@ -3,6 +3,7 @@ package org.vinsert.bot.script;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.logging.Level;
 
+import org.vinsert.Configuration;
 import org.vinsert.bot.script.api.Player;
 import org.vinsert.bot.script.api.tools.Bank;
 import org.vinsert.bot.script.api.tools.Camera;
@@ -91,7 +92,7 @@ public abstract class Script implements ProjectionListener, Runnable {
 	}
 
     private boolean canUse() {
-        if(!VBLogin.self.isLoggedIn()) {
+        if(!Configuration.DEV && !VBLogin.self.isLoggedIn()) {
            return false;
         }
         
