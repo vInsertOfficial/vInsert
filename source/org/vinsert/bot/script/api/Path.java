@@ -1,7 +1,13 @@
 package org.vinsert.bot.script.api;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.vinsert.bot.script.ScriptContext;
+import org.vinsert.bot.util.Perspective;
 
 /**
  * Represents a path consisting of tiles
@@ -132,4 +138,37 @@ public class Path {
 		return new Path(reversed.toArray(new Tile[reversed.size()]));
 	}
 
+	/**
+	 * Draws the path on the screen
+	 * @param g The graphics
+	 * @param ctx The current script context
+	 */
+	public void draw(Graphics2D g, ScriptContext ctx) {
+		for (Tile t : tiles) {
+			t.draw(g, ctx);
+		}
+	}
+	
+	/**
+	 * Draws the path on the minimap
+	 * @param g The Graphics
+	 * @param ctx The current script context
+	 */
+	public void drawOnMinimap(Graphics2D g, ScriptContext ctx) {
+		if (tiles.length <= 0) {
+			return;
+		}
+		for (int i = 1; i < tiles.length - 1; i++) {
+			tiles[i - 1].drawOnMinimap(g, ctx);
+			if (i == tiles.length - 1) {
+				tiles[i].drawOnMinimap(g, ctx);
+			}
+			g.setColor(new Color(0, 255, 0, 50));
+			Point current = tiles[i - 1].getMinimapPoint(ctx);
+			Point next = tiles[i].getMinimapPoint(ctx);
+			if (Perspective.on_minimap(current) && Perspective.on_minimap(next)) {
+				g.drawLine(current.x, current.y, next.x, next.y);
+			}
+		}
+	}
 }
