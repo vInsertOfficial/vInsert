@@ -19,7 +19,7 @@ public class Application {
 
 	public static void main(String[] args) {
 		if(args.length == 1 && args[0].equals("-dev"))
-			Configuration.OFFLINE = true;
+			Configuration.DEV = true;
 
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -50,9 +50,9 @@ public class Application {
 					
 			       	Configuration.mkdirs();
 			       	
-					if(Configuration.OFFLINE) {
+					if(Configuration.DEV) {
 						window = new BotWindow();
-						window.init(false);
+						window.init(true);
 					} else new BotVersionChecker();
 				} catch (Exception e) {
 					e.printStackTrace();

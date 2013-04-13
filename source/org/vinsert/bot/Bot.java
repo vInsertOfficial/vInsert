@@ -174,7 +174,6 @@ public class Bot {
 			if (!scriptStack.isEmpty() && scriptStack.peek() != null) {
 				Script script = scriptStack.pop();
 				log(Bot.class, Level.FINE, "Stopping script " + script.getManifest().name() + "...");
-                new Exception().printStackTrace();
                 try {
                     script.close();
                 } catch (final Throwable t) {

@@ -16,7 +16,7 @@ import javax.swing.ImageIcon;
 
 public class Configuration {
 
-	public static boolean OFFLINE = false;
+	public static boolean DEV = false;
 	
 	public static final String BOT_NAME = "vInsert";
 	public static final int BOT_VERSION_MAJOR = 2;

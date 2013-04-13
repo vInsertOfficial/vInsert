@@ -35,7 +35,6 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 import org.vinsert.Configuration;
-import org.vinsert.bot.SDN;
 import org.vinsert.bot.util.InstructionSearcher;
 
 //TODO: this shit needs some serious refactoring
@@ -107,14 +106,12 @@ public class ArchiveClassLoader extends ClassLoader {
 	
 	private void loadMappings(final boolean log) {
 		try {
-			if(!Configuration.OFFLINE) {
-				if(Configuration.getMinor() != getLocalMinorVersion() || !getLocalInsertionsFile().exists()) {
-                         	   if (log) {
-                                   	 fetch(Configuration.vesrionfile); //lazy as fuck
-                                   	 fetch(Configuration.jsonfile);
-					}
-				}
-			}
+            if(Configuration.getMinor() != getLocalMinorVersion() || !getLocalInsertionsFile().exists()) {
+                           if (log) {
+                                 fetch(Configuration.vesrionfile); //lazy as fuck
+                                 fetch(Configuration.jsonfile);
+                }
+            }
 			System.out.println(Configuration.jsonfile);
 			BufferedInputStream in = new BufferedInputStream(new FileInputStream(getLocalInsertionsFile()));
 			GzipCompressorInputStream gzip = new GzipCompressorInputStream(in);
