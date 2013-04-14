@@ -2,8 +2,8 @@ package org.vinsert.insertion;
 
 public interface INodeDeque {
 
-	public INode front();
-	
-	public INode tail();
-	
+    public INode front();
+
+    public INode tail();
+
 }

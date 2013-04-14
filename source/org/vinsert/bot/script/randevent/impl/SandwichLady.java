@@ -1,17 +1,14 @@
 package org.vinsert.bot.script.randevent.impl;
 
-import java.util.Random;
 import org.vinsert.bot.script.ScriptManifest;
 import org.vinsert.bot.script.api.Npc;
 import org.vinsert.bot.script.api.Widget;
 import org.vinsert.bot.script.api.generic.Filters;
 import org.vinsert.bot.script.randevent.RandomEvent;
-import org.vinsert.bot.script.randevent.RandomEvent.RandomEventPriority;
 import org.vinsert.bot.util.Utils;
 
 
 /**
- *
  * @author tholomew
  */
 @ScriptManifest(name = "Sandwich Lady", authors = {"tholomew"}, description = "Talks to this obnoxious cunt.", version = 1.0)

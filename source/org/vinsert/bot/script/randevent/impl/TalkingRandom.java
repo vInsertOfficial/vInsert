@@ -9,7 +9,7 @@ import org.vinsert.bot.script.randevent.RandomEvent;
 public class TalkingRandom extends RandomEvent {
 
     private static final int[] NPC_ID = {2539, 407, 409, 410, 408, 956, 2540, 2458, 1056,
-        4375, 2476, 3912, 3913, 2478, 2469, 2470, 3118, 2790};
+            4375, 2476, 3912, 3913, 2478, 2469, 2470, 3118, 2790};
     Npc npc;
 
     @Override

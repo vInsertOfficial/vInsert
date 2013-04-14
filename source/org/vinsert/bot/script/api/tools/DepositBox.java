@@ -148,11 +148,11 @@ public class DepositBox {
             return false;
         }
         return ctx.widgets.getValidated(new Filter<Widget>() {
-                    @Override
-                    public boolean accept(Widget element) {
-                        return element.getParentId() == WIDGET_ID && element.getId() == 60;
-                    }
-                }).get(0).getTooltip().contains("Bank");
+            @Override
+            public boolean accept(Widget element) {
+                return element.getParentId() == WIDGET_ID && element.getId() == 60;
+            }
+        }).get(0).getTooltip().contains("Bank");
     }
 
     public boolean open() {
@@ -162,10 +162,10 @@ public class DepositBox {
         GameObject box = ctx.objects.getNearest(new Filter<GameObject>() {
             @Override
             public boolean accept(GameObject element) {
-                for(int id :DEPOSIT_BOX_IDS) {
-                if(id == element.getId()) {
-                    return true;
-                }
+                for (int id : DEPOSIT_BOX_IDS) {
+                    if (id == element.getId()) {
+                        return true;
+                    }
                 }
                 return false;
             }

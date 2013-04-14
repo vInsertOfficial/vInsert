@@ -1,5 +1,10 @@
 package org.vinsert.bot.util;
 
+import com.sun.org.apache.bcel.internal.classfile.ClassParser;
+import com.sun.org.apache.bcel.internal.generic.ClassGen;
+import org.vinsert.bot.script.ScriptInfo;
+import org.vinsert.bot.script.ScriptManifest;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -11,12 +16,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import org.vinsert.bot.script.ScriptInfo;
-import org.vinsert.bot.script.ScriptManifest;
-
-import com.sun.org.apache.bcel.internal.classfile.ClassParser;
-import com.sun.org.apache.bcel.internal.generic.ClassGen;
 
 public class ScriptClassLoader {
 

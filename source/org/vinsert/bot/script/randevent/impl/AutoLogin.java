@@ -1,18 +1,17 @@
 package org.vinsert.bot.script.randevent.impl;
 
-import java.awt.Rectangle;
-
 import org.vinsert.bot.accounts.Account;
 import org.vinsert.bot.script.ScriptManifest;
 import org.vinsert.bot.script.api.tools.Game.GameState;
 import org.vinsert.bot.script.randevent.RandomEvent;
+
+import java.awt.*;
 
 /**
  * Auto login, written very fast, doesn't use widgets
  * now it does, ;)
  *
  * @author tommo
- *
  */
 @ScriptManifest(name = "Auto Login", authors = {"tommo", "tholomew"}, description = "Automatic login", version = 1.0)
 public class AutoLogin extends RandomEvent {
@@ -23,13 +22,13 @@ public class AutoLogin extends RandomEvent {
     @Override
     public boolean init() {
         if (game.getGameState() == GameState.LOGIN) {
-        	if (getContext().getAccount() == null || getContext().getAccount().getUsername().equals("null")
+            if (getContext().getAccount() == null || getContext().getAccount().getUsername().equals("null")
                     || getContext().getAccount().getPassword().equals("null")) {
                 log("You must have an account saved to use Auto Login. Make sure you press the save button. You can also try editing the Accounts.txt in your vInsert folder.");
                 return false;
-        	} else {
-        		return true;
-        	}
+            } else {
+                return true;
+            }
         }
         return false;
     }

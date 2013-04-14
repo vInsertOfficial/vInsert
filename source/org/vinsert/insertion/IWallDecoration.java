@@ -2,24 +2,24 @@ package org.vinsert.insertion;
 
 public interface IWallDecoration {
 
-	public IRenderable getRenderable();
+    public IRenderable getRenderable();
 
-	public int getObjectHash();
+    public int getObjectHash();
 
-	public int getFlags();
+    public int getFlags();
 
-	public int getPlane();
+    public int getPlane();
 
-	public int getGridX();
+    public int getGridX();
 
-	public int getGridY();
+    public int getGridY();
 
-	public int getHeight();
+    public int getHeight();
 
-	public int getOrientation();
+    public int getOrientation();
 
-	public int getReletiveX();
+    public int getReletiveX();
 
-	public int getReletiveY();
+    public int getReletiveY();
 
 }

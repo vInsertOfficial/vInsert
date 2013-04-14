@@ -1,21 +1,21 @@
 package org.vinsert.insertion;
 
 public interface IWall {
-	
-	public IRenderable getRenderable();
 
-	public int getObjectHash();
+    public IRenderable getRenderable();
 
-	public int getFlags();
+    public int getObjectHash();
 
-	public int getPlane();
+    public int getFlags();
 
-	public int getGridX();
+    public int getPlane();
 
-	public int getGridY();
+    public int getGridX();
 
-	public int getHeight();
+    public int getGridY();
 
-	public int getOrientation();
-	
+    public int getHeight();
+
+    public int getOrientation();
+
 }

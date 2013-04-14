@@ -1,32 +1,18 @@
 package org.vinsert.bot.ui;
 
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import org.vinsert.bot.accounts.Account;
+import org.vinsert.bot.accounts.AccountManager;
 
-import javax.swing.Box;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JToolBar;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
-
-import org.vinsert.bot.accounts.Account;
-import org.vinsert.bot.accounts.AccountManager;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author Tekk
@@ -50,8 +36,8 @@ public class BotAccountManager extends JDialog implements ActionListener {
     private static class RandomRewardEditor extends DefaultCellEditor {
         private static final long serialVersionUID = 6519185448833736787L;
 
-        @SuppressWarnings({ "unchecked", "rawtypes" })
-		public RandomRewardEditor() {
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        public RandomRewardEditor() {
             super(new JComboBox(RANDOM_REWARDS));
         }
     }

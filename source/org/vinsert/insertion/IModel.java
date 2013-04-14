@@ -2,30 +2,30 @@ package org.vinsert.insertion;
 
 public interface IModel extends IRenderable {
 
-	public int getVertices();
-	
-	public int[] getVerticesX();
-	
-	public int[] getVerticesY();
+    public int getVertices();
 
-	public int[] getVerticesZ();
-	
-	public int[] getVertexSkins();
-	
-	public int getTriangles();
-	
-	public int[] getTriViewX();
+    public int[] getVerticesX();
 
-	public int[] getTriViewY();
+    public int[] getVerticesY();
 
-	public int[] getTriViewZ();
-	
-	public int getTexTriangles();
-	
-	public int[] getTexMapX();
+    public int[] getVerticesZ();
 
-	public int[] getTexMapY();
+    public int[] getVertexSkins();
 
-	public int[] getTexMapZ();
-	
+    public int getTriangles();
+
+    public int[] getTriViewX();
+
+    public int[] getTriViewY();
+
+    public int[] getTriViewZ();
+
+    public int getTexTriangles();
+
+    public int[] getTexMapX();
+
+    public int[] getTexMapY();
+
+    public int[] getTexMapZ();
+
 }

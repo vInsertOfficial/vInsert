@@ -1,17 +1,5 @@
 package org.vinsert.bot;
 
-import java.applet.Applet;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelListener;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.EventListener;
-import java.util.Stack;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-
 import org.vinsert.bot.accounts.Account;
 import org.vinsert.bot.loader.HijackLoader;
 import org.vinsert.bot.loader.Language;
@@ -24,70 +12,79 @@ import org.vinsert.bot.util.Utils;
 import org.vinsert.bot.util.VBLogin;
 import org.vinsert.component.HijackCanvas;
 
+import java.applet.Applet;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.EventListener;
+import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+
 
 /**
  * Represents a bot instance
- * @author tommo
  *
+ * @author tommo
  */
 public class Bot {
 
-	/**
-	 * The client loader
-	 */
-	private HijackLoader loader;
+    /**
+     * The client loader
+     */
+    private HijackLoader loader;
 
-	/**
-	 * The bot logger
-	 */
-	private BotLogger logger;
+    /**
+     * The bot logger
+     */
+    private BotLogger logger;
 
-	/**
-	 * The active script stack
-	 */
-	public Stack<Script> scriptStack = new Stack<Script>();
+    /**
+     * The active script stack
+     */
+    public Stack<Script> scriptStack = new Stack<Script>();
 
-	/**
-	 * The callback the UI supplies to call when the bot applet is loaded and initialized
-	 */
-	private Callback callback;
+    /**
+     * The callback the UI supplies to call when the bot applet is loaded and initialized
+     */
+    private Callback callback;
 
-	/**
-	 * The bot's input handler
-	 */
-	private InputHandler inputHandler;
+    /**
+     * The bot's input handler
+     */
+    private InputHandler inputHandler;
 
-	/**
-	 * The bot instance, since scripts are created on a separate thread
-	 * we must store the local bot instance for reference
-	 */
-	private Bot bot;
-	
-	/**
-	 * The canvas
-	 */
-	private HijackCanvas canvas;
-	
-	/**
-	 * The bot's index in the tab list
-	 */
-	private int botIndex;
-	
-	/**
-	 * The last account used to execute a script
-	 */
-	private Account lastAccount;
-	
-	/**
-	 * The thread the bot is running in
-	 */
-	public Thread thread;
+    /**
+     * The bot instance, since scripts are created on a separate thread
+     * we must store the local bot instance for reference
+     */
+    private Bot bot;
 
-	/**
-	 * The VB Login instance
-	 */
-	private VBLogin login;
-    
+    /**
+     * The canvas
+     */
+    private HijackCanvas canvas;
+
+    /**
+     * The bot's index in the tab list
+     */
+    private int botIndex;
+
+    /**
+     * The last account used to execute a script
+     */
+    private Account lastAccount;
+
+    /**
+     * The thread the bot is running in
+     */
+    public Thread thread;
+
+    /**
+     * The VB Login instance
+     */
+    private VBLogin login;
+
     /**
      * The bot window containing this bot instance
      */
@@ -96,133 +93,135 @@ public class Bot {
     private boolean initialized;
 
     public Bot(final BotWindow window) {
-    	this.window = window;
-		this.bot = this;
-	}
-    
+        this.window = window;
+        this.bot = this;
+    }
+
     /**
      * Starts a new thread for loading the bot client
      */
     public void load() {
-    	new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					loader = HijackLoader.create(Language.ENGLISH, true);
-					callback.call();
-				} catch (Exception e) {
-					e.printStackTrace();
-					log(Bot.class, Level.SEVERE, "Error loading bot!");
-				}
-		        initialized = true;
-				log(Bot.class, "Bot now active.");
-				
-				while((canvas = getCanvas()) == null) {
-		            Utils.sleep(1);
-				}
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    loader = HijackLoader.create(Language.ENGLISH, true);
+                    callback.call();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log(Bot.class, Level.SEVERE, "Error loading bot!");
+                }
+                initialized = true;
+                log(Bot.class, "Bot now active.");
+
+                while ((canvas = getCanvas()) == null) {
+                    Utils.sleep(1);
+                }
 
                 canvas.setBot(Bot.this);
                 Utils.sleep(3000);
                 inputHandler = new InputHandler(bot, canvas);
-			}
-    	}).start();
+            }
+        }).start();
     }
 
     public void setInputHandler(final InputHandler inputHandler) {
         this.inputHandler = inputHandler;
     }
-    
+
     /**
      * Destroys the applet backing this bot instance
      */
     public void exit() {
-		loader.getApplet().stop();
-		loader.getApplet().destroy();
+        loader.getApplet().stop();
+        loader.getApplet().destroy();
     }
 
-	/**
-	 * Executes the script, and cancels the currently running script if applicable
-	 * @param script The script to run
-	 * @param stack Should the script be stacked upon previous scripts, or wipe the script stack
-	 * (temporary scripts such as randoms generally stack, whilst others don't)
-	 */
-	public synchronized void pushScript(Script script, boolean stack, Account account) {
-		synchronized (scriptStack) {
-			if (!stack) {
-				popScript();
-			} else if (!initialized) {
-				log(Bot.class, Level.SEVERE, "Bot not initialized!");
+    /**
+     * Executes the script, and cancels the currently running script if applicable
+     *
+     * @param script The script to run
+     * @param stack  Should the script be stacked upon previous scripts, or wipe the script stack
+     *               (temporary scripts such as randoms generally stack, whilst others don't)
+     */
+    public synchronized void pushScript(Script script, boolean stack, Account account) {
+        synchronized (scriptStack) {
+            if (!stack) {
+                popScript();
+            } else if (!initialized) {
+                log(Bot.class, Level.SEVERE, "Bot not initialized!");
                 return;
             }
-			this.lastAccount = account;
-			script.create(new ScriptContext(bot, loader.getClient(), account));
-			log(Bot.class, Level.FINE, "Starting script: " + script.getManifest().name());
-			
-			Thread thread = new Thread(script);
-            thread.setName("Bot-" + bot.getBotIndex() + ": Index-" + scriptStack.size() + 1);
-			script.setThread(thread);
-			scriptStack.push(script);
-			getCanvas().getListeners().add(script);
-			inputHandler.setHumanInput(false);
-            if (script instanceof MouseListener || script instanceof MouseMotionListener || script instanceof MouseWheelListener) {
-                inputHandler.addListener((EventListener)  script);
-            }
-			thread.start();
-		}
-	}
+            this.lastAccount = account;
+            script.create(new ScriptContext(bot, loader.getClient(), account));
+            log(Bot.class, Level.FINE, "Starting script: " + script.getManifest().name());
 
-	/**
-	 * Pops a running script off the stack, if applicable
-	 * @return The script which was closed, null if none
-	 */
-	public synchronized Script popScript() {
-		synchronized (scriptStack) {
-			if (!scriptStack.isEmpty() && scriptStack.peek() != null) {
-				Script script = scriptStack.pop();
-				log(Bot.class, Level.FINE, "Stopping script " + script.getManifest().name() + "...");
+            Thread thread = new Thread(script);
+            thread.setName("Bot-" + bot.getBotIndex() + ": Index-" + scriptStack.size() + 1);
+            script.setThread(thread);
+            scriptStack.push(script);
+            getCanvas().getListeners().add(script);
+            inputHandler.setHumanInput(false);
+            if (script instanceof EventListener) {
+                inputHandler.addScriptListener((EventListener) script);
+            }
+            thread.start();
+        }
+    }
+
+    /**
+     * Pops a running script off the stack, if applicable
+     *
+     * @return The script which was closed, null if none
+     */
+    public synchronized Script popScript() {
+        synchronized (scriptStack) {
+            if (!scriptStack.isEmpty() && scriptStack.peek() != null) {
+                Script script = scriptStack.pop();
+                log(Bot.class, Level.FINE, "Stopping script " + script.getManifest().name() + "...");
                 try {
                     script.close();
                 } catch (final Throwable t) {
                     log(script, t);
                 }
-                
+
                 script.destroy();
-				getCanvas().getListeners().remove(script);
-				if (scriptStack.isEmpty()) {
-					inputHandler.setHumanInput(true);
-				}
-                if (script instanceof MouseListener || script instanceof MouseMotionListener || script instanceof MouseWheelListener) {
-                    inputHandler.removeListener((EventListener)  script);
+                getCanvas().getListeners().remove(script);
+                if (scriptStack.isEmpty()) {
+                    inputHandler.setHumanInput(true);
                 }
-				return script;
-			}
-		}
-		return null;
-	}
+                if (script instanceof EventListener) {
+                    inputHandler.removeScriptListener((EventListener) script);
+                }
+                return script;
+            }
+        }
+        return null;
+    }
 
-	public synchronized void log(Class<?> source, String msg) {
-		LogRecord record = new LogRecord(Level.INFO, msg);
-		record.setSourceClassName(source.getSimpleName());
-		getLogger().log(record);
-	}
+    public synchronized void log(Class<?> source, String msg) {
+        LogRecord record = new LogRecord(Level.INFO, msg);
+        record.setSourceClassName(source.getSimpleName());
+        getLogger().log(record);
+    }
 
-	public synchronized void log(Class<?> source, Level level, String msg) {
-		LogRecord record = new LogRecord(level, msg);
-		record.setSourceClassName(source.getSimpleName());
-		getLogger().log(record);
-	}
+    public synchronized void log(Class<?> source, Level level, String msg) {
+        LogRecord record = new LogRecord(level, msg);
+        record.setSourceClassName(source.getSimpleName());
+        getLogger().log(record);
+    }
 
-	public synchronized void log(String tag, String msg) {
-		LogRecord record = new LogRecord(Level.INFO, msg);
-		record.setSourceClassName(tag);
-		getLogger().log(record);
-	}
+    public synchronized void log(String tag, String msg) {
+        LogRecord record = new LogRecord(Level.INFO, msg);
+        record.setSourceClassName(tag);
+        getLogger().log(record);
+    }
 
-	public synchronized void log(String tag, Level level, String msg) {
-		LogRecord record = new LogRecord(level, msg);
-		record.setSourceClassName(tag);
-		getLogger().log(record);
-	}
+    public synchronized void log(String tag, Level level, String msg) {
+        LogRecord record = new LogRecord(level, msg);
+        record.setSourceClassName(tag);
+        getLogger().log(record);
+    }
 
     public synchronized void log(final Script s, final Throwable t) {
         final Writer result = new StringWriter();
@@ -233,83 +232,83 @@ public class Bot {
 
 
     public synchronized void setLogger(BotLogger logger) {
-		this.logger = logger;
-	}
+        this.logger = logger;
+    }
 
-	public synchronized BotLogger getLogger() {
-		return logger;
-	}
+    public synchronized BotLogger getLogger() {
+        return logger;
+    }
 
-	public synchronized Applet getApplet() {
-		return loader.getApplet();
-	}
+    public synchronized Applet getApplet() {
+        return loader.getApplet();
+    }
 
-	public synchronized HijackLoader getLoader() {
-		return loader;
-	}
+    public synchronized HijackLoader getLoader() {
+        return loader;
+    }
 
-	public synchronized HijackCanvas getCanvas() {
-		if (canvas != null) {
-			return canvas;
-		}
-		if (loader == null || getApplet() == null || getApplet().getComponentCount() == 0 || !(getApplet().getComponent(0) instanceof HijackCanvas)) {
-			return null;
-		}
-		return (HijackCanvas) getApplet().getComponent(0);
-	}
+    public synchronized HijackCanvas getCanvas() {
+        if (canvas != null) {
+            return canvas;
+        }
+        if (loader == null || getApplet() == null || getApplet().getComponentCount() == 0 || !(getApplet().getComponent(0) instanceof HijackCanvas)) {
+            return null;
+        }
+        return (HijackCanvas) getApplet().getComponent(0);
+    }
 
-	public synchronized InputHandler getInputHandler() {
-		return inputHandler;
-	}
+    public synchronized InputHandler getInputHandler() {
+        return inputHandler;
+    }
 
-	public void setCallback(Callback callback) {
-		this.callback = callback;
-	}
+    public void setCallback(Callback callback) {
+        this.callback = callback;
+    }
 
-	public int getBotIndex() {
-		return botIndex;
-	}
+    public int getBotIndex() {
+        return botIndex;
+    }
 
-	public void setBotIndex(int botIndex) {
-		this.botIndex = botIndex;
-	}
+    public void setBotIndex(int botIndex) {
+        this.botIndex = botIndex;
+    }
 
-	public Account getLastAccount() {
-		return lastAccount;
-	}
+    public Account getLastAccount() {
+        return lastAccount;
+    }
 
-	public Script peekScript() {
-		synchronized (scriptStack) {
-			if (scriptStack.isEmpty()) return null;
-			
-			return scriptStack.peek();
-		}
-	}
-	
-	public boolean isScriptStackEmpty() {
-		synchronized (scriptStack) {
-			return scriptStack.isEmpty();
-		}
-	}
+    public Script peekScript() {
+        synchronized (scriptStack) {
+            if (scriptStack.isEmpty()) return null;
 
-	public VBLogin getLogin() {
-		return login;
-	}
+            return scriptStack.peek();
+        }
+    }
 
-	public void setThread(Thread thread) {
-		this.thread = thread;
-	}
+    public boolean isScriptStackEmpty() {
+        synchronized (scriptStack) {
+            return scriptStack.isEmpty();
+        }
+    }
 
-	public Thread getThread() {
-		return thread;
-	}
+    public VBLogin getLogin() {
+        return login;
+    }
 
-	public synchronized BotWindow getWindow() {
-		return window;
-	}
+    public void setThread(Thread thread) {
+        this.thread = thread;
+    }
 
-	public synchronized void setWindow(BotWindow window) {
-		this.window = window;
-	}
+    public Thread getThread() {
+        return thread;
+    }
+
+    public synchronized BotWindow getWindow() {
+        return window;
+    }
+
+    public synchronized void setWindow(BotWindow window) {
+        this.window = window;
+    }
 
 }

@@ -1,5 +1,10 @@
 package org.vinsert.bot;
 
+import org.vinsert.bot.script.ScriptInfo;
+import org.vinsert.bot.util.ScriptClassLoader;
+import org.vinsert.bot.util.VBLogin;
+
+import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -7,13 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import org.vinsert.bot.IOHelper;
-import org.vinsert.bot.script.ScriptInfo;
-import org.vinsert.bot.util.ScriptClassLoader;
-import org.vinsert.bot.util.VBLogin;
 
 public class SDN {
 

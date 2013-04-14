@@ -46,7 +46,7 @@ public class PasteScript {
             input.renameTo(output);
             fileManager.close();
             Application.window.getActiveBot().getLogger().log(new LogRecord(Level.INFO, success ? "Compiled Script : " + name
-            : "Compilation Error"));
+                    : "Compilation Error"));
         } catch (IOException e) {
             e.printStackTrace();
         }

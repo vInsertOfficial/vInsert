@@ -1,17 +1,17 @@
 package org.vinsert.insertion;
 
 public interface IFloorDecoration {
-	
-	public IRenderable getRenderable();
 
-	public int getObjectHash();
+    public IRenderable getRenderable();
 
-	public int getFlags();
+    public int getObjectHash();
 
-	public int getHeight();
+    public int getFlags();
 
-	public int getGridX();
+    public int getHeight();
 
-	public int getGridY();
+    public int getGridX();
+
+    public int getGridY();
 
 }

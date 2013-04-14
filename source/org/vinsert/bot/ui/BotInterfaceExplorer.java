@@ -1,30 +1,28 @@
 package org.vinsert.bot.ui;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
+import org.vinsert.bot.script.ScriptContext;
+import org.vinsert.bot.script.api.Widget;
+import org.vinsert.component.ProjectionListener;
+
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import org.vinsert.bot.script.ScriptContext;
-import org.vinsert.bot.script.api.Widget;
-import org.vinsert.component.ProjectionListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 /**
- *
  * @author tholomew
  */
 public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = -2287588384260930650L;
-	private JButton filter;
+     *
+     */
+    private static final long serialVersionUID = -2287588384260930650L;
+    private JButton filter;
     private JScrollPane jScrollPane1;
     private JScrollPane jScrollPane2;
     private JTextField searchQuery;

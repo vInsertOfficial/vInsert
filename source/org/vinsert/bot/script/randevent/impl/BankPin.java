@@ -5,10 +5,9 @@ import org.vinsert.bot.script.api.Widget;
 import org.vinsert.bot.script.randevent.RandomEvent;
 
 /**
- *
  * @author tholomew
  * @version 1.1: now finds the correct widget that a human would most likely click, rather than a tiny box
- *      also enters in the pin based on what window is showing
+ *          also enters in the pin based on what window is showing
  */
 @ScriptManifest(name = "Bank Pin", authors = {"tholomew"}, description = "Bank Pin Handler", version = 1.1)
 public class BankPin extends RandomEvent {
@@ -19,15 +18,15 @@ public class BankPin extends RandomEvent {
     @Override
     public boolean init() {
         if (isPinWindowOpen()) {
-                log("Parsing bank pin.");
-                String sPin = getContext().getAccount().getPin();
-                if (sPin.length() < 4 || sPin.equals("null")) {
-                    log("You must enter a valid bank pin in accounts!");
-                    return false;
-                }
-                bankPin = parseBankPin(sPin);
-                return true;
+            log("Parsing bank pin.");
+            String sPin = getContext().getAccount().getPin();
+            if (sPin.length() < 4 || sPin.equals("null")) {
+                log("You must enter a valid bank pin in accounts!");
+                return false;
             }
+            bankPin = parseBankPin(sPin);
+            return true;
+        }
         return false;
     }
 
@@ -84,17 +83,17 @@ public class BankPin extends RandomEvent {
         Widget clickText = widgets.get(PARENT_ID, 151);
         if (clickText != null) {
             if (clickText.getText().equals("First click the FIRST digit."))
-            	return 0;
+                return 0;
             else if (clickText.getText().equals("Now click the SECOND digit."))
-            	return 1;
+                return 1;
             else if (clickText.getText().equals("Time for the THIRD digit."))
-            	return 2;
+                return 2;
             else if (clickText.getText().equals("Finally, the FOURTH digit."))
-            	return 3;
+                return 3;
         }
         return -1;  //shouldn't ever get here
     }
-    
+
     public boolean isPinWindowOpen() {
         for (Widget w : widgets.getValidated()) {
             if (w.getParentId() == PARENT_ID) {

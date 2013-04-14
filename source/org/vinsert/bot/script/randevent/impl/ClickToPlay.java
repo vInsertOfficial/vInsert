@@ -5,7 +5,6 @@ import org.vinsert.bot.script.api.Widget;
 import org.vinsert.bot.script.randevent.RandomEvent;
 
 /**
- *
  * @author tholomew
  */
 @ScriptManifest(name = "Click To Play", authors = {"tholomew"}, description = "Click to play, made for the sole purpose of disconnects", version = 1.0)

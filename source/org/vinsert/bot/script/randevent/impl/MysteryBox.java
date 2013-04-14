@@ -1,15 +1,12 @@
 package org.vinsert.bot.script.randevent.impl;
 
-import java.util.Random;
 import org.vinsert.bot.script.ScriptManifest;
 import org.vinsert.bot.script.api.Item;
 import org.vinsert.bot.script.api.Widget;
 import org.vinsert.bot.script.randevent.RandomEvent;
-import org.vinsert.bot.script.randevent.RandomEvent.RandomEventPriority;
 import org.vinsert.bot.util.Utils;
 
 /**
- *
  * @author tholomew
  */
 @ScriptManifest(name = "MysteryBox", description = "Solves the Mystery Box", authors = {"tholomew"})

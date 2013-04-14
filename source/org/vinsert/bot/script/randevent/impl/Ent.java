@@ -1,11 +1,9 @@
 package org.vinsert.bot.script.randevent.impl;
 
-import java.util.Random;
 import org.vinsert.bot.script.ScriptManifest;
 import org.vinsert.bot.script.api.Npc;
 import org.vinsert.bot.script.api.tools.Navigation.NavigationPolicy;
 import org.vinsert.bot.script.randevent.RandomEvent;
-import org.vinsert.bot.script.randevent.RandomEvent.RandomEventPriority;
 import org.vinsert.bot.util.Utils;
 
 @ScriptManifest(name = "Ent", description = "Stops chopping ents!", authors = {"tholomew"})

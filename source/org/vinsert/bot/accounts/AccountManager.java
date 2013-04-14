@@ -45,7 +45,7 @@ public class AccountManager {
 
     public static void loadAccounts() {
         try {
-        	accounts.clear();
+            accounts.clear();
             File accountsFile = new File(Configuration.ACCOUNTS_DIR + File.separator + "Accounts.txt");
             if (!accountsFile.exists()) {
                 accountsFile.createNewFile();

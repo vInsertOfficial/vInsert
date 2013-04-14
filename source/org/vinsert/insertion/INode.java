@@ -2,10 +2,10 @@ package org.vinsert.insertion;
 
 public interface INode {
 
-	public INode next();
-	
-	public INode prev();
+    public INode next();
 
-	public long uid();
-	
+    public INode prev();
+
+    public long uid();
+
 }

@@ -1,9 +1,9 @@
 package org.vinsert.component;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 
 public interface ProjectionListener {
-	
-	public void render(Graphics2D graphics);
+
+    public void render(Graphics2D graphics);
 
 }

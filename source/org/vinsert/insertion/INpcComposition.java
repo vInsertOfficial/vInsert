@@ -2,10 +2,10 @@ package org.vinsert.insertion;
 
 public interface INpcComposition {
 
-	public String getName();
+    public String getName();
 
-	public int getId();
-	
-	public String[] getActions();
-	
+    public int getId();
+
+    public String[] getActions();
+
 }

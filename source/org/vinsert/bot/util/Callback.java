@@ -2,9 +2,9 @@ package org.vinsert.bot.util;
 
 /**
  * Generic callback interface
- * @author tommo
  *
+ * @author tommo
  */
 public interface Callback {
-	public void call();
+    public void call();
 }

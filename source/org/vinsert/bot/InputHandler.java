@@ -50,7 +50,6 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
     /**
      * The coreListener to handle all events within lists.
      */
-
     private CoreListener coreListener;
 
     public InputHandler(Bot bot, Canvas canvas) {
@@ -97,7 +96,7 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
      * @param keycode
      */
     public void typeNonKey(int keycode) {
-        KeyEvent typed = new KeyEvent(canvas, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0,
+        KeyEvent typed = new KeyEvent(getFakeSource(), KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0,
                 (char) keycode, KeyEvent.CHAR_UNDEFINED);
         coreListener.keyPressed(typed);
     }
@@ -108,7 +107,7 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
      * @param keycode The keycode, such as KeyEvent.VK_X
      */
     public void pressKey(int keycode) {
-        KeyEvent pressed = new KeyEvent(canvas, KeyEvent.KEY_PRESSED, System.currentTimeMillis(),
+        KeyEvent pressed = new KeyEvent(getFakeSource(), KeyEvent.KEY_PRESSED, System.currentTimeMillis(),
                 0, keycode, (char) keycode, KeyEvent.KEY_LOCATION_STANDARD);
         coreListener.keyPressed(pressed);
     }
@@ -119,7 +118,7 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
      * @param keycode
      */
     public void typeKey(int keycode) {
-        KeyEvent typed = new KeyEvent(canvas, KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0,
+        KeyEvent typed = new KeyEvent(getFakeSource(), KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0,
                 KeyEvent.VK_UNDEFINED, (char) keycode, KeyEvent.KEY_LOCATION_UNKNOWN);
         coreListener.keyTyped(typed);
     }
@@ -130,7 +129,7 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
      * @param keycode The keycode, such as KeyEvent.VK_X
      */
     public void releaseKey(int keycode) {
-        KeyEvent released = new KeyEvent(canvas, KeyEvent.KEY_RELEASED, System.currentTimeMillis(),
+        KeyEvent released = new KeyEvent(getFakeSource(), KeyEvent.KEY_RELEASED, System.currentTimeMillis(),
                 0, keycode, (char) keycode, KeyEvent.KEY_LOCATION_STANDARD);
         coreListener.keyReleased(released);
     }
@@ -139,7 +138,7 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
      * Dispatches a mouse pressed event, must release manually
      */
     public void pressMouse(boolean right) {
-        MouseEvent pressed = new MouseEvent(canvas, MouseEvent.MOUSE_PRESSED,
+        MouseEvent pressed = new MouseEvent(getFakeSource(), MouseEvent.MOUSE_PRESSED,
                 System.currentTimeMillis(), right ? InputEvent.BUTTON3_MASK : 0,
                 (int) position.getX(), (int) position.getY(), 1, false);
 
@@ -154,7 +153,7 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
      * Dispatches a mouse released event
      */
     public void releaseMouse() {
-        MouseEvent released = new MouseEvent(canvas, MouseEvent.MOUSE_RELEASED,
+        MouseEvent released = new MouseEvent(getFakeSource(), MouseEvent.MOUSE_RELEASED,
                 System.currentTimeMillis(), 0, (int) position.getX(), (int) position.getY(), 1,
                 false);
         coreListener.mouseReleased(released);
@@ -167,7 +166,7 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
      * @param y The y coordinate
      */
     public void moveMouse(final int x, final int y) {
-        final MouseEvent me = new MouseEvent(canvas, MouseEvent.MOUSE_MOVED,
+        final MouseEvent me = new MouseEvent(getFakeSource(), MouseEvent.MOUSE_MOVED,
                 System.currentTimeMillis(), 0, x, y, 0, false);
         coreListener.mouseMoved(me);
         position.setLocation(x, y);
@@ -180,7 +179,7 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
      * @param y The y coordinate
      */
     public void mouseEnter(final int x, final int y) {
-        final MouseEvent me = new MouseEvent(canvas, MouseEvent.MOUSE_MOVED,
+        final MouseEvent me = new MouseEvent(getFakeSource(), MouseEvent.MOUSE_MOVED,
                 System.currentTimeMillis(), 0, x, y, 0, false);
         coreListener.mouseMoved(me);
         position.setLocation(x, y);
@@ -188,20 +187,17 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
 
     @Override
     public void keyTyped(KeyEvent e) {
-        //if (humanInput)
-            coreListener.keyTyped(e);
+        coreListener.keyTyped(e);
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        //if (humanInput)
-            coreListener.keyPressed(e);
+        coreListener.keyPressed(e);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        //if (humanInput)
-            coreListener.keyReleased(e);
+        coreListener.keyReleased(e);
     }
 
     @Override
@@ -270,12 +266,12 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
             coreListener.mouseWheelMoved(e);
     }
 
-    public void addListener(final EventListener... listeners) {
-        coreListener.addListener(listeners);
+    public void addScriptListener(final EventListener... listeners) {
+        coreListener.addListener(true, listeners);
     }
 
-    public void removeListener(final EventListener... listeners) {
-        coreListener.removeListener(listeners);
+    public void removeScriptListener(final EventListener... listeners) {
+        coreListener.removeListener(true, listeners);
     }
 
     public Point getPosition() {
@@ -373,6 +369,10 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
         return new Point(position.x, position.y);
     }
 
+    public Component getFakeSource() {
+        return bot.getApplet();
+    }
+
     /**
      * CoreListener acts as a wrapper to {@link MouseListener}, {@link MouseMotionListener}, {@link MouseWheelListener},
      * {@link KeyListener}, and {@link FocusListener}.
@@ -383,11 +383,11 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
      * @author core
      */
     private class CoreListener implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener, FocusListener {
-        private final List<MouseListener> mouseListeners = new ArrayList<>();
-        private final List<MouseMotionListener> mouseMotionListeners = new ArrayList<>();
-        private final List<MouseWheelListener> mouseWheelListeners = new ArrayList<>();
+        private final List<MouseListener> mouseListeners = new ArrayList<>(), scriptMouseListeners = new ArrayList<>();
+        private final List<MouseMotionListener> mouseMotionListeners = new ArrayList<>(), scriptMouseMotionListeners = new ArrayList<>();
+        private final List<MouseWheelListener> mouseWheelListeners = new ArrayList<>(), scriptMouseWheelListeners = new ArrayList<>();
         private final List<KeyListener> keyListeners = new ArrayList<>();
-        private final List<FocusListener> focusListeners = new ArrayList<>();
+        private final List<FocusListener> focusListeners = new ArrayList<>(), scriptMouseFocusListeners = new ArrayList<>();
 
         public CoreListener(final MouseListener[] mouseListeners,
                             final MouseMotionListener[] mouseMotionListeners,
@@ -401,42 +401,42 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
             this.focusListeners.addAll(Arrays.asList(focusListeners));
         }
 
-        public void addListener(final EventListener... listeners) {
+        private void addListener(final boolean script, final EventListener... listeners) {
             for (final EventListener listener : listeners) {
                 if (listener instanceof MouseListener) {
-                    mouseListeners.add((MouseListener) listener);
+                    (script ? scriptMouseListeners : mouseListeners).add((MouseListener) listener);
                 }
                 if (listener instanceof MouseMotionListener) {
-                    mouseMotionListeners.add((MouseMotionListener) listener);
+                    (script ? scriptMouseMotionListeners : mouseMotionListeners).add((MouseMotionListener) listener);
                 }
                 if (listener instanceof MouseWheelListener) {
-                    mouseWheelListeners.add((MouseWheelListener) listener);
+                    (script ? scriptMouseWheelListeners : mouseWheelListeners).add((MouseWheelListener) listener);
                 }
-                if (listener instanceof KeyListener) {
+                if (!script && listener instanceof KeyListener) {
                     keyListeners.add((KeyListener) listener);
                 }
                 if (listener instanceof FocusListener) {
-                    focusListeners.add((FocusListener) listener);
+                    (script ? scriptMouseFocusListeners : focusListeners).add((FocusListener) listener);
                 }
             }
         }
 
-        public void removeListener(final EventListener... listeners) {
+        private void removeListener(final boolean script, final EventListener... listeners) {
             for (final EventListener listener : listeners) {
                 if (listener instanceof MouseListener) {
-                    mouseListeners.remove(listener);
+                    (script ? scriptMouseListeners : mouseListeners).remove(listener);
                 }
                 if (listener instanceof MouseMotionListener) {
-                    mouseMotionListeners.remove(listener);
+                    (script ? scriptMouseMotionListeners : mouseMotionListeners).remove(listener);
                 }
                 if (listener instanceof MouseWheelListener) {
-                    mouseWheelListeners.remove(listener);
+                    (script ? scriptMouseWheelListeners : mouseWheelListeners).remove(listener);
                 }
-                if (listener instanceof KeyListener) {
-                    keyListeners.remove(listener);
+                if (!script && listener instanceof KeyListener) {
+                    keyListeners.add((KeyListener) listener);
                 }
                 if (listener instanceof FocusListener) {
-                    focusListeners.remove(listener);
+                    (script ? scriptMouseFocusListeners : focusListeners).remove(listener);
                 }
             }
         }
