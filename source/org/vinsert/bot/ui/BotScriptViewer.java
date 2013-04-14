@@ -212,14 +212,14 @@ public class BotScriptViewer extends JDialog {
 
 		@Override
 		protected Void doInBackground() throws Exception {
-			List<ScriptInfo> locals = new ArrayList<ScriptInfo>();
-			ScriptClassLoader.loadLocal(locals, new File(Configuration.COMPILED_DIR));
-			
-			for (ScriptInfo si : locals) {
-				firePropertyChange("script", null, si);
-			}
+            if (Configuration.OFFLINE_MODE) {
+                List<ScriptInfo> locals = new ArrayList<ScriptInfo>();
+                ScriptClassLoader.loadLocal(locals, new File(Configuration.COMPILED_DIR));
 
-            if (Configuration.DEV_MODE || Configuration.OFFLINE_MODE) {
+                for (ScriptInfo si : locals) {
+                    firePropertyChange("script", null, si);
+                }
+
                 firePropertyChange("finished", null, null);
                 return null;
             }

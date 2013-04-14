@@ -92,7 +92,7 @@ public abstract class Script implements ProjectionListener, Runnable {
 	}
 
     private boolean canUse() {
-        if(manifest.type() == ScriptType.FREE || (Configuration.DEV_MODE && !VBLogin.self.isLoggedIn())) {
+        if(manifest.type() == ScriptType.FREE || (!Configuration.OFFLINE_MODE && !VBLogin.self.isLoggedIn())) {
             return true;
         }
         if (!VBLogin.self.isLoggedIn() || VBLogin.self.getUsergroupId() == 8) {

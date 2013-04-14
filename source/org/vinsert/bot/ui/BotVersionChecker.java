@@ -71,6 +71,7 @@ public class BotVersionChecker extends JDialog implements PropertyChangeListener
 			int value = (Integer) evt.getNewValue();
 			if (value == RESULT_UP_TO_DATE) {
 				setVisible(false);
+                dispose();
 				Application.window = new BotWindow();
 				Application.window.init();
 				System.out.println("UP_TO_DATE");
@@ -80,6 +81,7 @@ public class BotVersionChecker extends JDialog implements PropertyChangeListener
 				System.exit(0);
 			} else if (value == RESULT_FALLBACK) {
 				setVisible(false);
+                dispose();
 				BotWindow.warn("Connection error", "Could not verify bot version from server, entering offline mode.");
                 Configuration.OFFLINE_MODE = true;
 				Application.window = new BotWindow();
