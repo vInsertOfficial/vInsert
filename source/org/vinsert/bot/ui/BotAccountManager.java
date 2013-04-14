@@ -3,6 +3,7 @@ package org.vinsert.bot.ui;
 
 import org.vinsert.bot.accounts.Account;
 import org.vinsert.bot.accounts.AccountManager;
+import org.vinsert.bot.util.Cryption;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -91,7 +92,7 @@ public class BotAccountManager extends JDialog implements ActionListener {
                     for (int x = 0; x < table.getColumnCount(); x++) {
                         data[x] = (String) table.getValueAt(i, x);
                     }
-                    AccountManager.getAccounts().add(new Account(data[0], data[1], data[2], data[3]));
+    				AccountManager.getAccounts().add(new Account(Cryption.baseEncrypt(data[0]), Cryption.baseEncrypt(data[1]), Cryption.baseEncrypt(data[2]), Cryption.baseEncrypt(data[3])));
                 }
                 AccountManager.saveAccounts();
                 dispose();
