@@ -54,11 +54,11 @@ public class ArchiveClassLoader extends ClassLoader {
 	 */
 	private Map<String, JSONObject> mappings = new HashMap<String, JSONObject>();
 
-	public ArchiveClassLoader(Archive<?> archive, final boolean log) throws IOException {
+	public ArchiveClassLoader(Archive<?> archive) throws IOException {
 		this.archive = archive;
 		Permissions permissions = getAppletPermissions();
 		this.domain = new ProtectionDomain(new CodeSource(null, (Certificate[]) null), permissions);
-		loadMappings(log);
+		loadMappings();
 
 //		for (ClassNode c : (Archive<ClassNode>) archive) {
 //			modify(c);
@@ -70,7 +70,7 @@ public class ArchiveClassLoader extends ClassLoader {
 	
 	
 	private File getLocalVersionFile() {
-		return new File(Configuration.STORAGE_DIR + File.separator + Configuration.vesrionfile);
+		return new File(Configuration.STORAGE_DIR + File.separator + Configuration.versionfile);
 	}
 	private File getLocalInsertionsFile() {
 		return new File(Configuration.STORAGE_DIR + File.separator + Configuration.jsonfile);
@@ -95,6 +95,7 @@ public class ArchiveClassLoader extends ClassLoader {
 		HttpURLConnection con = (HttpURLConnection) url.openConnection();
 		con.setRequestMethod("GET");
 		con.setDoInput(true);
+        con.setConnectTimeout(5000);
 		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.56 Safari/535.11");
 
 		ReadableByteChannel rbc = Channels.newChannel(con.getInputStream());
@@ -104,14 +105,16 @@ public class ArchiveClassLoader extends ClassLoader {
 	    rbc.close();
 	}
 	
-	private void loadMappings(final boolean log) {
+	private void loadMappings() {
 		try {
-            if(Configuration.getMinor() != getLocalMinorVersion() || !getLocalInsertionsFile().exists()) {
-                           if (log) {
-                                 fetch(Configuration.vesrionfile); //lazy as fuck
-                                 fetch(Configuration.jsonfile);
-                }
+
+            try {
+                fetch(Configuration.versionfile);
+                fetch(Configuration.jsonfile);
+            } catch (final IOException ignored) {
+                System.err.println("Failed to downloaded version file and hooks. Attempting to run without latest hooks.");
             }
+
 			System.out.println(Configuration.jsonfile);
 			BufferedInputStream in = new BufferedInputStream(new FileInputStream(getLocalInsertionsFile()));
 			GzipCompressorInputStream gzip = new GzipCompressorInputStream(in);

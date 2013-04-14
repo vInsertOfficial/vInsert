@@ -75,7 +75,7 @@ public class HijackLoader {
 	 * @return A runescape loader.
 	 * @throws Exception
 	 */
-	public static HijackLoader create(Language language, boolean decrypt, final boolean log) throws Exception {
+	public static HijackLoader create(Language language, boolean decrypt) throws Exception {
 		HijackLoader loader = new HijackLoader();
 		URL srcUrl = new URL("http://oldschool"+getWorld()+".runescape.com");
 		String source = getPageSource(srcUrl);
@@ -93,7 +93,7 @@ public class HijackLoader {
 			if (decrypt) {
 				Archive<ClassNode> archive = new JarArchive(jar);//new ClassArchive(AES.decryptPack(jar.getInputStream(jar.getEntry("inner.pack.gz")), stub.getParameter("0"), stub.getParameter("-1")));
 				logger.info("Archive opened. Injecting bytecode...");
-				ClassLoader classLoader = loader.classLoader = new ArchiveClassLoader(archive, log);
+				ClassLoader classLoader = loader.classLoader = new ArchiveClassLoader(archive);
 				Applet applet = loader.applet = (Applet) classLoader.loadClass("client").newInstance();
 				applet.setStub(stub);
 				applet.setPreferredSize(new Dimension(765, 503));

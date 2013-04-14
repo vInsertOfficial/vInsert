@@ -92,13 +92,12 @@ public abstract class Script implements ProjectionListener, Runnable {
 	}
 
     private boolean canUse() {
-        if(manifest.type() == ScriptType.FREE) {
+        if(manifest.type() == ScriptType.FREE || (Configuration.DEV_MODE && !VBLogin.self.isLoggedIn())) {
             return true;
         }
-        if((!Configuration.DEV && !VBLogin.self.isLoggedIn()) || VBLogin.self.getUsergroupId() == 8) {
-           return false;
+        if (!VBLogin.self.isLoggedIn() || VBLogin.self.getUsergroupId() == 8) {
+            return false;
         }
-        
         int[] vip = {10, 11, 6, 9};
         if(manifest.type() == ScriptType.VIP) {
             for(int id : vip) {
@@ -114,7 +113,7 @@ public abstract class Script implements ProjectionListener, Runnable {
 	 * FOR INTERNAL USE. Called by the bot to create the script.
 	 * @param context
 	 */
-	public void create(ScriptContext context) throws RuntimeException {
+	public final void create(ScriptContext context) throws RuntimeException {
 		this.context = context;
 		if (this.getClass().isAnnotationPresent(ScriptManifest.class)) {
 			this.manifest = this.getClass().getAnnotation(ScriptManifest.class);
@@ -160,7 +159,7 @@ public abstract class Script implements ProjectionListener, Runnable {
 	public abstract void close();
 	
 	@Override
-	public void run() {
+	public final void run() {
 		/*
 		 * Install a default exception handler which prints to the logger
 		 */
@@ -239,18 +238,18 @@ public abstract class Script implements ProjectionListener, Runnable {
 	/**
 	 * Calls close() and destroys the script thread
 	 */
-	public void destroy() {
+	public final void destroy() {
         if (thread != null) {
             thread.interrupt();
         }
         requestExit();
 	}
 
-	public synchronized Thread getThread() {
+	public final synchronized Thread getThread() {
 		return thread;
 	}
 
-	public synchronized void setThread(Thread thread) {
+	public final synchronized void setThread(Thread thread) {
 		this.thread = thread;
 	}
 
@@ -258,7 +257,7 @@ public abstract class Script implements ProjectionListener, Runnable {
 	 * Logs the message to the bot logger
 	 * @param string The string to log
 	 */
-	public void log(String string) {
+	public final void log(String string) {
 		context.getBot().log(manifest.name(), string);
 	}
 
@@ -267,46 +266,46 @@ public abstract class Script implements ProjectionListener, Runnable {
 	 * @param level The severity level
 	 * @param string The string to log
 	 */
-	public void log(Level level, String string) {
+	public final void log(Level level, String string) {
 		context.getBot().log(manifest.name(), level, string);
 	}
 
 	/**
 	 * @return Has the script requested an exit
 	 */
-	public boolean isExitRequested() {
+	public final boolean isExitRequested() {
 		return exitRequested;
 	}
 
 	/**
 	 * Requests the bot to cancel this running script.
 	 */
-	public void requestExit() {
+	public final void requestExit() {
 		exitRequested = true;
 	}
 	
 	/**
 	 * @return Is the script currently paused
 	 */
-	public boolean isPaused() {
+	public final boolean isPaused() {
 		return paused;
 	}
 	
-	public void setPaused(boolean paused) {
+	public final void setPaused(boolean paused) {
 		this.paused = paused;
 	}
 
 	/**
 	 * @return The script context the script is running in
 	 */
-	public ScriptContext getContext() {
+	public final ScriptContext getContext() {
 		return context;
 	}
 
 	/**
 	 * @return The script manifest
 	 */
-	public ScriptManifest getManifest() {
+	public final ScriptManifest getManifest() {
 		return manifest;
 	}
 
@@ -319,7 +318,7 @@ public abstract class Script implements ProjectionListener, Runnable {
 	 * @param max
 	 * @return
 	 */
-	public int random(int max) {
+	public final int random(int max) {
 		return Utils.random(0, max);
 	}
 	
@@ -329,7 +328,7 @@ public abstract class Script implements ProjectionListener, Runnable {
 	 * @param max
 	 * @return
 	 */
-	public int random(int min, int max) {
+	public final int random(int min, int max) {
 		return Utils.random(min, max);
 	}
 
@@ -337,7 +336,7 @@ public abstract class Script implements ProjectionListener, Runnable {
 	 * Sleeps for the given time in millis
 	 * @param millis
 	 */
-	public void sleep(int millis) {
+	public final void sleep(int millis) {
 		Utils.sleep(millis);
 	}
 
@@ -346,7 +345,7 @@ public abstract class Script implements ProjectionListener, Runnable {
 	 * @param minMillis
 	 * @param maxMillis
 	 */
-	public void sleep(int minMillis, int maxMillis) {
+	public final void sleep(int minMillis, int maxMillis) {
 		Utils.sleep(Utils.random(minMillis, maxMillis));
 	}
 	
@@ -355,7 +354,7 @@ public abstract class Script implements ProjectionListener, Runnable {
 	 * @param array
 	 * @return
 	 */
-	public <T> T random(T[] array) {
+	public final <T> T random(T[] array) {
 		return array[random(0, array.length)];
 	}
 	

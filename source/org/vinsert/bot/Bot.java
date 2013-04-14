@@ -87,11 +87,6 @@ public class Bot {
 	 * The VB Login instance
 	 */
 	private VBLogin login;
-        
-   /**
-    * Should the bot check for scripts
-    */
-    private boolean log;
     
     /**
      * The bot window containing this bot instance
@@ -100,10 +95,9 @@ public class Bot {
 
     private boolean initialized;
 
-    public Bot(final BotWindow window, final boolean l) {
+    public Bot(final BotWindow window) {
     	this.window = window;
 		this.bot = this;
-        this.log = l;
 	}
     
     /**
@@ -114,7 +108,7 @@ public class Bot {
 			@Override
 			public void run() {
 				try {
-					loader = HijackLoader.create(Language.ENGLISH, true, log);
+					loader = HijackLoader.create(Language.ENGLISH, true);
 					callback.call();
 				} catch (Exception e) {
 					e.printStackTrace();

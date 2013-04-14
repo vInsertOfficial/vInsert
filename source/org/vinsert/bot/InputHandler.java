@@ -2,6 +2,7 @@ package org.vinsert.bot;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EventListener;
 import java.util.List;
@@ -382,22 +383,22 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
      * @author core
      */
     private class CoreListener implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener, FocusListener {
-        private final List<MouseListener> mouseListeners;
-        private final List<MouseMotionListener> mouseMotionListeners;
-        private final List<MouseWheelListener> mouseWheelListeners;
-        private final List<KeyListener> keyListeners;
-        private final List<FocusListener> focusListeners;
+        private final List<MouseListener> mouseListeners = new ArrayList<>();
+        private final List<MouseMotionListener> mouseMotionListeners = new ArrayList<>();
+        private final List<MouseWheelListener> mouseWheelListeners = new ArrayList<>();
+        private final List<KeyListener> keyListeners = new ArrayList<>();
+        private final List<FocusListener> focusListeners = new ArrayList<>();
 
         public CoreListener(final MouseListener[] mouseListeners,
                             final MouseMotionListener[] mouseMotionListeners,
                             final MouseWheelListener[] mouseWheelListeners,
                             final KeyListener[] keyListeners,
                             final FocusListener[] focusListeners) {
-            this.mouseListeners = Arrays.asList(mouseListeners);
-            this.mouseMotionListeners = Arrays.asList(mouseMotionListeners);
-            this.mouseWheelListeners = Arrays.asList(mouseWheelListeners);
-            this.keyListeners = Arrays.asList(keyListeners);
-            this.focusListeners = Arrays.asList(focusListeners);
+            this.mouseListeners.addAll(Arrays.asList(mouseListeners));
+            this.mouseMotionListeners.addAll(Arrays.asList(mouseMotionListeners));
+            this.mouseWheelListeners.addAll(Arrays.asList(mouseWheelListeners));
+            this.keyListeners.addAll(Arrays.asList(keyListeners));
+            this.focusListeners.addAll(Arrays.asList(focusListeners));
         }
 
         public void addListener(final EventListener... listeners) {

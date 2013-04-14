@@ -218,7 +218,11 @@ public class BotScriptViewer extends JDialog {
 			for (ScriptInfo si : locals) {
 				firePropertyChange("script", null, si);
 			}
-			
+
+            if (Configuration.DEV_MODE || Configuration.OFFLINE_MODE) {
+                return null;
+            }
+
 			final List<ScriptInfo> definitions = new ArrayList<ScriptInfo>();
 			final List<String[]> jars = SDN.getData();
 			final List<byte[]> scriptList = SDN.getScriptByteList();

@@ -19,7 +19,7 @@ public class Application {
 
 	public static void main(String[] args) {
 		if(args.length == 1 && args[0].equals("-dev"))
-			Configuration.DEV = true;
+			Configuration.DEV_MODE = true;
 
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
@@ -50,10 +50,10 @@ public class Application {
 					
 			       	Configuration.mkdirs();
 			       	
-					if(Configuration.DEV) {
+					/*if(Configuration.DEV_MODE) {
 						window = new BotWindow();
 						window.init(true);
-					} else new BotVersionChecker();
+					} else*/ new BotVersionChecker();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

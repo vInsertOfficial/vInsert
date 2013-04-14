@@ -178,8 +178,8 @@ public class VBLogin {
         }
     }
 
-    public static void create(final boolean log) {
-        if (!log) {
+    public static void create() {
+        if (!Configuration.DEV_MODE) {
             final VBLogin login = new VBLogin("", "");
             login.usergroupId = 0;
             login.userId = 0;

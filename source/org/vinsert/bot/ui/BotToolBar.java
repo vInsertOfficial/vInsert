@@ -113,12 +113,12 @@ public class BotToolBar extends JToolBar {
 	private ImageIcon inputDisabled = Configuration.icon("res/icon_input_small_disabled.png");
 	private ImageIcon inputDisabledHighlighted = Configuration.icon("res/icon_input_small_disabled_highlighted.png");
 
-	public BotToolBar(BotWindow window, final boolean log) {
+	public BotToolBar(BotWindow window) {
 		this.window = window;
-		init(log);
+		init();
 	}
 	
-	private void init(final boolean log) {
+	private void init() {
 		miscLogin.setEnabled(false);
 		miscFps.setEnabled(false);
 		miscFloor.setEnabled(false);
@@ -195,7 +195,7 @@ public class BotToolBar extends JToolBar {
 	    });
 	    newBotButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				window.addNewBot(log);
+				window.addNewBot();
 			}
 		});
 	    runScriptButton.addActionListener(new ActionListener() {

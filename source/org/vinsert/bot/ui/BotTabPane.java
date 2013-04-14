@@ -47,10 +47,10 @@ public class BotTabPane extends JPanel {
 	 */
 	private Tab selected;
 	
-	public BotTabPane(BotWindow window, boolean log) {
+	public BotTabPane(BotWindow window) {
 		setPreferredSize(new Dimension(Configuration.BOT_APPLET_WIDTH + 8, Configuration.BOT_APPLET_HEIGHT + Configuration.BOT_LOGGER_HEIGHT + 40));
 		setBorder(null);
-		toolbar = new BotToolBar(window, log);
+		toolbar = new BotToolBar(window);
 		add(toolbar, BorderLayout.NORTH);
 	}
 	

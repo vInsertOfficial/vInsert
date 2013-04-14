@@ -72,17 +72,18 @@ public class BotVersionChecker extends JDialog implements PropertyChangeListener
 			if (value == RESULT_UP_TO_DATE) {
 				setVisible(false);
 				Application.window = new BotWindow();
-				Application.window.init(true);
+				Application.window.init();
 				System.out.println("UP_TO_DATE");
 			} else if (value == RESULT_OUT_OF_DATE) {
-				BotWindow.error("Out of date!", "Vinsert has been updated, re-download the new version at http://www.vinsert.org/");
+				BotWindow.error("Out of date!", Configuration.BOT_NAME + " has been updated, re-download the new version at http://www.vinsert.org/");
 				System.out.println("OUT_OF_DATE");
 				System.exit(0);
 			} else if (value == RESULT_FALLBACK) {
 				setVisible(false);
 				BotWindow.warn("Connection error", "Could not verify bot version from server, entering offline mode.");
+                Configuration.OFFLINE_MODE = true;
 				Application.window = new BotWindow();
-				Application.window.init(false);
+				Application.window.init();
 				System.out.println("FALLBACK_OFFLINE_MODE");
 			}
 		}
@@ -99,7 +100,7 @@ public class BotVersionChecker extends JDialog implements PropertyChangeListener
 		@Override
 		protected Void doInBackground() throws Exception {
 			try {
-				String str = ArchiveClassLoader.getText(Configuration.composeres() + Configuration.vesrionfile);
+				String str = ArchiveClassLoader.getText(Configuration.composeres() + Configuration.versionfile);
 				String[] strargs = str.split(",");
 				Configuration.remote_major = Integer.parseInt(strargs[0]);
 				Configuration.remote_minor = Integer.parseInt(strargs[1]);

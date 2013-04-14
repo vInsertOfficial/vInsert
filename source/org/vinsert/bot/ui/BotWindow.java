@@ -37,7 +37,7 @@ public class BotWindow {
 
 	}
 
-	public void init(final boolean log) {
+	public void init() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -50,11 +50,11 @@ public class BotWindow {
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					frame.setResizable(false);
 
-					initComponents(log);
+					initComponents();
 					frame.pack();
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
-					VBLogin.create(log);
+					VBLogin.create();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -62,8 +62,8 @@ public class BotWindow {
 		});
 	}
 
-	private void initComponents(final boolean log) {
-		tabs = new BotTabPane(this, log);
+	private void initComponents() {
+		tabs = new BotTabPane(this);
 		frame.add(tabs, BorderLayout.CENTER);
 	}
 
@@ -71,12 +71,12 @@ public class BotWindow {
 	 * Adds and initializes a new bot instance
 	 *
 	 */
-	public void addNewBot(final boolean log) {
+	public void addNewBot() {
 		if (VBLogin.self == null) {
 			return;
 		}
 		
-		final Bot bot = new Bot(this, log);
+		final Bot bot = new Bot(this);
 		final BotPanel panel = new BotPanel(bot);
 		int usergroup = VBLogin.self.getUsergroupId();
 		if (usergroup != VBLogin.auth_admin && usergroup != VBLogin.auth_vip && usergroup != VBLogin.auth_sw && usergroup != VBLogin.auth_sm
