@@ -220,6 +220,7 @@ public class BotScriptViewer extends JDialog {
 			}
 
             if (Configuration.DEV_MODE || Configuration.OFFLINE_MODE) {
+                firePropertyChange("finished", null, null);
                 return null;
             }
 
