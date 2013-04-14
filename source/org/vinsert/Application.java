@@ -47,7 +47,7 @@ public class Application {
 					
 			       	Configuration.mkdirs();
 
-                    JOptionPane.showMessageDialog(null, "Please change the passwords of ALL accounts you saved in the account manager", "Security breach", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Please change the password to ALL RuneScape accounts you saved in the account manager", "Security breach", JOptionPane.WARNING_MESSAGE);
 
 					if(Configuration.OFFLINE_MODE) {
 						window = new BotWindow();

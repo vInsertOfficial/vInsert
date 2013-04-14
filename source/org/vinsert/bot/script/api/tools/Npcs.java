@@ -29,14 +29,7 @@ public class Npcs {
 	 * @return The list of nearby local npcs
 	 */
 	public List<Npc> getAll() {
-		List<Npc> npcs = new ArrayList<Npc>();
-		for (int i = 0; i < ctx.getClient().getNpcs().length; i++) {
-			INpc npc = ctx.getClient().getNpcs()[ctx.getClient().getNpcIndices()[i]];
-			if (npc != null) {
-				npcs.add(new Npc(ctx, npc));
-			}
-		}
-		return npcs;
+		return getNpcs(null);
 	}
 	
 
@@ -46,14 +39,15 @@ public class Npcs {
 	 * @return The npcs.
 	 */
 	public List<Npc> getNpcs(Filter<Npc> filter) {
-		List<Npc> npcs = new ArrayList<Npc>();
-		for (int i = 0; i < ctx.getClient().getNpcs().length; i++) {
-			INpc npc = ctx.getClient().getNpcs()[ctx.getClient().getNpcIndices()[i]];
-			
+		final List<Npc> npcs = new ArrayList<Npc>();
+        final INpc[] rsnpcs = ctx.getClient().getNpcs();
+        final int[] npcIndices = ctx.getClient().getNpcIndices();
+        for (int i = 0; i < rsnpcs.length; i++) {
+            INpc npc = rsnpcs[npcIndices[i]];
 			if (npc != null) {
 				Npc rsnpc = new Npc(ctx, npc);
 
-				if (filter.accept(rsnpc)) {
+				if (filter == null || filter.accept(rsnpc)) {
 					npcs.add(rsnpc);
 				}
 			}
