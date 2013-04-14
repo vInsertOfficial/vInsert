@@ -2,10 +2,7 @@ package org.vinsert;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
-import javax.swing.JFrame;
-import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
+import javax.swing.*;
 
 import org.pushingpixels.substance.api.skin.SubstanceGraphiteGlassLookAndFeel;
 import org.vinsert.bot.ui.BotErrorDialog;
@@ -49,7 +46,9 @@ public class Application {
 			       	});
 					
 			       	Configuration.mkdirs();
-			       	
+
+                    JOptionPane.showMessageDialog(null, "Please change the passwords of ALL accounts you saved in the account manager", "Security breach", JOptionPane.WARNING_MESSAGE);
+
 					if(Configuration.OFFLINE_MODE) {
 						window = new BotWindow();
 						window.init();

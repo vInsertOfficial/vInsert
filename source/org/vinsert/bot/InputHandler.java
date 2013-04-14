@@ -188,19 +188,19 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
 
     @Override
     public void keyTyped(KeyEvent e) {
-        if (humanInput)
+        //if (humanInput)
             coreListener.keyTyped(e);
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (humanInput)
+        //if (humanInput)
             coreListener.keyPressed(e);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (humanInput)
+        //if (humanInput)
             coreListener.keyReleased(e);
     }
 
