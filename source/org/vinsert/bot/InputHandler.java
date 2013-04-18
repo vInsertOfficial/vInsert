@@ -493,10 +493,8 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
                     listener.mouseMoved(e);
                 }
             }
-            if (humanInput) {
-                for (final MouseMotionListener listener : scriptMouseMotionListeners) {
-                    listener.mouseMoved(e);
-                }
+            for (final MouseMotionListener listener : scriptMouseMotionListeners) {
+                listener.mouseMoved(e);
             }
         }
 
