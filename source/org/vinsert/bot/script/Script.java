@@ -19,7 +19,7 @@ import java.util.logging.Level;
  * @author tommo
  * @author `Discardedx2
  */
-public abstract class Script implements ProjectionListener, Runnable {
+public abstract class Script implements ProjectionListener {
 
     /**
      * This script's manifest
@@ -45,11 +45,6 @@ public abstract class Script implements ProjectionListener, Runnable {
      * The time signalling when next to execute the script
      */
     private long nextExecutionTime = -1;
-
-    /**
-     * The thread this script is executing in
-     */
-    private Thread thread;
 
     /**
      * The context's script classes
@@ -145,8 +140,7 @@ public abstract class Script implements ProjectionListener, Runnable {
      */
     public abstract void close();
 
-    @Override
-    public final void run() {
+    public final void begin() {
         /*
 		 * Install a default exception handler which prints to the logger
 		 */
@@ -175,50 +169,15 @@ public abstract class Script implements ProjectionListener, Runnable {
 		/*
 		 * Check if the script wants to execute
 		 */
+        boolean initialized = false;
         try {
-            boolean initialized = init();
-            if (!initialized) {
-                log(Level.WARNING, "Script " + manifest.name() + " refused to start.");
-                context.getBot().popScript();
-                return;
-            }
+            initialized = init();
         } catch (Exception exc) {
             //ignore it
         }
-		
-		/*
-		 * Start the loop
-		 */
-        while (true) {
-            if (context.randomEvents != null) {
-                context.randomEvents.check();
-            }
-            if (isExitRequested()) {
-                context.getBot().popScript();
-                break;
-            }
-            if (!paused) {
-                long time = System.currentTimeMillis();
-                if (time >= nextExecutionTime) {
-                    int delay = pulse();
-                    if (delay < 0)
-                        context.getBot().popScript();
-                    nextExecutionTime = time + delay;
-                }
-            }
-
-            try {
-                if (nextExecutionTime > 0) {
-                    long sleep = nextExecutionTime - System.currentTimeMillis();
-                    if (sleep > 0)
-                        Thread.sleep(nextExecutionTime
-                                - System.currentTimeMillis());
-                } else {
-                    Thread.sleep(200);
-                }
-            } catch (InterruptedException e1) {
-                // ignore the exception, because interrupting is normal
-            }
+        if (!initialized) {
+            log(Level.WARNING, "Script " + manifest.name() + " refused to start.");
+            context.getBot().popScript();
         }
     }
 
@@ -226,18 +185,7 @@ public abstract class Script implements ProjectionListener, Runnable {
      * Calls close() and destroys the script thread
      */
     public final void destroy() {
-        if (thread != null) {
-            thread.interrupt();
-        }
         requestExit();
-    }
-
-    public final synchronized Thread getThread() {
-        return thread;
-    }
-
-    public final synchronized void setThread(Thread thread) {
-        this.thread = thread;
     }
 
     /**
@@ -352,4 +300,11 @@ public abstract class Script implements ProjectionListener, Runnable {
         return array[random(0, array.length)];
     }
 
+    public final long getNextExecutionTime() {
+        return nextExecutionTime;
+    }
+
+    public final void setNextExecutionTime(final long nextExecutionTime) {
+        this.nextExecutionTime = nextExecutionTime;
+    }
 }

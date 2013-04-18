@@ -202,47 +202,48 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (humanInput)
+        //if (humanInput)
             coreListener.mouseClicked(e);
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (humanInput)
+        //if (humanInput)
             coreListener.mousePressed(e);
         pressed = true;
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (humanInput)
+        //if (humanInput)
             coreListener.mouseReleased(e);
         pressed = false;
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        if (humanInput)
+        //if (humanInput)
             coreListener.mouseEntered(e);
         present = true;
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        if (humanInput)
+        //if (humanInput)
             coreListener.mouseExited(e);
         present = false;
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (humanInput)
+        //if (humanInput)
             coreListener.mouseDragged(e);
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if (humanInput) {
+        //if (humanInput)
+        {
             position.setLocation(e.getX(), e.getY());
             coreListener.mouseMoved(e);
         }
@@ -250,19 +251,19 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
 
     @Override
     public void focusGained(FocusEvent e) {
-        if (humanInput)
+        //if (humanInput)
             coreListener.focusGained(e);
     }
 
     @Override
     public void focusLost(FocusEvent e) {
-        if (humanInput)
+        //if (humanInput)
             coreListener.focusLost(e);
     }
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        if (humanInput)
+        //if (humanInput)
             coreListener.mouseWheelMoved(e);
     }
 
@@ -387,7 +388,7 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
         private final List<MouseMotionListener> mouseMotionListeners = new ArrayList<>(), scriptMouseMotionListeners = new ArrayList<>();
         private final List<MouseWheelListener> mouseWheelListeners = new ArrayList<>(), scriptMouseWheelListeners = new ArrayList<>();
         private final List<KeyListener> keyListeners = new ArrayList<>();
-        private final List<FocusListener> focusListeners = new ArrayList<>(), scriptMouseFocusListeners = new ArrayList<>();
+        private final List<FocusListener> focusListeners = new ArrayList<>(), scriptFocusListeners = new ArrayList<>();
 
         public CoreListener(final MouseListener[] mouseListeners,
                             final MouseMotionListener[] mouseMotionListeners,
@@ -416,7 +417,7 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
                     keyListeners.add((KeyListener) listener);
                 }
                 if (listener instanceof FocusListener) {
-                    (script ? scriptMouseFocusListeners : focusListeners).add((FocusListener) listener);
+                    (script ? scriptFocusListeners : focusListeners).add((FocusListener) listener);
                 }
             }
         }
@@ -436,13 +437,16 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
                     keyListeners.add((KeyListener) listener);
                 }
                 if (listener instanceof FocusListener) {
-                    (script ? scriptMouseFocusListeners : focusListeners).remove(listener);
+                    (script ? scriptFocusListeners : focusListeners).remove(listener);
                 }
             }
         }
 
         @Override
         public void keyTyped(KeyEvent e) {
+            if (e.getSource() == getFakeSource()) {
+                e.setSource(canvas);
+            }
             for (final KeyListener listener : keyListeners) {
                 listener.keyTyped(e);
             }
@@ -450,6 +454,9 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
 
         @Override
         public void keyPressed(KeyEvent e) {
+            if (e.getSource() == getFakeSource()) {
+                e.setSource(canvas);
+            }
             for (final KeyListener listener : keyListeners) {
                 listener.keyPressed(e);
             }
@@ -457,6 +464,9 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
 
         @Override
         public void keyReleased(KeyEvent e) {
+            if (e.getSource() == getFakeSource()) {
+                e.setSource(canvas);
+            }
             for (final KeyListener listener : keyListeners) {
                 listener.keyReleased(e);
             }
@@ -464,70 +474,132 @@ public class InputHandler implements MouseListener, MouseMotionListener, MouseWh
 
         @Override
         public void mouseDragged(MouseEvent e) {
-            for (final MouseMotionListener listener : mouseMotionListeners) {
+            if (e.getSource() == getFakeSource() || humanInput) {
+                e.setSource(canvas);
+                for (final MouseMotionListener listener : mouseMotionListeners) {
+                    listener.mouseDragged(e);
+                }
+            }
+            for (final MouseMotionListener listener : scriptMouseMotionListeners) {
                 listener.mouseDragged(e);
             }
         }
 
         @Override
         public void mouseMoved(MouseEvent e) {
-            for (final MouseMotionListener listener : mouseMotionListeners) {
-                listener.mouseMoved(e);
+            if (e.getSource() == getFakeSource() || humanInput) {
+                e.setSource(canvas);
+                for (final MouseMotionListener listener : mouseMotionListeners) {
+                    listener.mouseMoved(e);
+                }
+            }
+            if (humanInput) {
+                for (final MouseMotionListener listener : scriptMouseMotionListeners) {
+                    listener.mouseMoved(e);
+                }
             }
         }
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            for (final MouseListener listener : mouseListeners) {
+            if (e.getSource() == getFakeSource() || humanInput) {
+                e.setSource(canvas);
+                for (final MouseListener listener : mouseListeners) {
+                    listener.mouseClicked(e);
+                }
+            }
+            for (final MouseListener listener : scriptMouseListeners) {
                 listener.mouseClicked(e);
             }
         }
 
         @Override
         public void mousePressed(MouseEvent e) {
-            for (final MouseListener listener : mouseListeners) {
+            if (e.getSource() == getFakeSource() || humanInput) {
+                e.setSource(canvas);
+                for (final MouseListener listener : mouseListeners) {
+                    listener.mousePressed(e);
+                }
+            }
+            for (final MouseListener listener : scriptMouseListeners) {
                 listener.mousePressed(e);
             }
         }
 
         @Override
         public void mouseReleased(MouseEvent e) {
-            for (final MouseListener listener : mouseListeners) {
+            if (e.getSource() == getFakeSource() || humanInput) {
+                e.setSource(canvas);
+                for (final MouseListener listener : mouseListeners) {
+                    listener.mouseReleased(e);
+                }
+            }
+            for (final MouseListener listener : scriptMouseListeners) {
                 listener.mouseReleased(e);
             }
         }
 
         @Override
         public void mouseEntered(MouseEvent e) {
-            for (final MouseListener listener : mouseListeners) {
+            if (e.getSource() == getFakeSource() || humanInput) {
+                e.setSource(canvas);
+                for (final MouseListener listener : mouseListeners) {
+                    listener.mouseEntered(e);
+                }
+            }
+            for (final MouseListener listener : scriptMouseListeners) {
                 listener.mouseEntered(e);
             }
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
-            for (final MouseListener listener : mouseListeners) {
+            if (e.getSource() == getFakeSource() || humanInput) {
+                e.setSource(canvas);
+                for (final MouseListener listener : mouseListeners) {
+                    listener.mouseExited(e);
+                }
+            }
+            for (final MouseListener listener : scriptMouseListeners) {
                 listener.mouseExited(e);
             }
         }
 
         @Override
         public void focusGained(FocusEvent e) {
-            for (final FocusListener listener : focusListeners) {
+            if (e.getSource() == getFakeSource() || humanInput) {
+                e.setSource(canvas);
+                for (final FocusListener listener : focusListeners) {
+                    listener.focusGained(e);
+                }
+            }
+            for (final FocusListener listener : scriptFocusListeners) {
                 listener.focusGained(e);
             }
         }
 
         @Override
         public void focusLost(FocusEvent e) {
-            for (final FocusListener listener : focusListeners) {
+            if (e.getSource() == getFakeSource() || humanInput) {
+                e.setSource(canvas);
+                for (final FocusListener listener : focusListeners) {
+                    listener.focusLost(e);
+                }
+            }
+            for (final FocusListener listener : scriptFocusListeners) {
                 listener.focusLost(e);
             }
         }
 
         @Override
         public void mouseWheelMoved(MouseWheelEvent e) {
-            for (final MouseWheelListener listener : mouseWheelListeners) {
+            if (e.getSource() == getFakeSource() || humanInput) {
+                e.setSource(canvas);
+                for (final MouseWheelListener listener : mouseWheelListeners) {
+                    listener.mouseWheelMoved(e);
+                }
+            }
+            for (final MouseWheelListener listener : scriptMouseWheelListeners) {
                 listener.mouseWheelMoved(e);
             }
         }

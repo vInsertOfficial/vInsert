@@ -108,6 +108,7 @@ public class BotTabPane extends JPanel {
         if (selected != null && selected.getIndex() == tab.getIndex()) {
             clearContent();
         }
+        tab.content.getBot().getThread().interrupt();
         updateTabs(null);
     }
 

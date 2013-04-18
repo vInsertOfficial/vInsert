@@ -174,16 +174,17 @@ public class Widgets {
      * @return The widgets.
      */
     public Widget[][] getAll(Filter<Widget> filter) {
-        Widget[][] widgets = new Widget[ctx.getClient().getWidgets().length][];
+        final IWidget[][] iWidgets = ctx.getClient().getWidgets();
+        Widget[][] widgets = new Widget[iWidgets.length][];
 
         for (int i = 0; i < widgets.length; i++) {
-            if (ctx.getClient().getWidgets()[i] != null) {
-                widgets[i] = new Widget[ctx.getClient().getWidgets()[i].length];
+            if (iWidgets[i] != null) {
+                widgets[i] = new Widget[iWidgets[i].length];
 
                 for (int j = 0; j < widgets[i].length; j++) {
 
-                    if (ctx.getClient().getWidgets()[i][j] != null) {
-                        Widget rsw = new Widget(ctx, ctx.getClient().getWidgets()[i][j]);
+                    if (iWidgets[i][j] != null) {
+                        Widget rsw = new Widget(ctx, iWidgets[i][j]);
 
                         if (filter != null) {
                             if (filter.accept(rsw)) {

@@ -95,13 +95,11 @@ public class ArchiveClassLoader extends ClassLoader {
 
     private void loadMappings() {
         try {
-            if (!Configuration.OFFLINE_MODE) {
-                try {
-                    fetch(Configuration.versionfile);
-                    fetch(Configuration.jsonfile);
-                } catch (final IOException ignored) {
-                    System.err.println("Failed to downloaded version file and hooks. Attempting to run without latest hooks.");
-                }
+            try {
+                fetch(Configuration.versionfile);
+                fetch(Configuration.jsonfile);
+            } catch (final IOException ignored) {
+                System.err.println("Failed to downloaded version file and hooks. Attempting to run without latest hooks.");
             }
 
             System.out.println(Configuration.jsonfile);

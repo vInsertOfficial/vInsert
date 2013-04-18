@@ -123,10 +123,54 @@ public class Bot {
                 inputHandler = new InputHandler(bot, canvas);
             }
         }).start();
-    }
 
-    public void setInputHandler(final InputHandler inputHandler) {
-        this.inputHandler = inputHandler;
+        thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                        if (!scriptStack.isEmpty()) {
+                            final Script script = scriptStack.peek();
+                            if (script != null) {
+                                final ScriptContext context = script.getContext();
+                                if (context.randomEvents != null) {
+                                    context.randomEvents.check();
+                                }
+                                if (script.isExitRequested()) {
+                                    context.getBot().popScript();
+                                    break;
+                                }
+                                if (!script.isPaused()) {
+                                    long time = System.currentTimeMillis();
+                                    if (time >= script.getNextExecutionTime()) {
+                                        int delay = script.pulse();
+                                        if (delay < 0)
+                                            context.getBot().popScript();
+                                        script.setNextExecutionTime(time + delay);
+                                    }
+                                }
+
+                                try {
+                                    if (script.getNextExecutionTime() > 0) {
+                                        long sleep = script.getNextExecutionTime() - System.currentTimeMillis();
+                                        if (sleep > 0)
+                                            Thread.sleep(script.getNextExecutionTime()
+                                                    - System.currentTimeMillis());
+                                    } else {
+                                        Thread.sleep(500);
+                                    }
+                                } catch (InterruptedException e1) {
+                                    // ignore the exception, because interrupting is normal
+                                }
+                            }
+                        } else {
+                            Utils.sleep(5000);
+                        }
+                    }
+
+            }
+        });
+        thread.setName("Bot-" + getBotIndex());
+        thread.start();
     }
 
     /**
@@ -156,16 +200,13 @@ public class Bot {
             script.create(new ScriptContext(bot, loader.getClient(), account));
             log(Bot.class, Level.FINE, "Starting script: " + script.getManifest().name());
 
-            Thread thread = new Thread(script);
-            thread.setName("Bot-" + bot.getBotIndex() + ": Index-" + scriptStack.size() + 1);
-            script.setThread(thread);
             scriptStack.push(script);
             getCanvas().getListeners().add(script);
             inputHandler.setHumanInput(false);
             if (script instanceof EventListener) {
                 inputHandler.addScriptListener((EventListener) script);
             }
-            thread.start();
+            script.begin();
         }
     }
 
@@ -278,7 +319,8 @@ public class Bot {
     }
 
     public Script peekScript() {
-        synchronized (scriptStack) {
+        synchronized (scriptStack)
+        {
             if (scriptStack.isEmpty()) return null;
 
             return scriptStack.peek();
@@ -310,5 +352,4 @@ public class Bot {
     public synchronized void setWindow(BotWindow window) {
         this.window = window;
     }
-
 }

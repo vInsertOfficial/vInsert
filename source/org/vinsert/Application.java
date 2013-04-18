@@ -7,13 +7,17 @@ import org.vinsert.bot.ui.BotWindow;
 import org.vinsert.bot.util.VSecruityManager;
 
 import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.Thread.UncaughtExceptionHandler;
 
 public class Application {
 
     public static BotWindow window;
 
-    public static void main(String[] args) {
+    public static void main(final String... args) throws IOException {
         if (args.length == 1 && args[0].equals("-dev"))
             Configuration.OFFLINE_MODE = true;
 

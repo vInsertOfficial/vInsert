@@ -226,17 +226,8 @@ public class BotScriptViewer extends JDialog {
                         out.close();
                         ScriptClassLoader.load(definitions, file);
                         if (definitions.size() > 0) {
-                            boolean clean = true;
                             final ScriptInfo def = definitions.get(definitions.size() - 1);
-                            for (final String author : def.getAuthors()) {
-                                if (author.contains("FuzzyNuts")) {
-                                    clean = false;
-                                    break;
-                                }
-                            }
-                            if (clean) {
-                                firePropertyChange("script", null, def);
-                            }
+                            firePropertyChange("script", null, def);
                         }
                     } catch (final Exception ignored) {
                         ignored.printStackTrace();

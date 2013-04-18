@@ -36,7 +36,7 @@ public class MysteryBox extends RandomEvent {
                 anw = getAnwser();
                 for (int i = 10; i < 13; i++) {
                     found = widgets.get(190, i);
-                    if (found.getText().toLowerCase().contains(anw)) {
+                    if (found.getText() != null && found.getText().toLowerCase().contains(anw)) {
                         found.click();
                     }
                     Utils.sleep(1500, 2000);

@@ -165,8 +165,8 @@ public class Inventory {
      * @return The items in the inventory
      */
     public Item[] getItems(Filter<Item> filter) {
-        if (ctx.getClient().getWidgets()[INVENTORY_ID][0] == null) return null;
-        Widget inventory = new Widget(ctx, ctx.getClient().getWidgets()[INVENTORY_ID][0]);
+        Widget inventory = ctx.widgets.get(INVENTORY_ID, 0);
+        if (inventory == null) return new Item[0];
 
         int[] ids = inventory.getSlotContents();
         int[] stacks = inventory.getSlotSizes();
