@@ -31,9 +31,9 @@ public class Game {
      * @return {@code true} if the tab was successfully opened.
      */
     public boolean openTab(Tabs tab) {
-        Point p = tab.getPoint(ctx.widgets);
-        ctx.mouse.click(p.x, p.y);
-        return true;
+    	tab.clickTab(ctx.widgets);
+    	currentTab = tab;
+    	return true;
     }
 
     /**
@@ -129,25 +129,28 @@ public class Game {
      * @author Discardedx2
      */
     public static enum Tabs {
-        COMBAT("Combat Options"),
-        STATS("Stats"),
-        QUESTS("Quest List"),
-        INVENTORY("Inventory"),
-        EQUIPMENT("Worn Equipment"),
-        PRAYER("Prayer"),
-        MAGIC("Magic"),
-        CLAN_CHAT("Clan Chat"),
-        FRIENDS_LIST("Friends List"),
-        IGNORE_LIST("Ignore List"),
-        LOGOUT("Logout"),
-        OPTIONS("Options"),
-        EMOTES("Emotes"),
-        MUSIC("Music Player");
-
+        COMBAT("Combat Options", 54),
+        STATS("Stats", 55),
+        QUESTS("Quest List", 56),
+        INVENTORY("Inventory", 57),
+        EQUIPMENT("Worn Equipment", 58),
+        PRAYER("Prayer", 59),
+        MAGIC("Magic", 60),
+        CLAN_CHAT("Clan Chat", 37),
+        FRIENDS_LIST("Friends List", 38),
+        IGNORE_LIST("Ignore List", 39),
+        LOGOUT("Logout", 40),
+        OPTIONS("Options", 41),
+        EMOTES("Emotes", 42),
+        MUSIC("Music Player", 43);
+        
+        final int PARENT = 548;
         String name;
+        int child;
 
-        Tabs(String name) {
+        Tabs(String name, int child) {
             this.name = name;
+            this.child = child;
         }
 
         public String getName() {
@@ -155,7 +158,8 @@ public class Game {
         }
 
         public Point getPoint(Widgets widgets) {
-            for (Widget w : widgets.get(548)) {
+        	//this is really broken
+            for (Widget w : widgets.get(PARENT)) {
                 if (w.getActions() != null) {
                     for (String s : w.getActions()) {
                         if (getName().equals(s)) {
@@ -166,6 +170,11 @@ public class Game {
                 }
             }
             return new Point(-1, -1);
+        }
+        
+        public void clickTab(Widgets widgets) {
+        	Widget w = widgets.get(PARENT, child);
+        	w.click();
         }
     }
 
