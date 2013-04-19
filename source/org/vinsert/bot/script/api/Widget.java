@@ -248,7 +248,7 @@ public class Widget {
                 return (posy[widget.getStaticPos()] + widget.getY());
             }
         }
-        return (widget.getY() + y);
+        return (widget.getY() + y + 25);
     }
 
     /**
