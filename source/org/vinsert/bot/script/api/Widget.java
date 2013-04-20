@@ -245,10 +245,12 @@ public class Widget {
         } else {
             int[] posy = ctx.getClient().getPaneYPos();
             if (widget.getStaticPos() != -1 && posy[widget.getStaticPos()] > 0) {
-                return (posy[widget.getStaticPos()] + widget.getY() + 25);
+                return (posy[widget.getStaticPos()] + widget.getY() + (getText().toLowerCase()
+                .contains("here to contin") ? 25 : 0));
             }
         }
-        return (widget.getY() + y + 25);
+        return (widget.getY() + y + + (getText().toLowerCase()
+                .contains("here to contin") ? 25 : 0));
     }
 
     /**
