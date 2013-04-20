@@ -245,7 +245,7 @@ public class Widget {
         } else {
             int[] posy = ctx.getClient().getPaneYPos();
             if (widget.getStaticPos() != -1 && posy[widget.getStaticPos()] > 0) {
-                return (posy[widget.getStaticPos()] + widget.getY());
+                return (posy[widget.getStaticPos()] + widget.getY() + 25);
             }
         }
         return (widget.getY() + y + 25);
