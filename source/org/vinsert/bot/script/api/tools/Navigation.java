@@ -7,8 +7,10 @@ import org.vinsert.bot.script.api.Widget;
 import org.vinsert.bot.script.api.tools.Game.Tabs;
 import org.vinsert.bot.util.Perspective;
 import org.vinsert.bot.util.Utils;
+import org.vinsert.insertion.ICollisionMap;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -135,6 +137,14 @@ public class Navigation {
             }
         }
         return list.peekFirst();
+    }
+
+    public int[][][] getFlags() {
+        ArrayList<int[][]> flags = new ArrayList<>();
+        for(ICollisionMap map : ctx.getClient().getCollisionMaps()) {
+           flags.add(map.getFlags());
+        }
+        return flags.toArray(new int[flags.size()][flags.size()][flags.size()]);
     }
 
     private void navigateMinimap(Tile tile) {

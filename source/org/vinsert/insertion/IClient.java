@@ -78,4 +78,6 @@ public interface IClient {
 
     public INodeMultiSet getInterfaceNodes();
 
+    public ICollisionMap[] getCollisionMaps();
+
 }
