@@ -144,7 +144,7 @@ public class Navigation {
         for(ICollisionMap map : ctx.getClient().getCollisionMaps()) {
            flags.add(map.getFlags());
         }
-        return flags.toArray(new int[flags.size()][flags.size()][flags.size()]);
+        return flags.toArray(new int[ctx.getClient().getCollisionMaps().length][flags.size()][flags.size()]);
     }
 
     private void navigateMinimap(Tile tile) {

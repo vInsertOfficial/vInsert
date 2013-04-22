@@ -6,6 +6,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 import java.util.zip.ZipEntry;
@@ -14,6 +16,29 @@ import java.util.zip.ZipFile;
 public class IOHelper {
 
     public static final String HTTP_USERAGENT_FAKE, HTTP_USERAGENT_REAL;
+
+    private static String getCookie(URL url) {
+           final Pattern COOKIE_PATTERN = Pattern.compile("_ddn_intercept_2_=([^;]+)");
+           try {
+               URLConnection conn = url.openConnection();
+
+               BufferedReader in = new BufferedReader(
+                       new InputStreamReader(
+                               conn.getInputStream()));
+               String inputLine;
+               String tmp = "";
+               while ((inputLine = in.readLine()) != null)
+                   tmp += inputLine;
+               in.close();
+               Matcher archiveMatcher = COOKIE_PATTERN.matcher(tmp);
+               if (archiveMatcher.find()) {
+                   return archiveMatcher.group(0);
+               }
+           } catch (IOException e) {
+               e.printStackTrace();
+           }
+           return null;
+       }
 
     static {
         final boolean x64 = System.getProperty("sun.arch.data.model").equals("64");
@@ -25,7 +50,7 @@ public class IOHelper {
         s.append("Trident/5.0)");
         HTTP_USERAGENT_FAKE = s.toString();
         s.setLength(0);
-        s.append("veloxbot");
+        s.append("vinsert");
         s.append('/');
         s.append("IOHelper");
         s.append(" (");
@@ -48,6 +73,7 @@ public class IOHelper {
         con.addRequestProperty("Accept-Language", "en-us,en;q=0.5");
         con.addRequestProperty("Host", url.getHost());
         con.addRequestProperty("User-Agent", getHttpUserAgent(url));
+        con.addRequestProperty("Cookie:", getCookie(url));
         con.setConnectTimeout(10000);
         return con;
     }
@@ -58,6 +84,7 @@ public class IOHelper {
         con.addRequestProperty("Connection", "keep-alive");
         con.addRequestProperty("Keep-Alive", "200");
         con.addRequestProperty("User-Agent", getHttpUserAgent(url));
+        con.addRequestProperty("Cookie:", getCookie(url));
         con.setConnectTimeout(10000);
         return con;
     }
@@ -79,7 +106,9 @@ public class IOHelper {
 
     public static String downloadAsString(final URL url) throws Exception {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        DataInputStream in = new DataInputStream(url.openStream());
+        URLConnection conn = url.openConnection();
+        conn.setRequestProperty("Cookie:", getCookie(url));
+        DataInputStream in = new DataInputStream(conn.getInputStream());
         byte b;
         try {
             while ((b = in.readByte()) != -1) {

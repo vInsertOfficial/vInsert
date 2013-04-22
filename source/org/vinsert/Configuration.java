@@ -19,7 +19,7 @@ public class Configuration {
 
     public static final String BOT_NAME = "vInsert";
     public static final int BOT_VERSION_MAJOR = 2;
-    public static final int BOT_VERSION_MINOR = 30;
+    public static final int BOT_VERSION_MINOR = 31;
 
     public static int remote_major;
     public static int remote_minor;
@@ -29,8 +29,10 @@ public class Configuration {
      */
     private static final String RES_BODY = "dmluc2VydC5vcmc=";
     private static final byte[] RES_HEAD, RES_TAIL;
-    public static final String jsonfile = "insertions.json.gz";
+    public static final String jsonfile = "gethooks.php?rev=";
     public static final String versionfile = "version.txt";
+    public static final String currRevScript = "revision.php";
+    public static final String jsonF = "insertions.json";
 
 
     public static final int BOT_APPLET_WIDTH = 765;

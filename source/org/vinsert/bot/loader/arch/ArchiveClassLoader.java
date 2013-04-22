@@ -1,18 +1,20 @@
 package org.vinsert.bot.loader.arch;
 
-import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 import org.vinsert.Configuration;
+import org.vinsert.bot.IOHelper;
 import org.vinsert.bot.util.InstructionSearcher;
 
 import java.io.*;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.security.AllPermission;
@@ -23,6 +25,8 @@ import java.security.cert.Certificate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 //TODO: this shit needs some serious refactoring
 public class ArchiveClassLoader extends ClassLoader {
@@ -61,7 +65,7 @@ public class ArchiveClassLoader extends ClassLoader {
     }
 
     private File getLocalInsertionsFile() {
-        return new File(Configuration.STORAGE_DIR + File.separator + Configuration.jsonfile);
+        return new File(Configuration.STORAGE_DIR + File.separator + Configuration.jsonF);
     }
 
     private int getLocalMinorVersion() throws IOException {
@@ -78,6 +82,29 @@ public class ArchiveClassLoader extends ClassLoader {
         return local_minor;
     }
 
+    private String getCookie(URL url) {
+        final Pattern COOKIE_PATTERN = Pattern.compile("_ddn_intercept_2_=([^;]+)");
+        try {
+            URLConnection conn = url.openConnection();
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(
+                            conn.getInputStream()));
+            String inputLine;
+            String tmp = "";
+            while ((inputLine = in.readLine()) != null)
+                tmp += inputLine;
+            in.close();
+            Matcher archiveMatcher = COOKIE_PATTERN.matcher(tmp);
+            if (archiveMatcher.find()) {
+                return archiveMatcher.group(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private void fetch(String res) throws IOException {
         URL url = new URL(Configuration.composeres() + res);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -85,29 +112,52 @@ public class ArchiveClassLoader extends ClassLoader {
         con.setDoInput(true);
         con.setConnectTimeout(5000);
         con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.56 Safari/535.11");
-
+        con.setRequestProperty("Cookie:", getCookie(url));
         ReadableByteChannel rbc = Channels.newChannel(con.getInputStream());
-        FileOutputStream fos = new FileOutputStream(Configuration.STORAGE_DIR + File.separator + res);
+        FileOutputStream fos = new FileOutputStream(Configuration.STORAGE_DIR + File.separator + Configuration.jsonF);
         fos.getChannel().transferFrom(rbc, 0, 1 << 24);
         fos.close();
         rbc.close();
+    }
+
+    private void fetchNew(String url) {
+        try {
+            String page = "";
+            URL url1 = new URL(url);
+            String cookie = getCookie(url1);
+            URLConnection conn = url1.openConnection();
+            conn.setRequestProperty("Cookie:", cookie);
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(
+                            conn.getInputStream()));
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                page += inputLine;
+            }
+            in.close();
+            FileWriter fos = new FileWriter(Configuration.STORAGE_DIR + File.separator + Configuration.jsonF);
+            fos.write(page);
+            fos.close();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadMappings() {
         try {
             try {
                 fetch(Configuration.versionfile);
-                fetch(Configuration.jsonfile);
+                fetchNew(Configuration.composeres() + Configuration.jsonfile + IOHelper.downloadAsString(new URL(
+                        Configuration.composeres() + Configuration.currRevScript)));
             } catch (final IOException ignored) {
                 System.err.println("Failed to downloaded version file and hooks. Attempting to run without latest hooks.");
             }
-
-            System.out.println(Configuration.jsonfile);
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(getLocalInsertionsFile()));
-            GzipCompressorInputStream gzip = new GzipCompressorInputStream(in);
 
             JSONParser parser = new JSONParser();
-            JSONArray classes = (JSONArray) parser.parse(new BufferedReader(new InputStreamReader(gzip)));
+            JSONArray classes = (JSONArray) parser.parse(new BufferedReader(new InputStreamReader(in)));
             for (int i = 0; i < classes.size(); i++) {
                 JSONObject classEntry = (JSONObject) classes.get(i);
                 String name = (String) classEntry.get("name");
