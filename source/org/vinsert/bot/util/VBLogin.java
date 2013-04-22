@@ -30,6 +30,8 @@ public class VBLogin {
     public static final int auth_contrib = 12;
     public static final int auth_sponsor = 11;
     public static final int auth_dev = 9;
+    public static final int auth_reg = 2;
+    public static final int auth_banned = 8;
 
     public static VBLogin self = null;
 
@@ -135,7 +137,7 @@ public class VBLogin {
 
                 userId = Integer.parseInt(data[0]);
                 usergroupId = Integer.parseInt(data[1]);
-                return true;
+                return usergroupId != auth_banned;
             }
             return false;
         } catch (final Exception e) {

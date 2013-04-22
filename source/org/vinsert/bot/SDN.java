@@ -1,44 +1,19 @@
 package org.vinsert.bot;
 
-import org.vinsert.bot.script.ScriptInfo;
-import org.vinsert.bot.util.ScriptClassLoader;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.vinsert.bot.util.VBLogin;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class SDN {
-
-    public static ScriptInfo[] getScriptDefinitions() {
-        try {
-            final List<ScriptInfo> definitions = new ArrayList<ScriptInfo>();
-            final List<String[]> jars = getData();
-            final List<byte[]> scriptList = getScriptByteList();
-            if (jars != null) {
-                for (int i = 0; i < scriptList.size(); i++) {
-                    try {
-                        final File file = File.createTempFile("script" + i, "jar");
-                        final OutputStream out = new FileOutputStream(file);
-                        out.write(scriptList.get(i));
-                        out.close();
-                        ScriptClassLoader.load(definitions, file);
-                    } catch (final Exception ignored) {
-                        ignored.printStackTrace();
-                    }
-                }
-                return definitions.toArray(new ScriptInfo[definitions.size()]);
-            }
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     private static String getCookie(final URL url) throws IOException {
         final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -57,58 +32,58 @@ public class SDN {
         return null;
     }
 
-    public static List<String[]> getData() throws IOException {
-        final List<String[]> data = new ArrayList<String[]>();
-        final URL url = new URL("http://www.vinsert.org/repo/info.php");
-        final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setDoInput(true);
-        conn.setDoOutput(true);
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("User-Agent", "vinsert");
-        conn.setRequestProperty("Cookie", getCookie(url));
-        final PrintWriter writer = new PrintWriter(conn.getOutputStream());
-        writer.write("id=" + VBLogin.self.getUserId());
-        writer.flush();
-        conn.connect();
-        if (conn.getResponseCode() == HttpsURLConnection.HTTP_OK) {
-            String line;
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            line = reader.readLine();
-            if (line != null) {
-                final Matcher arrays = Pattern.compile("\\[(.*?)\\]").matcher(line);
-                while (arrays.find()) {
-                    final Matcher items = Pattern.compile("\\{(.*?)\\}").matcher(arrays.group(1));
-                    final String[] info = new String[13];
-                    int i = 0;
-                    while (items.find()) {
-                        info[i++] = items.group(1);
-                    }
-                    data.add(info);
+    public static List<String[]> getData() {
+        try {
+            final List<String[]> data = new ArrayList<>();
+            final URL url = new URL("http://repo.vinsert.org/getscripts/" + VBLogin.self.getUserId());
+            final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("User-Agent", "vinsert");
+            conn.setRequestProperty("Cookie", getCookie(url));
+            conn.connect();
+            if (conn.getResponseCode() == HttpsURLConnection.HTTP_OK) {
+                final BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String line;
+                String content = "";
+                while((line = reader.readLine()) != null) {
+                    content += line;
+                }
+                reader.close();
+                String[] scripts = content.split("},");
+                for(String str : scripts) {
+                  data.add(new String[]{str.split("\"id\": |}")[1], str.split("\"vip\":|, \"type\"")[1]});
                 }
             }
+            return data;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return data;
+        return null;
     }
 
-    public static List<byte[]> getScriptByteList() throws Exception {
-        final List<byte[]> bytes = new ArrayList<byte[]>();
-        final List<String[]> data = getData();
-        if (!data.isEmpty()) {
-            for (final String[] array : data) {
-                final String id = array[0];
-                final URL url = new URL("http://www.vinsert.org/repo/fetcher.php");
-                final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("User-Agent", "vinsert");
-                conn.setRequestProperty("Cookie", getCookie(url));
-                final PrintWriter writer = new PrintWriter(conn.getOutputStream());
-                writer.write("pass=13489123417238947128934&id=" + id);
-                writer.flush();
-                bytes.add(IOHelper.downloadBinary(conn.getInputStream()));
+    public static List<byte[]> getScriptByteList() {
+        try {
+            final List<byte[]> bytes = new ArrayList<>();
+            final List<String[]> data = getData();
+            if (!data.isEmpty()) {
+                for (final String[] array : data) {
+                    final String id = array[0];
+                    if (array[1].replaceAll("\"", "").equals("yes")) {
+                        if (VBLogin.self.getUsergroupId() == VBLogin.auth_reg) {
+                            continue;
+                        }
+                    }
+                    final URL url = new URL("http://repo.vinsert.org/load/" + id + ".jar");
+                    final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestProperty("User-Agent", "vinsert");
+                    bytes.add(IOHelper.downloadBinary(conn.getInputStream()));
+                }
             }
+            return bytes;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return bytes;
+        return null;
     }
+
+
 }
