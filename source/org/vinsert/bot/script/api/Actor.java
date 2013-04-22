@@ -250,14 +250,14 @@ public abstract class Actor extends Renderable implements Interactable {
      * @return The {@link Actor} this actor is interacting with, if applicable
      */
     public Actor getInteracting() {
-        if (actor.getInteracting() == -1) {
+    	int index = getInteractingIndex();
+        if (index == -1) {
             return null;
         }
-
         if (actor.getInteracting() < 32768) {
-            return new Npc(ctx, ctx.getClient().getNpcs()[actor.getInteracting()]);
+            return new Npc(ctx, ctx.getClient().getNpcs()[index]);
         }
-        return new Player(ctx, ctx.getClient().getPlayers()[actor.getInteracting() - 32768]);
+        return new Player(ctx, ctx.getClient().getPlayers()[index - 32768]);
     }
 
     /**
