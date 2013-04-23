@@ -249,7 +249,7 @@ public class Navigation {
      * @return The player's current energy
      */
     public int getEnergy() {
-        return Integer.parseInt(ctx.widgets.get(261, 40).getText());
+        return Integer.parseInt(ctx.widgets.get(261, 40).getText().replaceAll("%", ""));
     }
 
     /**
