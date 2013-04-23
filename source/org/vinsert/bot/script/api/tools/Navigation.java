@@ -213,7 +213,7 @@ public class Navigation {
      * @return true if the player is running, false if not
      */
     public boolean isRunning() {
-        return ctx.settings.get(Settings.TOGGLE_RUN) == 1;
+        return ctx.widgets.get(261, 40).getText().contains("on");
     }
 
     /**

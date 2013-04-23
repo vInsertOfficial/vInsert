@@ -245,12 +245,13 @@ public class Widget {
         } else {
             int[] posy = ctx.getClient().getPaneYPos();
             if (widget.getStaticPos() != -1 && posy[widget.getStaticPos()] > 0) {
-                return (posy[widget.getStaticPos()] + widget.getY() + (getText().toLowerCase()
-                .contains("here to contin") ? 25 : 0));
+                return (posy[widget.getStaticPos()] + widget.getY() +
+                        (posy[widget.getStaticPos()] + widget.getY() + 25 > 337 &&
+                                posy[widget.getStaticPos()] + widget.getY() + 25 < 481 ? 25 : 0));
             }
         }
-        return (widget.getY() + y + + (getText().toLowerCase()
-                .contains("here to contin") ? 25 : 0));
+        return (y + widget.getY() +
+                (y + widget.getY() + 25 > 337 && y + widget.getY() + 25 < 481 ? 25 : 0));
     }
 
     /**
@@ -359,7 +360,7 @@ public class Widget {
     }
 
     public boolean isValid() {
-        return widget != null;
+        return widget != null && ctx.widgets.getValidated().contains(widget);
     }
 
 }

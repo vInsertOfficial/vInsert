@@ -254,10 +254,10 @@ public abstract class Actor extends Renderable implements Interactable {
         if (index == -1) {
             return null;
         }
-        if (actor.getInteracting() < 32768) {
+        if (actor.getInteracting() < 32767) {
             return new Npc(ctx, ctx.getClient().getNpcs()[index]);
         }
-        return new Player(ctx, ctx.getClient().getPlayers()[index - 32768]);
+        return new Player(ctx, ctx.getClient().getPlayers()[index - 32767]);
     }
 
     /**

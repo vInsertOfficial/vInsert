@@ -30,6 +30,7 @@ public class RandomEventPool {
         register(new Ent());
         register(new SandwichLady());
         register(new MysteryBox());
+        register(new Mime());
     }
 
     /**
