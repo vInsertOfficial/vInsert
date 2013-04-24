@@ -7,10 +7,7 @@ import org.vinsert.bot.ui.BotWindow;
 import org.vinsert.bot.util.VSecruityManager;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.Thread.UncaughtExceptionHandler;
 
 public class Application {
@@ -49,9 +46,6 @@ public class Application {
                     });
 
                     Configuration.mkdirs();
-
-                    JOptionPane.showMessageDialog(null, "Please change the password to ALL RuneScape accounts you saved in the account manager", "Security breach", JOptionPane.WARNING_MESSAGE);
-
                     if (Configuration.OFFLINE_MODE) {
                         window = new BotWindow();
                         window.init();

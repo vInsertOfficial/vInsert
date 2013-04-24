@@ -72,9 +72,10 @@ public class GroundItem extends Item implements Hullable, Interactable {
         }
 
         IRenderable rend = null;
-
+       /*
         switch (type) {
             case TOP:
+
                 rend = layer.getTop();
                 break;
             case MIDDLE:
@@ -83,6 +84,14 @@ public class GroundItem extends Item implements Hullable, Interactable {
             case BOTTOM:
                 rend = layer.getBottom();
                 break;
+        }  */
+        IRenderable[] layers = {layer.getTop(), layer.getMiddle(), layer.getBottom()};
+        for(IRenderable layer1 : layers) {
+            if(layer1 == null) {
+                continue;
+            }
+            rend = layer1;
+            break;
         }
 
         if (rend == null) {

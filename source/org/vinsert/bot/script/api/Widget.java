@@ -22,6 +22,7 @@ public class Widget {
     private ScriptContext ctx;
     private IWidget widget;
 
+
     public Widget(final ScriptContext ctx, IWidget widget) {
         this.ctx = ctx;
         this.widget = widget;
@@ -205,6 +206,11 @@ public class Widget {
         return new Point(x, y);
     }
 
+
+    private int calculateOffset(int currX, int currY) {
+        return (new Rectangle(0, 338, 519, 142).contains(currX, currY) ? 25 : 0);
+    }
+
     /**
      * The widget's absolute X position
      *
@@ -225,7 +231,7 @@ public class Widget {
                 return (posx[widget.getStaticPos()] + widget.getX());
             }
         }
-        return (widget.getX() + x);
+        return (x + widget.getRelativeX());
     }
 
     /**
@@ -245,14 +251,13 @@ public class Widget {
         } else {
             int[] posy = ctx.getClient().getPaneYPos();
             if (widget.getStaticPos() != -1 && posy[widget.getStaticPos()] > 0) {
-                return (posy[widget.getStaticPos()] + widget.getY() +
-                        (posy[widget.getStaticPos()] + widget.getY() + 25 > 337 &&
-                                posy[widget.getStaticPos()] + widget.getY() + 25 < 481 ? 25 : 0));
+                return posy[widget.getStaticPos()] + widget.getY() + (calculateOffset(widget.getX(), (25 + widget.getY() +
+                posy[widget.getStaticPos()])));
             }
         }
-        return (y + widget.getY() +
-                (y + widget.getY() + 25 > 337 && y + widget.getY() + 25 < 481 ? 25 : 0));
+          return ((y + widget.getRelativeY()) + (calculateOffset(widget.getX(), (widget.getRelativeY() + 25))));
     }
+
 
     /**
      * @return The widget's x coordinate relative to the parent
