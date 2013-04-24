@@ -6,6 +6,8 @@ import org.vinsert.bot.script.api.tools.Navigation.NavigationPolicy;
 import org.vinsert.bot.script.randevent.RandomEvent;
 import org.vinsert.bot.util.Utils;
 
+// fix by mcpedro
+
 @ScriptManifest(name = "Ent", description = "Stops chopping ents!", authors = {"tholomew"})
 public class Ent extends RandomEvent {
 
@@ -41,7 +43,7 @@ public class Ent extends RandomEvent {
         if (players.getLocalPlayer() == null || players.getLocalPlayer().getInteracting() == null) {
             return false;
         }
-        final Npc ent = (Npc) players.getLocalPlayer().getInteracting();
+        final Npc ent = new Npc(getContext(), getContext().getClient().getNpcs()[localPlayer.getInteractingIndex()]);
         return ent != null && contains(ENT_IDS, ent.getId());
     }
 
