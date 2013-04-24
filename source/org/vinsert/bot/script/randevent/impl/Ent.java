@@ -34,7 +34,7 @@ public class Ent extends RandomEvent {
 
     @Override
     public RandomEventPriority priority() {
-        return RandomEventPriority.MEDIUM;
+        return RandomEventPriority.HIGH;
     }
 
     private boolean isEntThere() {
