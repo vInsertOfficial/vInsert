@@ -191,6 +191,17 @@ public class ArchiveClassLoader extends ClassLoader {
         return response.toString();
     }
 
+    /*
+    public static void addMethodGetter(final ClassNode cn, final String name, final String desc) {
+        final MethodNode mn = new MethodNode(Opcodes.ACC_PUBLIC, name, "(I)" + desc, null, null);
+        mn.instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
+        mn.instructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC));
+        mn.instructions.add(new InsnNode(Opcodes.ARETURN));
+        mn.visitMaxs(1, 1);
+        mn.visitEnd();
+        cn.methods.add(mn);
+    } */
+
     @SuppressWarnings("unchecked")
     private void modify(ClassNode node) {
         if (!mappings.containsKey(node.name)) return;
@@ -234,36 +245,18 @@ public class ArchiveClassLoader extends ClassLoader {
                 node.interfaces.remove(i);
             }
         }
-
-        if (node.name.equals("client") && false) {
-
-
-            for (MethodNode mn : (List<MethodNode>) node.methods) {
-                if (mn.name.equals("i")) {
-
-                    InstructionSearcher searcher = new InstructionSearcher(mn.instructions, 0, Opcodes.SIPUSH, Opcodes.INVOKESTATIC, Opcodes.ASTORE);
-
-                    if (searcher.match()) {
-                        InstructionSearcher search = new InstructionSearcher(mn.instructions, 0, Opcodes.SIPUSH, Opcodes.INVOKESTATIC, Opcodes.ASTORE);
-
-                        AbstractInsnNode[] primMatches = searcher.getMatches().get(0);
-                        if (search.match()) {
-                            AbstractInsnNode[] matches = search.getMatches().get(0);
-
+                /*
+        if (node.name.equals("client")) {
                             VarInsnNode var = new VarInsnNode(Opcodes.ALOAD, 0);
                             VarInsnNode var2 = new VarInsnNode(Opcodes.ALOAD, ((VarInsnNode) primMatches[primMatches.length - 1]).var);
 
-                            mn.instructions.insert(matches[matches.length - 1], var);
+                            node.instructions.insert(matches[matches.length - 1], var);
                             mn.instructions.insert(var, var2);
                             mn.instructions.insert(var2, new MethodInsnNode(Opcodes.INVOKESTATIC, "org/vinsert/bot/script/callback/ItemDefinitionCallback", "callback", "(Lorg/vinsert/insertion/IItemDefinition;)V"));
 
                             System.out.println("\tInserted item def callback to " + node.name + "." + mn.name + ((MethodInsnNode) matches[1]).name);
                         }
-                    }
-                }
-            }
-        }
-
+                    */
 
         if (identity.equals("Renderable")) {
 

@@ -50,5 +50,4 @@ public class Item {
         Item o = (Item) other;
         return (o.getId() == id);
     }
-
 }
