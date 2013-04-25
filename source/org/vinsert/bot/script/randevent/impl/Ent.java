@@ -2,6 +2,7 @@ package org.vinsert.bot.script.randevent.impl;
 
 import org.vinsert.bot.script.ScriptManifest;
 import org.vinsert.bot.script.api.Npc;
+import org.vinsert.bot.script.api.Player;
 import org.vinsert.bot.script.api.tools.Navigation.NavigationPolicy;
 import org.vinsert.bot.script.randevent.RandomEvent;
 import org.vinsert.bot.util.Utils;
@@ -40,6 +41,11 @@ public class Ent extends RandomEvent {
     private boolean isEntThere() {
         if (players.getLocalPlayer() == null || players.getLocalPlayer().getInteracting() == null) {
             return false;
+        }
+        for(Player player : players.getAll()) {
+            if(localPlayer.getInteracting().equals(player)) {
+                return false;
+            }
         }
         final Npc ent = (Npc) players.getLocalPlayer().getInteracting();
         return ent != null && contains(ENT_IDS, ent.getId());
