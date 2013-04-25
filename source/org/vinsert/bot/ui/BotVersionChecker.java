@@ -2,12 +2,13 @@ package org.vinsert.bot.ui;
 
 import org.vinsert.Application;
 import org.vinsert.Configuration;
-import org.vinsert.bot.loader.arch.ArchiveClassLoader;
+import org.vinsert.bot.IOHelper;
 
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.net.URL;
 
 /**
  * The version checker
@@ -98,7 +99,7 @@ public class BotVersionChecker extends JDialog implements PropertyChangeListener
         @Override
         protected Void doInBackground() throws Exception {
             try {
-                String str = ArchiveClassLoader.getText(Configuration.composeres() + Configuration.versionfile);
+                String str = IOHelper.downloadAsString(new URL(Configuration.composeres() + Configuration.versionfile));
                 String[] strargs = str.split(",");
                 Configuration.remote_major = Integer.parseInt(strargs[0]);
                 Configuration.remote_minor = Integer.parseInt(strargs[1]);

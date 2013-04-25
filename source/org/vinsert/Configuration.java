@@ -30,7 +30,7 @@ public class Configuration {
     private static final String RES_BODY = "dmluc2VydC5vcmc=";
     private static final byte[] RES_HEAD, RES_TAIL;
     public static final String jsonfile = "gethooks.php?rev=";
-    public static final String versionfile = "version.txt";
+    public static final String versionfile = "getversion.php";
     public static final String currRevScript = "revision.php";
     public static final String jsonF = "insertions.json";
 

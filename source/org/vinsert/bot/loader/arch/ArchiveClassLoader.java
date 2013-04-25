@@ -147,8 +147,7 @@ public class ArchiveClassLoader extends ClassLoader {
 
     private void loadMappings() {
         try {
-            try {
-                fetch(Configuration.versionfile);
+          try {
                 fetchNew(Configuration.composeres() + Configuration.jsonfile + IOHelper.downloadAsString(new URL(
                         Configuration.composeres() + Configuration.currRevScript)));
             } catch (final IOException ignored) {
