@@ -53,6 +53,9 @@ public class GroundItems {
                 NodeDeque<INode> deque = new NodeDeque<INode>(deq);
 
                 for (INode node = deque.front(); node != null; node = deque.next()) {
+                    if(!(node.prev() instanceof IItem)) {
+                        continue;
+                    }
                     IItem i = (IItem) node.prev();
 
                     GroundItem item = new GroundItem(ctx, i.getId(), i.getAmount(), new Tile(client.getOriginX() + x, client.getOriginY() + y, x, y));
