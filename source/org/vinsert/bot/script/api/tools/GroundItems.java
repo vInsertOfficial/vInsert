@@ -35,26 +35,15 @@ public class GroundItems {
      * Gets all ground items in an {@link Area}, by applying a filter first.
      *
      * @param filter The filter to apply.
-     * @param area   The area to get all the items from.
      * @return The ground items.
      */
-    public List<GroundItem> getAll(Filter<GroundItem> filter, Area area) {
+    public List<GroundItem> getAll(Filter<GroundItem> filter) {
         List<GroundItem> items = new ArrayList<GroundItem>();
 
         IClient client = ctx.getClient();
-        INodeDeque[][] deques = client.getGroundItems()[client.getPlane()];
-
-        Tile bl = area.getBottomLeft();
-        Tile tr = area.getTopRight();
-
-        Area fin = new Area(new Tile(bl.getX() - client.getOriginX(), bl.getY() - client.getOriginY()), new Tile(tr.getX() - client.getOriginX(), tr.getY() - client.getOriginY()));
-
-        bl = fin.getBottomLeft();
-        tr = fin.getTopRight();
-        for (int x = bl.getX(); x <= tr.getX(); x++) {
-            for (int y = bl.getY(); y <= tr.getY(); y++) {
-                if (x < 0 || y < 0 || x >= 104 || y >= 104) continue;
-                INodeDeque deq = deques[x][y];
+        for (int x = 0; x < 104; x++) {
+            for (int y = 0; y < 104; y++) {
+                INodeDeque deq = client.getGroundItems()[client.getPlane()][x][y];
 
                 if (deq == null) {
                     continue;
@@ -63,12 +52,12 @@ public class GroundItems {
                 NodeDeque<INode> deque = new NodeDeque<INode>(deq);
 
                 for (INode node = deque.front(); node != null; node = deque.next()) {
-                    IItem i = (IItem) node.prev();
+                    IItem item = (IItem) node.prev();
 
-                    GroundItem item = new GroundItem(ctx, i.getId(), i.getAmount(), new Tile(client.getOriginX() + x, client.getOriginY() + y, x, y));
+                    GroundItem gItem = new GroundItem(ctx, item.getId(), item.getAmount(), new Tile(client.getOriginX() + x, client.getOriginY() + y, x, y));
 
-                    if (filter == null || filter.accept(item)) {
-                        items.add(item);
+                    if (filter == null || filter.accept(gItem)) {
+                        items.add(gItem);
                     }
                 }
             }
@@ -122,11 +111,10 @@ public class GroundItems {
     /**
      * Gets all ground items in an {@link Area}, without applying a filter.
      *
-     * @param area The area to get all the items from.
      * @return The ground items.
      */
-    public List<GroundItem> getAll(Area area) {
-        return getAll(null, area);
+    public List<GroundItem> getAll() {
+        return getAll(null);
     }
 
 

@@ -31,9 +31,9 @@ public class Game {
      * @return {@code true} if the tab was successfully opened.
      */
     public boolean openTab(Tabs tab) {
-    	tab.clickTab(ctx.widgets);
-    	currentTab = tab;
-    	return true;
+        tab.clickTab(ctx.widgets);
+        currentTab = tab;
+        return true;
     }
 
     /**
@@ -143,7 +143,7 @@ public class Game {
         OPTIONS("Options", 41),
         EMOTES("Emotes", 42),
         MUSIC("Music Player", 43);
-        
+
         final int PARENT = 548;
         String name;
         int child;
@@ -158,7 +158,7 @@ public class Game {
         }
 
         public Point getPoint(Widgets widgets) {
-        	//this is really broken
+            //this is really broken
             for (Widget w : widgets.get(PARENT)) {
                 if (w.getActions() != null) {
                     for (String s : w.getActions()) {
@@ -171,10 +171,10 @@ public class Game {
             }
             return new Point(-1, -1);
         }
-        
+
         public void clickTab(Widgets widgets) {
-        	Widget w = widgets.get(PARENT, child);
-        	w.click();
+            Widget w = widgets.get(PARENT, child);
+            w.click();
         }
     }
 

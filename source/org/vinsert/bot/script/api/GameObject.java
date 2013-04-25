@@ -66,6 +66,10 @@ public class GameObject implements Interactable, Hullable {
         this.location = location;
     }
 
+    public Renderable getRenderable() {
+        return new Renderable(ctx, object.getRenderable());
+    }
+
     /**
      * @return The object's model
      */
@@ -94,6 +98,7 @@ public class GameObject implements Interactable, Hullable {
                     ModelCallback.callback(boundary.getRenderable(), (IModel) boundary.getRenderable());
                 }
                 return new Model(PersistentModelCache.table.get(boundary.getRenderable()));
+              //  return new Renderable(ctx, object.getRenderable())._getModel();
         }
         return null;
     }

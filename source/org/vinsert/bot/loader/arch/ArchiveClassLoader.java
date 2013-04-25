@@ -235,6 +235,36 @@ public class ArchiveClassLoader extends ClassLoader {
             }
         }
 
+        if (node.name.equals("client") && false) {
+
+
+            for (MethodNode mn : (List<MethodNode>) node.methods) {
+                if (mn.name.equals("i")) {
+
+                    InstructionSearcher searcher = new InstructionSearcher(mn.instructions, 0, Opcodes.SIPUSH, Opcodes.INVOKESTATIC, Opcodes.ASTORE);
+
+                    if (searcher.match()) {
+                        InstructionSearcher search = new InstructionSearcher(mn.instructions, 0, Opcodes.SIPUSH, Opcodes.INVOKESTATIC, Opcodes.ASTORE);
+
+                        AbstractInsnNode[] primMatches = searcher.getMatches().get(0);
+                        if (search.match()) {
+                            AbstractInsnNode[] matches = search.getMatches().get(0);
+
+                            VarInsnNode var = new VarInsnNode(Opcodes.ALOAD, 0);
+                            VarInsnNode var2 = new VarInsnNode(Opcodes.ALOAD, ((VarInsnNode) primMatches[primMatches.length - 1]).var);
+
+                            mn.instructions.insert(matches[matches.length - 1], var);
+                            mn.instructions.insert(var, var2);
+                            mn.instructions.insert(var2, new MethodInsnNode(Opcodes.INVOKESTATIC, "org/vinsert/bot/script/callback/ItemDefinitionCallback", "callback", "(Lorg/vinsert/insertion/IItemDefinition;)V"));
+
+                            System.out.println("\tInserted item def callback to " + node.name + "." + mn.name + ((MethodInsnNode) matches[1]).name);
+                        }
+                    }
+                }
+            }
+        }
+
+
         if (identity.equals("Renderable")) {
 
 
@@ -316,7 +346,8 @@ public class ArchiveClassLoader extends ClassLoader {
     }
 
     @SuppressWarnings("unchecked")
-    private void insert(ClassNode node, String parent, String name, String getterName, String signature, String fieldSignature, boolean isStatic, int opLoad, int opReturn, int modBits, int modDirect, boolean modInverse) {
+    private void insert(ClassNode node, String parent, String name, String getterName, String signature, String
+            fieldSignature, boolean isStatic, int opLoad, int opReturn, int modBits, int modDirect, boolean modInverse) {
         MethodNode mn = new MethodNode(Opcodes.ACC_PUBLIC, getterName, "()" + signature, null, null);
 
         StringBuilder sb = new StringBuilder("\tInserted method " + getterName + "()" + signature + " " + (isStatic ? "GETSTATIC" : "GETFIELD") + " -> " + parent + "." + name + " " + fieldSignature);

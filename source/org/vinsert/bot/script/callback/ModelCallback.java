@@ -14,7 +14,13 @@ import org.vinsert.insertion.IRenderable;
  */
 public class ModelCallback {
 
+    private static long timeSince = System.currentTimeMillis();
+
     public static void callback(IRenderable renderable, IModel model) {
+        if (System.currentTimeMillis() - timeSince > 9000000) {
+            PersistentModelCache.table.clear();
+            timeSince = System.currentTimeMillis();
+        }
         if (model != null) {
             if (!PersistentModelCache.table.containsKey(renderable)) {
                 int orientation = 0;

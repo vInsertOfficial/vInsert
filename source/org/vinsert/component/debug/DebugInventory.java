@@ -18,5 +18,4 @@ public class DebugInventory extends Debugger {
             }
         }
     }
-
 }

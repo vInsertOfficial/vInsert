@@ -58,7 +58,6 @@ public class Model {
     public Polygon[] getPolygons() {
         return null;
     }
-
     /**
      * Convenience method to return an array of {@link Vec3}'s denoting vertices
      *
@@ -118,5 +117,4 @@ public class Model {
     public int getOrientation() {
         return model.getOrientation();
     }
-
 }

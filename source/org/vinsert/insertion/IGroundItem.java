@@ -1,6 +1,6 @@
 package org.vinsert.insertion;
 
-public interface IGroundItem {
+public interface IGroundItem extends IRenderable {
 
     public int getId();
 

@@ -36,10 +36,19 @@ public class GroundItem extends Item implements Hullable, Interactable {
      */
     private ScriptContext ctx;
 
+    private IRenderable render;
+
     public GroundItem(ScriptContext ctx, int id, int amount, Tile tile) {
         super(id, amount);
         this.ctx = ctx;
         this.location = tile;
+    }
+
+    public GroundItem(ScriptContext ctx, int id, int amount, Tile tile, IRenderable render) {
+        super(id, amount);
+        this.ctx = ctx;
+        this.location = tile;
+        this.render = render;
     }
 
     /**
@@ -53,15 +62,16 @@ public class GroundItem extends Item implements Hullable, Interactable {
         TOP, MIDDLE, BOTTOM;
     }
 
+    public Model getModel() {
+        return new Renderable(ctx, render).getModel();
+    }
     /**
      * @return The floor model representing this ground item
      */
     public Model getModel(ModelStackType type) {
         int x = location.getX() - ctx.getClient().getOriginX();
         int y = location.getY() - ctx.getClient().getOriginY();
-
         ISceneTile tile = ctx.getClient().getScene().getSceneTiles()[ctx.getClient().getPlane()][x][y];
-
         if (tile == null) {
             return null;
         }
@@ -72,10 +82,9 @@ public class GroundItem extends Item implements Hullable, Interactable {
         }
 
         IRenderable rend = null;
-       /*
+
         switch (type) {
             case TOP:
-
                 rend = layer.getTop();
                 break;
             case MIDDLE:
@@ -84,22 +93,13 @@ public class GroundItem extends Item implements Hullable, Interactable {
             case BOTTOM:
                 rend = layer.getBottom();
                 break;
-        }  */
-        IRenderable[] layers = {layer.getTop(), layer.getMiddle(), layer.getBottom()};
-        for(IRenderable layer1 : layers) {
-            if(layer1 == null) {
-                continue;
-            }
-            rend = layer1;
-            break;
         }
-
         if (rend == null) {
             return null;
         }
 
         this.height = rend.getModelHeight();
-        return new Model(PersistentModelCache.table.get(rend));
+        return new Model(PersistentModelCache.table.get(render));
     }
 
     /**
@@ -115,7 +115,7 @@ public class GroundItem extends Item implements Hullable, Interactable {
         }
         List<Point> points = new ArrayList<Point>();
         /*
-		 * Generate a list of all model vertices
+         * Generate a list of all model vertices
 		 */
         //instead of using getvectors we can deal directly with vertex arrays, but no point yet
         Vec3[][] vectors = getModel(ModelStackType.TOP).getVectors();
@@ -155,7 +155,7 @@ public class GroundItem extends Item implements Hullable, Interactable {
         if (points == null || model == null || !model.isValid()) return null;
 
 		/*
-		 * Generate a convex hull from the model vertices
+         * Generate a convex hull from the model vertices
 		 */
         Point[] hull = ConvexHull.getConvexHull(points);
         if (hull == null || hull.length == 0) {
@@ -163,7 +163,7 @@ public class GroundItem extends Item implements Hullable, Interactable {
         }
 
 		/*
-		 * Convert the hull into a polygon
+         * Convert the hull into a polygon
 		 */
         int[] x = new int[hull.length];
         int[] y = new int[hull.length];
@@ -180,8 +180,8 @@ public class GroundItem extends Item implements Hullable, Interactable {
 
     @Override
     public Point hullPoint(Polygon poly) {
-		/*
-		 * Find the minimum x, y and maximum x, y vertices
+        /*
+         * Find the minimum x, y and maximum x, y vertices
 		 */
         int minX = -1;
         int minY = -1;
@@ -210,7 +210,7 @@ public class GroundItem extends Item implements Hullable, Interactable {
         if (maxY <= 0) maxY = 2;
 
 		/*
-		 * Generate a random point within the polygon in regards
+         * Generate a random point within the polygon in regards
 		 * to the min/max vertices of the polygon
 		 */
         Point gen = null;
@@ -271,5 +271,4 @@ public class GroundItem extends Item implements Hullable, Interactable {
 
         return false;
     }
-
 }

@@ -21,6 +21,10 @@ public class Renderable {
         this.renderable = renderable;
     }
 
+    public long getUID() {
+        return renderable.uid();
+    }
+
     /**
      * @return The renderable entity's model height.
      */

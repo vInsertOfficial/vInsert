@@ -25,7 +25,7 @@ public class FreakyForest extends RandomEvent {
 
 
     Npc lumberjack = npcs.getNearest(freakyForester);
-    GroundItem pheasantMeat = groundItems.getNearest(players.getLocalPlayer().getLocation(), Filters.groundItemId(6179));
+    GroundItem pheasantMeat = groundItems.getNearest(getContext().players.getLocalPlayer().getLocation(), Filters.groundItemId(6179));
     GameObject forestportal = objects.getNearest(Filters.objectId(8972));
 
     @Override
@@ -90,7 +90,7 @@ public class FreakyForest extends RandomEvent {
                     //TODO get rest of the ID's
                 }
                 sleep(750, 1250);
-                pheasantMeat = groundItems.getNearest(players.getLocalPlayer().getLocation(), Filters.groundItemId(meats));
+                pheasantMeat = groundItems.getNearest(getContext().players.getLocalPlayer().getLocation(), Filters.groundItemId(meats));
             } else {
                 if (!inventory.contains(Filters.itemId(meats)) && gotMeat == false) {
                     if (pheasantMeat == null) {
@@ -99,9 +99,9 @@ public class FreakyForest extends RandomEvent {
                         while (players.getLocalPlayer().getAnimation() != -1 || players.getLocalPlayer().isMoving()) {
                             sleep(50, 75);
                         }
-                        pheasantMeat = groundItems.getNearest(players.getLocalPlayer().getLocation(), Filters.groundItemId(meats));
+                        pheasantMeat = groundItems.getNearest(getContext().players.getLocalPlayer().getLocation(), Filters.groundItemId(meats));
                     } else if (pheasantMeat != null && !inventory.isFull()) {
-                        pheasantMeat = groundItems.getNearest(players.getLocalPlayer().getLocation(), Filters.groundItemId(meats));
+                        pheasantMeat = groundItems.getNearest(getContext().players.getLocalPlayer().getLocation(), Filters.groundItemId(meats));
                         pheasantMeat.interact("Take");
                         gotMeat = true;
                         sleep(750, 1200);
