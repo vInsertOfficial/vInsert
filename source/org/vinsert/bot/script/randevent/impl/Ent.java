@@ -42,13 +42,12 @@ public class Ent extends RandomEvent {
         if (players.getLocalPlayer() == null || players.getLocalPlayer().getInteracting() == null) {
             return false;
         }
-        for(Player player : players.getAll()) {
-            if(localPlayer.getInteracting().equals(player)) {
-                return false;
-            }
-        }
-        final Npc ent = (Npc) players.getLocalPlayer().getInteracting();
-        return ent != null && contains(ENT_IDS, ent.getId());
+        final Actor actor = players.getLocalPlayer().getInteracting();
+        if (actor instanceof Npc) {
+            final Npc ent = (Npc) players.getLocalPlayer().getInteracting();
+	        return ent != null && contains(ENT_IDS, ent.getId());
+        } else
+        	return false;
     }
 
     public boolean contains(final int[] y, final int i) {
