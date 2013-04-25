@@ -3,6 +3,8 @@ package org.vinsert.component.debug;
 import org.vinsert.bot.script.api.GroundItem;
 import org.vinsert.bot.script.api.GroundItem.ModelStackType;
 import org.vinsert.bot.script.api.Model;
+import org.vinsert.bot.script.api.Player;
+import org.vinsert.bot.script.api.Tile;
 
 import java.awt.*;
 
@@ -13,10 +15,11 @@ public class DebugGroundHulls extends Debugger {
 
     @Override
     public void draw(Graphics2D g) {
-        for (GroundItem item : getContext().groundItems.getAll()){
-            if(item != null) {
+        Player player = getContext().players.getLocalPlayer();
+
+        Tile loc = player.getLocation();
+        for (GroundItem item : getContext().groundItems.getAll()) {
             draw(g, item, color);
-            }
         }
     }
 

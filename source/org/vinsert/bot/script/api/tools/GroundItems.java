@@ -38,12 +38,13 @@ public class GroundItems {
      * @return The ground items.
      */
     public List<GroundItem> getAll(Filter<GroundItem> filter) {
-        List<GroundItem> items = new ArrayList<GroundItem>();
+        List<GroundItem> items = new ArrayList();
 
         IClient client = ctx.getClient();
+        INodeDeque[][] deques = client.getGroundItems()[client.getPlane()];
         for (int x = 0; x < 104; x++) {
             for (int y = 0; y < 104; y++) {
-                INodeDeque deq = client.getGroundItems()[client.getPlane()][x][y];
+                INodeDeque deq = deques[x][y];
 
                 if (deq == null) {
                     continue;
@@ -52,12 +53,12 @@ public class GroundItems {
                 NodeDeque<INode> deque = new NodeDeque<INode>(deq);
 
                 for (INode node = deque.front(); node != null; node = deque.next()) {
-                    IItem item = (IItem) node.prev();
+                    IItem i = (IItem) node.prev();
 
-                    GroundItem gItem = new GroundItem(ctx, item.getId(), item.getAmount(), new Tile(client.getOriginX() + x, client.getOriginY() + y, x, y));
+                    GroundItem item = new GroundItem(ctx, i.getId(), i.getAmount(), new Tile(client.getOriginX() + x, client.getOriginY() + y, x, y));
 
-                    if (filter == null || filter.accept(gItem)) {
-                        items.add(gItem);
+                    if (filter == null || filter.accept(item)) {
+                        items.add(item);
                     }
                 }
             }
