@@ -6,6 +6,7 @@ import org.vinsert.bot.script.api.Player;
 import org.vinsert.bot.script.api.tools.Navigation.NavigationPolicy;
 import org.vinsert.bot.script.randevent.RandomEvent;
 import org.vinsert.bot.util.Utils;
+import org.vinsert.bot.script.api.Actor;
 
 @ScriptManifest(name = "Ent", description = "Stops chopping ents!", authors = {"tholomew"})
 public class Ent extends RandomEvent {
@@ -42,11 +43,12 @@ public class Ent extends RandomEvent {
         if (players.getLocalPlayer() == null || players.getLocalPlayer().getInteracting() == null) {
             return false;
         }
-        Actor a = localPlayer.getInteracting();
-        if(a instanceof Player)
-            return false;
-        final Npc ent = (Npc) a;
-        return ent != null && contains(ENT_IDS, ent.getId());
+        final Actor actor = players.getLocalPlayer().getInteracting();
+        if (actor instanceof Npc) {
+            final Npc ent = (Npc) players.getLocalPlayer().getInteracting();
+return ent != null && contains(ENT_IDS, ent.getId());
+        } else
+         return false;
     }
 
     public boolean contains(final int[] y, final int i) {
