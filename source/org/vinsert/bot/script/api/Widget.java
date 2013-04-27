@@ -207,8 +207,8 @@ public class Widget {
     }
 
 
-    private int calculateOffset(int currX, int currY) {
-        return (new Rectangle(0, 338, 519, 142).contains(currX, currY) ? 25 : 0);
+    private int calculateOffset(int currY) {
+        return (new Rectangle(0, 338, 519, 142).contains(getX(), currY + 25) ? 25 : 0);
     }
 
     /**
@@ -251,11 +251,12 @@ public class Widget {
         } else {
             int[] posy = ctx.getClient().getPaneYPos();
             if (widget.getStaticPos() != -1 && posy[widget.getStaticPos()] > 0) {
-                return posy[widget.getStaticPos()] + widget.getY() + (calculateOffset(widget.getX(), (25 + widget.getY() +
-                posy[widget.getStaticPos()])));
+                int y1 = posy[widget.getStaticPos()] + widget.getY();
+                return calculateOffset(y1) + y1;
             }
         }
-          return ((y + widget.getRelativeY()) + (calculateOffset(widget.getX(), (widget.getRelativeY() + 25))));
+        int y1 = y + widget.getRelativeY();
+        return calculateOffset(y1) + y1;
     }
 
 
@@ -365,7 +366,7 @@ public class Widget {
     }
 
     public boolean isValid() {
-        return widget != null && ctx.widgets.getValidated().contains(widget);
+        return widget != null;
     }
 
 }
