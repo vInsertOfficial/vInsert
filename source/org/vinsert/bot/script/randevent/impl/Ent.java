@@ -1,6 +1,7 @@
 package org.vinsert.bot.script.randevent.impl;
 
 import org.vinsert.bot.script.ScriptManifest;
+import org.vinsert.bot.script.api.Actor;
 import org.vinsert.bot.script.api.Npc;
 import org.vinsert.bot.script.api.Player;
 import org.vinsert.bot.script.api.tools.Navigation.NavigationPolicy;
