@@ -79,6 +79,7 @@ public class BotScriptViewer extends JDialog {
         add(panel, BorderLayout.SOUTH);
 
         setVisible(true);
+        this.setLocationRelativeTo(Application.window.getFrame());
     }
 
     /**
