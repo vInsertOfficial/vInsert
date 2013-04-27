@@ -42,12 +42,10 @@ public class Ent extends RandomEvent {
         if (players.getLocalPlayer() == null || players.getLocalPlayer().getInteracting() == null) {
             return false;
         }
-        for(Player player : players.getAll()) {
-            if(localPlayer.getInteracting().equals(player)) {
-                return false;
-            }
-        }
-        final Npc ent = (Npc) players.getLocalPlayer().getInteracting();
+        Actor a = localPlayer.getInteracting();
+        if(a instanceof Player)
+            return false;
+        final Npc ent = (Npc) a;
         return ent != null && contains(ENT_IDS, ent.getId());
     }
 
