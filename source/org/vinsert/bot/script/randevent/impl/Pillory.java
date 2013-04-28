@@ -6,7 +6,7 @@ import org.vinsert.bot.script.api.Tile;
 import org.vinsert.bot.script.api.generic.Filters;
 import org.vinsert.bot.script.randevent.RandomEvent;
 
-import java.awt.Point;
+import java.awt.*;
 
 /**
  * @author mcpedro
@@ -96,7 +96,7 @@ public class Pillory extends RandomEvent {
     }
     
     public boolean checkPosition() {
-    	if(Game.isLoggedOn()) {
+    	if(game.isLoggedIn()) {
     	Tile cageTile = objects.getNearest(Filters.objectId(CAGE_ID)).getLocation();
     	if (cageTile != null) {
     		if (localPlayer.getLocation().distanceTo(cageTile) < 4) {
