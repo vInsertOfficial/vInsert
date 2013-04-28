@@ -96,6 +96,7 @@ public class Pillory extends RandomEvent {
     }
     
     public boolean checkPosition() {
+    	if(Game.isLoggedOn()) {
     	Tile cageTile = objects.getNearest(Filters.objectId(CAGE_ID)).getLocation();
     	if (cageTile != null) {
     		if (localPlayer.getLocation().distanceTo(cageTile) < 4) {
@@ -105,6 +106,7 @@ public class Pillory extends RandomEvent {
     			camera.rotateToTile(cageTile);
     			return true;
     		}
+    	}
     	}
     	return false;
     }
