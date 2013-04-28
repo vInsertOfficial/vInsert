@@ -5,8 +5,6 @@ import org.vinsert.insertion.IActor;
 import org.vinsert.insertion.IModel;
 import org.vinsert.insertion.IRenderable;
 
-import java.util.Map;
-
 
 /**
  * Model callback used to retrieve renderable's model instances
@@ -17,16 +15,6 @@ import java.util.Map;
 public class ModelCallback {
 
     public static void callback(IRenderable renderable, IModel model) {
-        if (PersistentModelCache.table.size() > 500) {
-            int counter = 0;
-            for (Map.Entry<IRenderable, MutableCachedModel> entry : PersistentModelCache.table.entrySet()) {
-                if (counter < 400) {
-                    PersistentModelCache.table.remove(entry.getKey());
-                    counter++;
-                }
-                break;
-            }
-        }
         if (model != null) {
             if (!PersistentModelCache.table.containsKey(renderable)) {
                 int orientation = 0;
