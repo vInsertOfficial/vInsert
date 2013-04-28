@@ -21,6 +21,9 @@ public class Iles extends RandomEvent {
 
     @Override
     public boolean init() {
+        if(!game.isLoggedIn()) {
+            return false;
+        }
         Npc iles = npcs.getNearest(NPC_IDS);
         if (iles != null) {
             if (iles.getSpeech() != null) {
