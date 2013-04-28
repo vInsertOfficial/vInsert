@@ -20,7 +20,7 @@ import java.util.logging.LogRecord;
 @SuppressWarnings("all")
 public class BotLogger extends JList<String> {
 
-    public static final int MAX_LIST_SIZE = 500;// tweak this number?
+    public static final int MAX_LIST_SIZE = 200;// tweak this number?
     public static final Rectangle BOTTOM_OF_WINDOW = new Rectangle(0,
             Integer.MAX_VALUE, 0, 0);
     private static final Formatter formatter = new Formatter() {
@@ -73,23 +73,17 @@ public class BotLogger extends JList<String> {
                         + vbar.getVisibleAmount();
 
 				/*
-                 * Remove the first index to prevent the list becoming gigantic
+                 * Remove the last index to prevent the list becoming gigantic
 				 */
                 if (model.getSize() >= MAX_LIST_SIZE) {
-                    model.removeElementAt(0);
+                    model.remove(model.getSize() - 1);
                 }
-
-                model.addElement(new LogEntry(record));
-                ensureIndexIsVisible(model.size() - 1);
-                // if (end) {
-                // scrollRectToVisible(BOTTOM_OF_WINDOW);
-                // scroller.scrollRectToVisible(BOTTOM_OF_WINDOW);
-                // }
+                model.add(0, new LogEntry(record));
             }
         });
     }
 
-    private static class LogEntry {
+    private class LogEntry {
 
         public final LogRecord record;
         public final String formatted;

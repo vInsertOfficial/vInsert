@@ -80,7 +80,7 @@ public class Bank {
 
         for (int i = 0; i < CAPACITY; i++) {
             if (itemPane.getSlotContents()[i] != 0) {
-                items.add(new Item(itemPane.getSlotContents()[i], itemPane.getSlotSizes()[i]));
+                items.add(new Item(ctx, itemPane.getSlotContents()[i], itemPane.getSlotSizes()[i]));
             }
         }
         return items.toArray(new Item[0]);

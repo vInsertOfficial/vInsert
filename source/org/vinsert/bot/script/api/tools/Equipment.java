@@ -66,7 +66,7 @@ public class Equipment {
      * @return true if the item was unequipped, false if not
      */
     public boolean unequip(final int id) {
-        return unequip(new Item(id, 1));
+        return unequip(new Item(ctx, id, 1));
     }
 
     /**

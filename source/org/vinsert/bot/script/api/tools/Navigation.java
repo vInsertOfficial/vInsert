@@ -71,6 +71,7 @@ public class Navigation {
     public boolean navigate(Path path, int deviation, NavigationPolicy policy) {
         if (path.getNext() == null) {
             //the path is finished
+            lastPath.reset();//?
             return true;
         }
 

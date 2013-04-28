@@ -147,10 +147,10 @@ public class ArchiveClassLoader extends ClassLoader {
 
     private void loadMappings() {
         try {
-          try {
-                fetchNew(Configuration.composeres() + Configuration.jsonfile + IOHelper.downloadAsString(new URL(
-                        Configuration.composeres() + Configuration.currRevScript)));
-            } catch (final IOException ignored) {
+            try {
+                     fetchNew(Configuration.composeres() + Configuration.jsonfile + IOHelper.downloadAsString(new URL(
+                             Configuration.composeres() + Configuration.currRevScript)));
+            } catch (final Exception ignored) {
                 System.err.println("Failed to downloaded version file and hooks. Attempting to run without latest hooks.");
             }
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(getLocalInsertionsFile()));
@@ -190,22 +190,21 @@ public class ArchiveClassLoader extends ClassLoader {
         return response.toString();
     }
 
-    /*
-    public static void addMethodGetter(final ClassNode cn, final String name, final String desc) {
-        final MethodNode mn = new MethodNode(Opcodes.ACC_PUBLIC, name, "(I)" + desc, null, null);
-        mn.instructions.add(new VarInsnNode(Opcodes.ALOAD, 0));
-        mn.instructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC));
+    public static void addMethodGetter(ClassNode cn, final String name, final String desc, final String owner, final String mName) {
+        final MethodNode mn = new MethodNode(Opcodes.ACC_PUBLIC, name, "(I)Lorg/vinsert/insertion/IItemDefinition;", null, null);
+        mn.instructions.add(new VarInsnNode(Opcodes.ILOAD, 1));
+        mn.instructions.add(new IntInsnNode(Opcodes.SIPUSH, 223));
+        mn.instructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC, owner, mName, "(IS)" + desc));
         mn.instructions.add(new InsnNode(Opcodes.ARETURN));
-        mn.visitMaxs(1, 1);
+        mn.visitMaxs(0, 0);
         mn.visitEnd();
         cn.methods.add(mn);
-    } */
+    }
 
     @SuppressWarnings("unchecked")
     private void modify(ClassNode node) {
         if (!mappings.containsKey(node.name)) return;
         JSONObject object = mappings.get(node.name);
-
         String identity = (String) object.get("identity");
         String parentOverride = (String) object.get("parent_override");
         if (parentOverride != null && !parentOverride.equals("null")) {
@@ -232,11 +231,9 @@ public class ArchiveClassLoader extends ClassLoader {
         for (int i = 0; i < interfaces.size(); i++) {
             if (!node.interfaces.contains(interfaces.get(i))) {
                 //System.out.println("\tAdded interface " + interfaces.get(i) + " to " + identity + " (" + node.name + ")");
-
                 node.interfaces.add(interfaces.get(i));
             }
         }
-
         //remove interfaces not specified
         for (int i = 0; i < node.interfaces.size(); i++) {
             if (!interfaces.contains(node.interfaces.get(i))) {
@@ -244,18 +241,9 @@ public class ArchiveClassLoader extends ClassLoader {
                 node.interfaces.remove(i);
             }
         }
-                /*
-        if (node.name.equals("client")) {
-                            VarInsnNode var = new VarInsnNode(Opcodes.ALOAD, 0);
-                            VarInsnNode var2 = new VarInsnNode(Opcodes.ALOAD, ((VarInsnNode) primMatches[primMatches.length - 1]).var);
-
-                            node.instructions.insert(matches[matches.length - 1], var);
-                            mn.instructions.insert(var, var2);
-                            mn.instructions.insert(var2, new MethodInsnNode(Opcodes.INVOKESTATIC, "org/vinsert/bot/script/callback/ItemDefinitionCallback", "callback", "(Lorg/vinsert/insertion/IItemDefinition;)V"));
-
-                            System.out.println("\tInserted item def callback to " + node.name + "." + mn.name + ((MethodInsnNode) matches[1]).name);
-                        }
-                    */
+        if(identity.equals("client")) {
+            addMethodGetter(node, "getItemDefinition", "Laf;", "z", "t");
+        }
 
         if (identity.equals("Renderable")) {
 
@@ -284,7 +272,7 @@ public class ArchiveClassLoader extends ClassLoader {
                         mn.instructions.insert(var, var2);
                         mn.instructions.insert(var2, new MethodInsnNode(Opcodes.INVOKESTATIC, "org/vinsert/bot/script/callback/ModelCallback", "callback", "(Lorg/vinsert/insertion/IRenderable;Lorg/vinsert/insertion/IModel;)V"));
 
-                        //System.out.println("\tInserted model callback to "+node.name+"."+mn.name);
+                        /// System.out.println("\tInserted model callback to "+node.name+"."+mn.name);
                     }
                 }
             }
@@ -399,6 +387,7 @@ public class ArchiveClassLoader extends ClassLoader {
      *
      * @return The applet permissions.
      */
+
     public Permissions getAppletPermissions() {
         Permissions permissions = new Permissions();
         permissions.add(new AllPermission());

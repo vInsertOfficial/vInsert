@@ -202,24 +202,40 @@ public class Bot {
     public synchronized void log(Class<?> source, String msg) {
         LogRecord record = new LogRecord(Level.INFO, msg);
         record.setSourceClassName(source.getSimpleName());
+        if (getLogger() == null) {
+            System.out.println(msg);
+            return;
+        }
         getLogger().log(record);
     }
 
     public synchronized void log(Class<?> source, Level level, String msg) {
         LogRecord record = new LogRecord(level, msg);
         record.setSourceClassName(source.getSimpleName());
+        if (getLogger() == null) {
+            System.out.println(msg);
+            return;
+        }
         getLogger().log(record);
     }
 
     public synchronized void log(String tag, String msg) {
         LogRecord record = new LogRecord(Level.INFO, msg);
         record.setSourceClassName(tag);
+        if (getLogger() == null) {
+            System.out.println(msg);
+            return;
+        }
         getLogger().log(record);
     }
 
     public synchronized void log(String tag, Level level, String msg) {
         LogRecord record = new LogRecord(level, msg);
         record.setSourceClassName(tag);
+        if (getLogger() == null) {
+            System.out.println(msg);
+            return;
+        }
         getLogger().log(record);
     }
 
@@ -227,6 +243,10 @@ public class Bot {
         final Writer result = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(result);
         t.printStackTrace(printWriter);
+        if (getLogger() == null) {
+            System.out.println(t.toString());
+            return;
+        }
         log(s.getClass(), Level.SEVERE, result.toString());
     }
 

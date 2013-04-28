@@ -56,7 +56,6 @@ public class Widgets {
             Widget w = new Widget(ctx, ctx.getClient().getWidgets()[group][j]);
             valid[j] = w;
         }
-
         return valid;
     }
 

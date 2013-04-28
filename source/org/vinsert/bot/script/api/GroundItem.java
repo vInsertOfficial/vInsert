@@ -37,7 +37,7 @@ public class GroundItem extends Item implements Hullable, Interactable {
     private ScriptContext ctx;
 
     public GroundItem(ScriptContext ctx, int id, int amount, Tile tile) {
-        super(id, amount);
+        super(ctx, id, amount);
         this.ctx = ctx;
         this.location = tile;
     }

@@ -1,13 +1,21 @@
 package org.vinsert.insertion;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Owner
- * Date: 25/04/13
- * Time: 3:54 PM
- * To change this template use File | Settings | File Templates.
+ * @author iJava
  */
 public interface IItemDefinition {
 
     public String getName();
+
+    public int getModelId();
+
+    public String[] getActions();
+
+    public String[] getGroundActions();
+
+    public int[] getStackIds();
+
+    public int[] getStackAmounts();
+
+    public int getValue();
 }

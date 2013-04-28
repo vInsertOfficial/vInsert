@@ -230,6 +230,7 @@ public class BotScriptViewer extends JDialog {
                             final ScriptInfo def = definitions.get(definitions.size() - 1);
                             firePropertyChange("script", null, def);
                         }
+                        file.delete();
                     } catch (final Exception ignored) {
                         ignored.printStackTrace();
                     }

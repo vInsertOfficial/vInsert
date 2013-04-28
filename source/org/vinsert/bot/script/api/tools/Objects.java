@@ -45,6 +45,16 @@ public class Objects {
      * Returns an array of all game objects within a given distance from the local player
      *
      * @param distance The maximum distance, in tiles
+     * @return
+     */
+    public GameObject[] getWithinDistanceType(final int distance, final int mask) {
+        return getWithinDistance(ctx.players.getLocalPlayer(), distance, mask);
+    }
+
+    /**
+     * Returns an array of all game objects within a given distance from the local player
+     *
+     * @param distance The maximum distance, in tiles
      * @param mask     object type mask (all = Objects.TYPE_ALL)
      * @return
      */

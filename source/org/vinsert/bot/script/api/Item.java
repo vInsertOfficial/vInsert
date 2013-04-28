@@ -1,6 +1,8 @@
 package org.vinsert.bot.script.api;
 
 
+import org.vinsert.bot.script.ScriptContext;
+
 /**
  * Wraps the Item class in the client
  *
@@ -10,10 +12,12 @@ public class Item {
 
     private int id;
     private int amount;
+    private ScriptContext ctx;
 
-    public Item(int id, int amount) {
+    public Item(ScriptContext ctx, int id, int amount) {
         this.id = id;
         this.amount = amount;
+        this.ctx = ctx;
     }
 
     /**
@@ -49,5 +53,9 @@ public class Item {
         if (!(other instanceof Item)) return false;
         Item o = (Item) other;
         return (o.getId() == id);
+    }
+
+    public ItemDefinition getItemDefinition() {
+        return new ItemDefinition(ctx, ctx.getClient().getItemDefinition(id - 1));
     }
 }

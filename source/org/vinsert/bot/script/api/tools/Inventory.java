@@ -174,7 +174,7 @@ public class Inventory {
 
         Item[] items = new Item[ids.length];
         for (int i = 0; i < ids.length; i++) {
-            Item item = new Item(ids[i], stacks[i]);
+            Item item = new Item(ctx, ids[i], stacks[i]);
             if (filter == null || filter.accept(item)) {
                 items[i] = item;
             }

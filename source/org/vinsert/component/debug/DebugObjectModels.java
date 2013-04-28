@@ -9,13 +9,13 @@ import org.vinsert.bot.util.Vec3;
 import java.awt.*;
 
 
-public class DebugObjectModels extends Debugger {
+public class DebugObjectModels extends ObjectDebugger {
 
     private Color color = new Color(220, 220, 0, 85);
 
     @Override
     public void draw(Graphics2D g) {
-        for (GameObject obj : context.objects.getWithinDistance(5)) {
+        for (GameObject obj : context.objects.getWithinDistanceType(5, getType())) {
             drawModel(g, obj, color);
         }
     }

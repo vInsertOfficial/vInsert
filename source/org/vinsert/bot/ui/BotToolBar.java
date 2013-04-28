@@ -4,7 +4,7 @@ import org.vinsert.Configuration;
 import org.vinsert.bot.Bot;
 import org.vinsert.bot.script.Script;
 import org.vinsert.bot.script.ScriptContext;
-import org.vinsert.bot.util.PasteScript;
+import org.vinsert.bot.script.api.tools.Objects;
 import org.vinsert.component.HijackCanvas;
 import org.vinsert.component.ProjectionListener;
 import org.vinsert.component.debug.*;
@@ -36,7 +36,6 @@ public class BotToolBar extends JToolBar {
 
     private JPopupMenu settings = new JPopupMenu("Settings");
     private JMenuItem accounts = new JMenuItem("Accounts");
-    private JMenuItem pasteScript = new JMenuItem("New Script");
     private JMenu interfaces = new JMenu("Interfaces");
     private JMenuItem interfacesInventory = new JMenuItem("Draw Inventory");
     private JMenuItem interfacesMenu = new JMenuItem("Draw Menu Info");
@@ -52,9 +51,26 @@ public class BotToolBar extends JToolBar {
     private JMenuItem playersModels = new JMenuItem("Models");
     private JMenuItem playersHulls = new JMenuItem("Hulls");
     private JMenu objects = new JMenu("Objects");
-    private JMenuItem objectsInfo = new JMenuItem("Info");
-    private JMenuItem objectsModels = new JMenuItem("Models");
-    private JMenuItem objectsHulls = new JMenuItem("Hulls");
+    private JMenu all = new JMenu("All");
+    private JMenu walls = new JMenu("Walls");
+    private JMenu interactive = new JMenu("Interactive");
+    private JMenu floor = new JMenu("Floor");
+    private JMenu boundary = new JMenu("Boundary");
+    private JMenuItem allObjectsInfo = new JMenuItem("Info");
+    private JMenuItem allObjectsModels = new JMenuItem("Models");
+    private JMenuItem allObjectsHulls = new JMenuItem("Hulls");
+    private JMenuItem interactiveObjectsInfo = new JMenuItem("Info");
+    private JMenuItem interactiveObjectsModels = new JMenuItem("Models");
+    private JMenuItem interactiveObjectsHulls = new JMenuItem("Hulls");
+    private JMenuItem wallsObjectsInfo = new JMenuItem("Info");
+    private JMenuItem wallsObjectsModels = new JMenuItem("Models");
+    private JMenuItem wallsObjectsHulls = new JMenuItem("Hulls");
+    private JMenuItem floorObjectsInfo = new JMenuItem("Info");
+    private JMenuItem floorObjectsModels = new JMenuItem("Models");
+    private JMenuItem floorObjectsHulls = new JMenuItem("Hulls");
+    private JMenuItem boundaryObjectsInfo = new JMenuItem("Info");
+    private JMenuItem boundaryObjectsModels = new JMenuItem("Models");
+    private JMenuItem boundaryObjectsHulls = new JMenuItem("Hulls");
     private JMenu misc = new JMenu("Misc");
     private JMenuItem miscMouse = new JMenuItem("Mouse Info");
     private JMenuItem miscCursor = new JMenuItem("Draw Cursor");
@@ -91,7 +107,6 @@ public class BotToolBar extends JToolBar {
 
         settings.add(accounts);
         settings.addSeparator();
-        settings.add(pasteScript);
         interfaces.add(interfacesInventory);
         interfaces.add(interfacesMenu);
         interfaces.add(interfacesWidgets);
@@ -106,9 +121,26 @@ public class BotToolBar extends JToolBar {
         npcs.add(npcsModels);
         npcs.add(npcsHulls);
         settings.add(npcs);
-        objects.add(objectsInfo);
-        objects.add(objectsModels);
-        objects.add(objectsHulls);
+        objects.add(all);
+        objects.add(interactive);
+        objects.add(walls);
+        objects.add(floor);
+        objects.add(boundary);
+        all.add(allObjectsInfo);
+        all.add(allObjectsModels);
+        all.add(allObjectsHulls);
+        interactive.add(interactiveObjectsInfo);
+        interactive.add(interactiveObjectsModels);
+        interactive.add(interactiveObjectsHulls);
+        walls.add(wallsObjectsInfo);
+        walls.add(wallsObjectsModels);
+        walls.add(wallsObjectsHulls);
+        floor.add(floorObjectsInfo);
+        floor.add(floorObjectsModels);
+        floor.add(floorObjectsHulls);
+        boundary.add(boundaryObjectsInfo);
+        boundary.add(boundaryObjectsModels);
+        boundary.add(boundaryObjectsHulls);
         settings.add(objects);
         misc.add(miscMouse);
         misc.add(miscCursor);
@@ -234,13 +266,6 @@ public class BotToolBar extends JToolBar {
             }
         });
 
-        pasteScript.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String url = JOptionPane.showInputDialog("Enter Pastebin URL :");
-                new PasteScript(url);
-            }
-        });
-
         //misc menu
         miscMouse.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -325,19 +350,84 @@ public class BotToolBar extends JToolBar {
             }
         });
         //object menu
-        objectsInfo.addActionListener(new ActionListener() {
+        allObjectsInfo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                toggleDebugger(objectsInfo, DebugObjectInfo.class);
+
+                toggleObjectsDebugger(allObjectsInfo, DebugObjectInfo.class, Objects.TYPE_ALL);
             }
         });
-        objectsModels.addActionListener(new ActionListener() {
+        allObjectsModels.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                toggleDebugger(objectsModels, DebugObjectModels.class);
+                toggleObjectsDebugger(allObjectsModels, DebugObjectModels.class, Objects.TYPE_ALL);
             }
         });
-        objectsHulls.addActionListener(new ActionListener() {
+        allObjectsHulls.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                toggleDebugger(objectsHulls, DebugObjectHulls.class);
+                toggleObjectsDebugger(allObjectsHulls, DebugObjectHulls.class, Objects.TYPE_ALL);
+            }
+        });
+        interactiveObjectsInfo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                toggleObjectsDebugger(interactiveObjectsInfo, DebugObjectInfo.class, Objects.TYPE_INTERACTABLE);
+            }
+        });
+        interactiveObjectsModels.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                toggleObjectsDebugger(interactiveObjectsModels, DebugObjectModels.class, Objects.TYPE_INTERACTABLE);
+            }
+        });
+        interactiveObjectsHulls.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                toggleObjectsDebugger(interactiveObjectsHulls, DebugObjectHulls.class, Objects.TYPE_INTERACTABLE);
+            }
+        });
+        wallsObjectsInfo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                toggleObjectsDebugger(wallsObjectsInfo, DebugObjectInfo.class, Objects.TYPE_WALL_DECORATION);
+            }
+        });
+        wallsObjectsModels.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                toggleObjectsDebugger(wallsObjectsModels, DebugObjectModels.class, Objects.TYPE_WALL_DECORATION);
+            }
+        });
+        wallsObjectsHulls.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                toggleObjectsDebugger(wallsObjectsHulls, DebugObjectHulls.class, Objects.TYPE_WALL_DECORATION);
+            }
+        });
+        floorObjectsInfo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                toggleObjectsDebugger(floorObjectsInfo, DebugObjectInfo.class, Objects.TYPE_FLOOR_DECORATION);
+            }
+        });
+        floorObjectsModels.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                toggleObjectsDebugger(floorObjectsModels, DebugObjectModels.class, Objects.TYPE_FLOOR_DECORATION);
+            }
+        });
+        floorObjectsHulls.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                toggleObjectsDebugger(floorObjectsHulls, DebugObjectHulls.class, Objects.TYPE_FLOOR_DECORATION);
+            }
+        });
+        boundaryObjectsInfo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                toggleObjectsDebugger(boundaryObjectsInfo, DebugObjectInfo.class, Objects.TYPE_BOUNDARY);
+            }
+        });
+        boundaryObjectsModels.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                toggleObjectsDebugger(boundaryObjectsModels, DebugObjectModels.class, Objects.TYPE_BOUNDARY);
+            }
+        });
+        boundaryObjectsHulls.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                toggleObjectsDebugger(boundaryObjectsHulls, DebugObjectHulls.class, Objects.TYPE_BOUNDARY);
             }
         });
 
@@ -440,6 +530,47 @@ public class BotToolBar extends JToolBar {
             if (!removed) {
                 try {
                     Debugger d = (Debugger) listener.newInstance();
+                    d.install(b);
+                    c.getListeners().add(d);
+                    src.setIcon(tickIcon);
+                    b.getLogger().log(new LogRecord(Level.FINE, "Installed " + d.getClass().getSimpleName().replaceAll("Debug", "") + " debugger"));
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void toggleObjectsDebugger(JMenuItem src, Class<?> listener, int type) {
+        Bot b = window.getActiveBot();
+        if (b != null) {
+            HijackCanvas c = b.getCanvas();
+            boolean removed = false;
+            if (c == null) {
+                b.getLogger().log(new LogRecord(Level.SEVERE, "Error accessing canvas..."));
+                return;
+            }
+            for (int i = 0; i < c.getListeners().size(); i++) {
+                ProjectionListener pl = c.getListeners().get(i);
+                if (pl.getClass().equals(listener)) {
+                    ObjectDebugger d = (ObjectDebugger) pl;
+                    if (d.getType() == type) {
+                        d.uninstall();
+                        c.getListeners().remove(i);
+                        removed = true;
+                        src.setIcon(null);
+                        b.getLogger().log(new LogRecord(Level.FINE, "Uninstalled " + d.getClass().getSimpleName().replaceAll("Debug", "") + " debugger"));
+                        break;
+                    }
+                }
+            }
+
+            if (!removed) {
+                try {
+                    ObjectDebugger d = (ObjectDebugger) listener.newInstance();
+                    d.setType(type);
                     d.install(b);
                     c.getListeners().add(d);
                     src.setIcon(tickIcon);
