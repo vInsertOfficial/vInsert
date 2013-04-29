@@ -104,11 +104,10 @@ public class BotTabPane extends JPanel {
      * @param tab The tab to close
      */
     public void closeTab(Tab tab) {
-        tabs.remove(tab);
         if (selected != null && selected.getIndex() == tab.getIndex()) {
             clearContent();
         }
-        tab.content.getBot().getThread().interrupt();
+        tabs.remove(tab);
         updateTabs(null);
     }
 
