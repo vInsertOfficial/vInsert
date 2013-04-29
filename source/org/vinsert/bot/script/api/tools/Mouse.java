@@ -3,6 +3,7 @@ package org.vinsert.bot.script.api.tools;
 import org.vinsert.bot.InputHandler;
 import org.vinsert.bot.script.ScriptContext;
 import org.vinsert.bot.script.api.Actor;
+import org.vinsert.bot.script.api.GameObject;
 import org.vinsert.bot.util.Utils;
 
 import java.awt.*;
@@ -180,15 +181,16 @@ public class Mouse {
     public Point getPosition() {
         return handler.getPosition();
     }
+
     /**
      * Moves the mouse and hovers over an object
      *
      * @param object The GameObject to hover over
      */
-     public void hover(GameObject object) {
+    public void hover(GameObject object) {
         Polygon poly = object.hull();
-            Point p = object.hullPoint(poly);
-            mouse.move(p.x, p.y);
+        Point p = object.hullPoint(poly);
+        ctx.mouse.move(p.x, p.y);
     }
 
 }
