@@ -9,6 +9,7 @@ import org.vinsert.bot.util.Perspective;
 import org.vinsert.bot.util.Utils;
 import org.vinsert.bot.util.Vec3;
 import org.vinsert.insertion.IGroundLayer;
+import org.vinsert.insertion.IItemDefinition;
 import org.vinsert.insertion.IRenderable;
 import org.vinsert.insertion.ISceneTile;
 
@@ -36,10 +37,13 @@ public class GroundItem extends Item implements Hullable, Interactable {
      */
     private ScriptContext ctx;
 
+    private IItemDefinition itemDefinition;
+
     public GroundItem(ScriptContext ctx, int id, int amount, Tile tile) {
         super(ctx, id, amount);
         this.ctx = ctx;
         this.location = tile;
+        this.itemDefinition = ctx.getClient().getItemDefinition(id);
     }
 
     /**
@@ -245,6 +249,34 @@ public class GroundItem extends Item implements Hullable, Interactable {
     public int getHeight() {
         return height;
     }
+
+    public String getName() {
+           return itemDefinition.getName();
+       }
+
+       public String[] getActions() {
+           return itemDefinition.getActions();
+       }
+
+       public String[] getGroundActions() {
+           return itemDefinition.getGroundActions();
+       }
+
+       public int getModelId() {
+           return itemDefinition.getModelId();
+       }
+
+       public int[] getStackAmounts() {
+           return itemDefinition.getStackAmounts();
+       }
+
+       public int[] getStackIds() {
+           return itemDefinition.getStackIds();
+       }
+
+       public int getValue() {
+           return itemDefinition.getValue();
+       }
 
     @Override
     public boolean interact(String action) {

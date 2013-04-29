@@ -5,6 +5,7 @@ import org.vinsert.insertion.IClient;
 import org.vinsert.insertion.IWidget;
 
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 
 
 /**
@@ -15,6 +16,12 @@ import java.awt.*;
  * @author tommo
  */
 public class Perspective {
+
+
+    /**
+     * The effective minimap
+     */
+    public static final Ellipse2D.Double MINIMAP = new Ellipse2D.Double(565, 5, 155, 155);
 
     /**
      * The effective screen viewport
@@ -190,7 +197,7 @@ public class Perspective {
      * positive x axis (where the x-axis is from west to east).
      *
      * @param origin The origin position (generally player position)
-     * @param t      The target tile
+     * @param tile   The target tile
      * @return The angle in degrees
      */
     public static int tile_angle(Tile origin, Tile tile) {
@@ -213,8 +220,7 @@ public class Perspective {
     /**
      * Checks to see if a 2D {@link Point} is on screen.
      *
-     * @param client The client we are checking for.
-     * @param tile   The tile.
+     * @param point the point to check
      * @return {@code true} if the tile is on screen.
      */
     public static boolean on_screen(Point point) {
@@ -222,10 +228,32 @@ public class Perspective {
     }
 
     /**
-     * Checks to see if a set of 2D coordinates is on screen.
+     * Checks to see if an {@link Tile} is on the minimap.
      *
      * @param client The client we are checking for.
      * @param tile   The tile.
+     * @return {@code true} if the tile is on the minimap.
+     */
+    public static boolean on_minimap(IClient client, Tile tile) {
+        return on_minimap(trans_tile_minimap(client, tile.getX(), tile.getY()));
+    }
+
+
+    /**
+     * Checks to see if a 2D {@link Point} is on the minimap.
+     *
+     * @param point  The point
+     * @return {@code true} if the point is on the minimap.
+     */
+    public static boolean on_minimap(Point point) {
+        return MINIMAP.contains(point);
+    }
+
+    /**
+     * Checks to see if a set of 2D coordinates is on screen.
+     *
+     * @param x the x point
+     * @param y the y point
      * @return {@code true} if the tile is on screen.
      */
     public static boolean on_screen(int x, int y) {

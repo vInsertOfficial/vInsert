@@ -270,6 +270,46 @@ public class Camera {
     }
 
     /**
+     * Checks if an actor is currently visible on the minimap
+     *
+     * @param actor The actor to check
+     * @return true if the actor is visible on the minimap, false if not
+     */
+    public boolean isVisibleOnMinimap(Actor actor) {
+        return Perspective.on_minimap(ctx.getClient(), actor.getLocation());
+    }
+
+    /**
+     * Checks if a tile is currently visible on the minimap
+     *
+     * @param tile The tile to check
+     * @return true if the tile is visible on the minimap, false if not
+     */
+    public boolean isVisibleOnMinimap(Tile tile) {
+        return Perspective.on_minimap(ctx.getClient(), tile);
+    }
+
+    /**
+     * Checks if an object is currently visible on the minimap
+     *
+     * @param object The object to check
+     * @return true if the object is visible on the minimap, false if not
+     */
+    public boolean isVisibleOnMinimap(GameObject object) {
+        return Perspective.on_minimap(ctx.getClient(), object.getLocation());
+    }
+
+    /**
+     * Checks if a ground item is currently visible on the minimap
+     *
+     * @param item The item to check
+     * @return true if the item is visible on the minimap, false if not
+     */
+    public boolean isVisibleOnMinimap(GroundItem item) {
+        return Perspective.on_minimap(ctx.getClient(), item.getLocation());
+    }
+
+    /**
      * Checks if a ground item is currently visible on screen
      *
      * @param item The item to check

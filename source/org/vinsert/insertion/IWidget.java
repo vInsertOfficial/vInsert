@@ -2,6 +2,10 @@ package org.vinsert.insertion;
 
 public interface IWidget {
 
+    public int getTextureId();
+
+    public boolean isHidden();
+
     public IWidget[] getChildren();
 
     public IWidget getRoot();

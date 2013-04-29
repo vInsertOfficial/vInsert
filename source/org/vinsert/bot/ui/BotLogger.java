@@ -21,8 +21,6 @@ import java.util.logging.LogRecord;
 public class BotLogger extends JList<String> {
 
     public static final int MAX_LIST_SIZE = 200;// tweak this number?
-    public static final Rectangle BOTTOM_OF_WINDOW = new Rectangle(0,
-            Integer.MAX_VALUE, 0, 0);
     private static final Formatter formatter = new Formatter() {
         private final SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "h:mm");

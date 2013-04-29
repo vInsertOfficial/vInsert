@@ -5,8 +5,6 @@ import org.vinsert.bot.script.api.Widget;
 import org.vinsert.bot.util.Utils;
 import org.vinsert.insertion.IClient;
 
-import java.awt.*;
-
 /**
  * Standard game utilities
  *
@@ -17,11 +15,19 @@ public class Game {
 
     private ScriptContext ctx;
     private IClient client;
-    private Tabs currentTab = Tabs.INVENTORY;
 
     public Game(ScriptContext ctx) {
         this.ctx = ctx;
         this.client = ctx.getClient();
+    }
+
+    public Tabs getCurrentTab() {
+        for (Tabs tab : Tabs.values()) {
+            if(ctx.widgets.get(tab.getParent(), tab.getChild()).getTextureId() != -1) {
+                return tab;
+            }
+        }
+        return null;
     }
 
     /**
@@ -32,7 +38,6 @@ public class Game {
      */
     public boolean openTab(Tabs tab) {
         tab.clickTab(ctx.widgets);
-        currentTab = tab;
         return true;
     }
 
@@ -87,16 +92,6 @@ public class Game {
         }
         return GameState.UNKNOWN;
     }
-
-    /**
-     * Gets the current tab.
-     *
-     * @return the tab we are currently on.
-     */
-    public Tabs getCurrentTab() {
-        return currentTab;
-    }
-
     /**
      * @return The bot index in the tab list
      */
@@ -129,20 +124,20 @@ public class Game {
      * @author Discardedx2
      */
     public static enum Tabs {
-        COMBAT("Combat Options", 54),
-        STATS("Stats", 55),
-        QUESTS("Quest List", 56),
-        INVENTORY("Inventory", 57),
-        EQUIPMENT("Worn Equipment", 58),
-        PRAYER("Prayer", 59),
-        MAGIC("Magic", 60),
-        CLAN_CHAT("Clan Chat", 37),
-        FRIENDS_LIST("Friends List", 38),
-        IGNORE_LIST("Ignore List", 39),
-        LOGOUT("Logout", 40),
-        OPTIONS("Options", 41),
-        EMOTES("Emotes", 42),
-        MUSIC("Music Player", 43);
+        COMBAT("Combat Options", 47),
+        STATS("Stats", 48),
+        QUESTS("Quest List", 49),
+        INVENTORY("Inventory", 50),
+        EQUIPMENT("Worn Equipment", 51),
+        PRAYER("Prayer", 52),
+        MAGIC("Magic", 53),
+        CLAN_CHAT("Clan Chat", 30),
+        FRIENDS_LIST("Friends List", 31),
+        IGNORE_LIST("Ignore List", 32),
+        LOGOUT("Logout", 33),
+        OPTIONS("Options", 34),
+        EMOTES("Emotes", 35),
+        MUSIC("Music Player", 36);
 
         final int PARENT = 548;
         String name;
@@ -153,23 +148,16 @@ public class Game {
             this.child = child;
         }
 
-        public String getName() {
-            return name;
+        public int getParent() {
+            return PARENT;
         }
 
-        public Point getPoint(Widgets widgets) {
-            //this is really broken
-            for (Widget w : widgets.get(PARENT)) {
-                if (w.getActions() != null) {
-                    for (String s : w.getActions()) {
-                        if (getName().equals(s)) {
-                            Widget par = w.getRoot();
-                            return new Point(par.getRelativeX() + w.getRelativeX() + (w.getWidth() / 2), par.getRelativeY() + w.getRelativeY() + (w.getHeight() / 2));
-                        }
-                    }
-                }
-            }
-            return new Point(-1, -1);
+        public int getChild() {
+            return child;
+        }
+
+        public String getName() {
+            return name;
         }
 
         public void clickTab(Widgets widgets) {

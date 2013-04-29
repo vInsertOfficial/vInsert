@@ -29,8 +29,8 @@ public class BotAccountManager extends JDialog implements ActionListener {
             "Defence", "Strength", "Constitution", "Range", "Prayer", "Magic",
             "Cooking", "Woodcutting", "Fletching", "Fishing", "Firemaking",
             "Crafting", "Smithing", "Mining", "Herblore", "Agility", "Thieving",
-            "Slayer", "Farming", "Runecrafting", "Hunter", "Construction",
-            "Summoning", "Dungeoneering"};
+            "Slayer", "Farming", "Runecrafting", "Hunter", "Construction"
+            };
 
 
     private static class RandomRewardEditor extends DefaultCellEditor {

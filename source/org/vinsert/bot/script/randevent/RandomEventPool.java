@@ -29,9 +29,12 @@ public class RandomEventPool {
         register(new TalkingRandom());
         register(new Ent());
         register(new SandwichLady());
-        register(new MysteryBox());
+        register(new Pillory());
+        register(new Frog());
         register(new Mime());
         register(new Iles());
+        register(new StrangeBox());
+        register(new Lamp());
     }
 
     /**

@@ -28,6 +28,14 @@ public class Widget {
         this.widget = widget;
     }
 
+    public int getTextureId() {
+        return widget.getTextureId();
+    }
+
+    public boolean isVisible() {
+        return !widget.isHidden();
+    }
+
     public String getString1() {
         return widget.getString1();
     }

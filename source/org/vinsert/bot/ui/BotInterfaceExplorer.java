@@ -183,12 +183,22 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
                 + "<b>Bounds:</b> " + getBounds(par, chi)+ "<br>"
                 + "<b>Absolute X:</b> " + getBounds(par, chi).getX() + "<br>"
                 + "<b>Absolute Y:</b> " + getBounds(par, chi).getY() + "<br>"
+                + "<b>Texture Id:</b> " + getTextureId(par, chi) + "<br>"
+                + "<b>Visible:</b> " + isVisible(par, chi) + "<br>"
                 + "<b>Slot Sizes:</b> " + getSlotSizes(par, chi) + "<br>");
 
 
         widgetInformation.setText(widgetInformation.getText() + "</font>");
         selWid = c.widgets.get(par, chi);
 
+    }
+
+    private int getTextureId(int par, int chi) {
+        return c.widgets.get(par, chi).getTextureId();
+    }
+
+    private boolean isVisible(int par, int chi) {
+        return c.widgets.get(par, chi).isVisible();
     }
 
     private Rectangle getBounds(int par, int chi) {
