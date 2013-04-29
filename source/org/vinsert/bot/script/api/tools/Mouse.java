@@ -180,5 +180,15 @@ public class Mouse {
     public Point getPosition() {
         return handler.getPosition();
     }
+    /**
+     * Moves the mouse and hovers over an object
+     *
+     * @param object The GameObject to hover over
+     */
+     public void hover(GameObject object) {
+        Polygon poly = object.hull();
+            Point p = object.hullPoint(poly);
+            mouse.move(p.x, p.y);
+    }
 
 }
