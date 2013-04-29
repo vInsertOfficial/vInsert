@@ -442,7 +442,6 @@ public abstract class Actor extends Renderable implements Interactable {
             Utils.sleep(Utils.random(200, 400));
             return true;
         }
-
         ctx.mouse.click(true);
         if (index != -1) {
             Point menuPoint = ctx.menu.getClickPoint(index);

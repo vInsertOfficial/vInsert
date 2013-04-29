@@ -333,6 +333,8 @@ public class GameObject implements Interactable, Hullable {
             Utils.sleep(Utils.random(350, 650));
             return true;
         } else if (index > 0) {
+            ctx.mouse.click(true);
+            Utils.sleep(Utils.random(350, 650));
             ctx.menu.click(index);
             return true;
         }

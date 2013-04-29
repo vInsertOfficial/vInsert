@@ -320,7 +320,6 @@ public class Inventory {
             Utils.sleep(Utils.random(200, 400));
         } else {
             ctx.mouse.click(true);
-
             Point menuPoint = ctx.menu.getClickPoint(index);
             ctx.mouse.click(menuPoint.x, menuPoint.y);
             Utils.sleep(Utils.random(350, 650));
@@ -348,7 +347,7 @@ public class Inventory {
             Utils.sleep(Utils.random(200, 400));
         } else {
             ctx.mouse.click(true);
-
+            Utils.sleep(Utils.random(200, 400));
             Point menuPoint = ctx.menu.getClickPoint(index);
             ctx.mouse.click(menuPoint.x, menuPoint.y);
             Utils.sleep(Utils.random(350, 650));
@@ -358,7 +357,6 @@ public class Inventory {
         ctx.mouse.move(objPoint.x, objPoint.y);
         Utils.sleep(Utils.random(45, 100));
         ctx.mouse.click();
-
         return true;
     }
 
