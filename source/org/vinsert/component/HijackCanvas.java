@@ -26,8 +26,10 @@ public class HijackCanvas extends Canvas {
          * Only draw if this canvas it the active one
          */
         if (bot != null && bot.getWindow().getActiveBot() != null && bot.getWindow().getActiveBot() == bot) {
-            g.drawImage(gameBuffer, 0, 0, null);
-            g.dispose();
+            if (bot.isDrawCanvas()) {
+                g.drawImage(gameBuffer, 0, 0, null);
+                g.dispose();
+            }
             Graphics2D rend = (Graphics2D) super.getGraphics();
             for (ProjectionListener listener : listeners) {
                 listener.render((Graphics2D) botBuffer.getGraphics());

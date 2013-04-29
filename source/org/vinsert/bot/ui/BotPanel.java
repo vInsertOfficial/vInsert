@@ -24,7 +24,7 @@ public class BotPanel extends JPanel {
         this.bot = bot;
         setBorder(null);
         setLayout(new BorderLayout());
-        logger = new BotLogger();
+        logger = new BotLogger(bot);
         bot.setLogger(logger);
         loading = new BotLoadingIcon();
         loading.setPreferredSize(new Dimension(Configuration.BOT_APPLET_WIDTH, Configuration.BOT_APPLET_HEIGHT));

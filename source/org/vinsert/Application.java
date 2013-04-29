@@ -23,7 +23,7 @@ public class Application {
             public void run() {
                 try {
                     /*
-					 * Must disable the strict EDT checking for substance
+                     * Must disable the strict EDT checking for substance
 					 * (almost must be set before the LAF is changed)
 					 */
                     System.setProperty("insubstantial.checkEDT", "false");

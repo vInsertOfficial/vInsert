@@ -20,12 +20,7 @@ public class PersistentModelCache {
     /**
      * Global mappings from renderable instances to their models
      */
-    public static Map<IRenderable, MutableCachedModel> table = new ConcurrentHashMap<IRenderable, MutableCachedModel>();
-
-    private PersistentModelCache() {
-
-    }
-
+    public static Map<IRenderable, MutableCachedModel> table = new ConcurrentHashMap<>();
     /**
      * Cached model vertices, vertices will be updated accordingly
      *

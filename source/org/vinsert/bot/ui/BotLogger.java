@@ -1,6 +1,7 @@
 package org.vinsert.bot.ui;
 
 import org.vinsert.Configuration;
+import org.vinsert.bot.Bot;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -42,10 +43,12 @@ public class BotLogger extends JList<String> {
     private static final long serialVersionUID = -402184203325742570L;
     private DefaultListModel model = new DefaultListModel();
     private JScrollPane scroller;
+    private Bot bot;
 
-    public BotLogger() {
+    public BotLogger(Bot bot) {
         super();
         setModel(model);
+        this.bot = bot;
         setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
         setAutoscrolls(true);
@@ -70,6 +73,9 @@ public class BotLogger extends JList<String> {
                 boolean end = vbar.getMaximum() == vbar.getValue()
                         + vbar.getVisibleAmount();
 
+                if(!bot.isEnableLogger()) {
+                    return;
+                }
 				/*
                  * Remove the last index to prevent the list becoming gigantic
 				 */

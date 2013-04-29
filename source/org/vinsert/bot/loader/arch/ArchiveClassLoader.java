@@ -15,8 +15,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.security.AllPermission;
 import java.security.CodeSource;
 import java.security.Permissions;
@@ -105,22 +103,7 @@ public class ArchiveClassLoader extends ClassLoader {
         return null;
     }
 
-    private void fetch(String res) throws IOException {
-        URL url = new URL(Configuration.composeres() + res);
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        con.setDoInput(true);
-        con.setConnectTimeout(5000);
-        con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.56 Safari/535.11");
-        con.setRequestProperty("Cookie:", getCookie(url));
-        ReadableByteChannel rbc = Channels.newChannel(con.getInputStream());
-        FileOutputStream fos = new FileOutputStream(Configuration.STORAGE_DIR + File.separator + Configuration.jsonF);
-        fos.getChannel().transferFrom(rbc, 0, 1 << 24);
-        fos.close();
-        rbc.close();
-    }
-
-    private void fetchNew(String url) {
+    private void fetch(String url) {
         try {
             String page = "";
             URL url1 = new URL(url);
@@ -148,8 +131,8 @@ public class ArchiveClassLoader extends ClassLoader {
     private void loadMappings() {
         try {
             try {
-                     fetchNew(Configuration.composeres() + Configuration.jsonfile + IOHelper.downloadAsString(new URL(
-                             Configuration.composeres() + Configuration.currRevScript)));
+                fetch(Configuration.composeres() + Configuration.jsonfile + IOHelper.downloadAsString(new URL(
+                        Configuration.composeres() + Configuration.currRevScript)));
             } catch (final Exception ignored) {
                 System.err.println("Failed to downloaded version file and hooks. Attempting to run without latest hooks.");
             }
@@ -241,7 +224,7 @@ public class ArchiveClassLoader extends ClassLoader {
                 node.interfaces.remove(i);
             }
         }
-        if(identity.equals("client")) {
+        if (identity.equals("client")) {
             addMethodGetter(node, "getItemDefinition", "Laf;", "z", "t");
         }
 

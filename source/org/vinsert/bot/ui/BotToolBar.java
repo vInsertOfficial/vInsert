@@ -41,6 +41,8 @@ public class BotToolBar extends JToolBar {
     private JMenuItem interfacesMenu = new JMenuItem("Draw Menu Info");
     private JMenuItem interfacesWidgets = new JMenuItem("Draw Widgets");
     private JMenuItem interfaceExplorer = new JMenuItem("Interface Explorer");
+    private JMenuItem disableCanvas = new JMenuItem("Disable Canvas");
+    private JMenuItem enableLogger = new JMenuItem("Enable Logging");
     private JMenu npcs = new JMenu("Npcs");
     private JMenuItem npcsInfo = new JMenuItem("Info");
     private JMenuItem npcsModels = new JMenuItem("Models");
@@ -155,6 +157,8 @@ public class BotToolBar extends JToolBar {
         misc.add(miscWidgetSettings);
         misc.add(miscVarbitSettings);
         settings.add(misc);
+        settings.add(disableCanvas);
+        settings.add(enableLogger);
         settings.addSeparator();
         settings.add(exit);
 
@@ -265,7 +269,32 @@ public class BotToolBar extends JToolBar {
                 }
             }
         });
-
+        enableLogger.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Bot bot = window.getActiveBot();
+                if(bot.isEnableLogger()) {
+                    bot.setEnableLogger(false);
+                    enableLogger.setIcon(null);
+                    return;
+                }
+                bot.setEnableLogger(true);
+                enableLogger.setIcon(tickIcon);
+            }
+        });
+        disableCanvas.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Bot bot = window.getActiveBot();
+                if (bot.isDrawCanvas()) {
+                    bot.setDrawCanvas(false);
+                    disableCanvas.setIcon(tickIcon);
+                    return;
+                }
+                bot.setDrawCanvas(true);
+                disableCanvas.setIcon(null);
+            }
+        });
         //misc menu
         miscMouse.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

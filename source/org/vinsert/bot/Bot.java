@@ -54,6 +54,10 @@ public class Bot {
      */
     private InputHandler inputHandler;
 
+    private boolean drawCanvas = true;
+
+    private boolean enableLogger = false;
+
     /**
      * The bot instance, since scripts are created on a separate thread
      * we must store the local bot instance for reference
@@ -331,4 +335,19 @@ public class Bot {
         this.window = window;
     }
 
+    public boolean isEnableLogger() {
+        return enableLogger;
+    }
+
+    public void setEnableLogger(boolean enableLogger) {
+        this.enableLogger = enableLogger;
+    }
+
+    public boolean isDrawCanvas() {
+        return drawCanvas;
+    }
+
+    public void setDrawCanvas(boolean drawCanvas) {
+        this.drawCanvas = drawCanvas;
+    }
 }
