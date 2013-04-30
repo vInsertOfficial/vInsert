@@ -33,7 +33,7 @@ public class ApendageRandom extends RandomEvent {
                     return inArray(levers, element.getId());
                 }
             });
-            if (lever != null) {
+            if (lever != null && lever.isOnScreen()) {
                 return true;
             }
         }

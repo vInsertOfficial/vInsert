@@ -25,6 +25,7 @@ import java.util.Random;
  */
 public class GameObject implements Interactable, Hullable {
 
+
     private ScriptContext ctx;
     private ISceneObject object;
     private IFloorDecoration floorDecoration;
@@ -34,6 +35,7 @@ public class GameObject implements Interactable, Hullable {
     private int plane;
     private Tile location;
     private int id;
+    private static final Rectangle VIEWPORT = new Rectangle(4, 4, 512, 334);
 
     public GameObject(ScriptContext ctx, ISceneObject obj, Type type, int plane, Tile location) {
         this(ctx, type, plane, location);
@@ -70,6 +72,10 @@ public class GameObject implements Interactable, Hullable {
         return new Renderable(ctx, object.getRenderable());
     }
 
+    public boolean isOnScreen() {
+        return VIEWPORT.contains(getPoints()[0]);
+    }
+
     /**
      * @return The object's model
      */
@@ -98,7 +104,6 @@ public class GameObject implements Interactable, Hullable {
                     ModelCallback.callback(boundary.getRenderable(), (IModel) boundary.getRenderable());
                 }
                 return new Model(PersistentModelCache.table.get(boundary.getRenderable()));
-              //  return new Renderable(ctx, object.getRenderable())._getModel();
         }
         return null;
     }
