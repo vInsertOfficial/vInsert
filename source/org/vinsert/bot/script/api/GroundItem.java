@@ -43,7 +43,6 @@ public class GroundItem extends Item implements Hullable, Interactable {
         super(ctx, id, amount);
         this.ctx = ctx;
         this.location = tile;
-        this.itemDefinition = ctx.getClient().getItemDefinition(id);
     }
 
     /**
@@ -90,8 +89,8 @@ public class GroundItem extends Item implements Hullable, Interactable {
                 break;
         }  */
         IRenderable[] layers = {layer.getTop(), layer.getMiddle(), layer.getBottom()};
-        for(IRenderable layer1 : layers) {
-            if(layer1 == null) {
+        for (IRenderable layer1 : layers) {
+            if (layer1 == null) {
                 continue;
             }
             rend = layer1;
@@ -119,7 +118,7 @@ public class GroundItem extends Item implements Hullable, Interactable {
         }
         List<Point> points = new ArrayList<Point>();
         /*
-		 * Generate a list of all model vertices
+         * Generate a list of all model vertices
 		 */
         //instead of using getvectors we can deal directly with vertex arrays, but no point yet
         Vec3[][] vectors = getModel(ModelStackType.TOP).getVectors();
@@ -250,33 +249,47 @@ public class GroundItem extends Item implements Hullable, Interactable {
         return height;
     }
 
+    @Override
     public String getName() {
-           return itemDefinition.getName();
-       }
+        itemDefinition = ctx.getClient().getItemDefinition(getId());
+        return itemDefinition.getName();
+    }
 
-       public String[] getActions() {
-           return itemDefinition.getActions();
-       }
+    @Override
+    public String[] getActions() {
+        itemDefinition = ctx.getClient().getItemDefinition(getId());
+        return itemDefinition.getActions();
+    }
 
-       public String[] getGroundActions() {
-           return itemDefinition.getGroundActions();
-       }
+    @Override
+    public String[] getGroundActions() {
+        itemDefinition = ctx.getClient().getItemDefinition(getId());
+        return itemDefinition.getGroundActions();
+    }
 
-       public int getModelId() {
-           return itemDefinition.getModelId();
-       }
+    @Override
+    public int getModelId() {
+        itemDefinition = ctx.getClient().getItemDefinition(getId());
+        return itemDefinition.getModelId();
+    }
 
-       public int[] getStackAmounts() {
-           return itemDefinition.getStackAmounts();
-       }
+    @Override
+    public int[] getStackAmounts() {
+        itemDefinition = ctx.getClient().getItemDefinition(getId());
+        return itemDefinition.getStackAmounts();
+    }
 
-       public int[] getStackIds() {
-           return itemDefinition.getStackIds();
-       }
+    @Override
+    public int[] getStackIds() {
+        itemDefinition = ctx.getClient().getItemDefinition(getId());
+        return itemDefinition.getStackIds();
+    }
 
-       public int getValue() {
-           return itemDefinition.getValue();
-       }
+    @Override
+    public int getValue() {
+        itemDefinition = ctx.getClient().getItemDefinition(getId());
+        return itemDefinition.getValue();
+    }
 
     @Override
     public boolean interact(String action) {

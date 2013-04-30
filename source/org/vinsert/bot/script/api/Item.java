@@ -20,7 +20,6 @@ public class Item {
         this.id = id;
         this.amount = amount;
         this.ctx = ctx;
-        this.itemDefinition = ctx.getClient().getItemDefinition(id - 1);
     }
 
     /**
@@ -59,30 +58,37 @@ public class Item {
     }
 
     public String getName() {
+        itemDefinition = ctx.getClient().getItemDefinition(id - 1);
         return itemDefinition.getName();
     }
 
     public String[] getActions() {
+        itemDefinition = ctx.getClient().getItemDefinition(id - 1);
         return itemDefinition.getActions();
     }
 
     public String[] getGroundActions() {
+        itemDefinition = ctx.getClient().getItemDefinition(id - 1);
         return itemDefinition.getGroundActions();
     }
 
     public int getModelId() {
+        itemDefinition = ctx.getClient().getItemDefinition(id - 1);
         return itemDefinition.getModelId();
     }
 
     public int[] getStackAmounts() {
+        itemDefinition = ctx.getClient().getItemDefinition(id - 1);
         return itemDefinition.getStackAmounts();
     }
 
     public int[] getStackIds() {
+        itemDefinition = ctx.getClient().getItemDefinition(id - 1);
         return itemDefinition.getStackIds();
     }
 
     public int getValue() {
+        itemDefinition = ctx.getClient().getItemDefinition(id - 1);
         return itemDefinition.getValue();
     }
 
