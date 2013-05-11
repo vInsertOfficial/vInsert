@@ -83,7 +83,8 @@ public abstract class Script implements ProjectionListener, Runnable {
         if (!VBLogin.self.isLoggedIn() || VBLogin.self.getUsergroupId() == 8) {
             return false;
         }
-        int[] vip = {10, 11, 6, 9};
+        int[] vip = {VBLogin.auth_admin, VBLogin.auth_contrib, VBLogin.auth_dev, VBLogin.auth_mod, VBLogin.auth_sm,
+        VBLogin.auth_sponsor, VBLogin.auth_sw, VBLogin.auth_vip};
         if (manifest.type() == ScriptType.VIP) {
             for (int id : vip) {
                 if (id == VBLogin.self.getUsergroupId()) {

@@ -3,6 +3,7 @@ package org.vinsert.bot.script.randevent.impl;
 import org.vinsert.bot.script.ScriptManifest;
 import org.vinsert.bot.script.api.Item;
 import org.vinsert.bot.script.api.Widget;
+import org.vinsert.bot.script.api.tools.Game;
 import org.vinsert.bot.script.randevent.RandomEvent;
 import org.vinsert.bot.util.Utils;
 
@@ -19,6 +20,9 @@ public class Lamp extends RandomEvent {
 
     @Override
     public boolean init() {
+        if(game.getCurrentTab() != Game.Tabs.INVENTORY) {
+            return false;
+        }
         return game.isLoggedIn() && inventory.getCount(true, LAMP_ID) > 0;
     }
 

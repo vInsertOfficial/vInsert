@@ -2,8 +2,6 @@ package org.vinsert.insertion;
 
 public interface IClient {
 
-    public ICache getCache();
-
     public IItemDefinition getItemDefinition(int id);
 
     public IPlayer getLocalPlayer();
