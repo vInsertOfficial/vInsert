@@ -176,7 +176,7 @@ public class ArchiveClassLoader extends ClassLoader {
     public static void addMethodGetter(ClassNode cn, final String name, final String desc, final String owner, final String mName) {
         final MethodNode mn = new MethodNode(Opcodes.ACC_PUBLIC, name, "(I)Lorg/vinsert/insertion/IItemDefinition;", null, null);
         mn.instructions.add(new VarInsnNode(Opcodes.ILOAD, 1));
-        mn.instructions.add(new IntInsnNode(Opcodes.SIPUSH, 223));
+        mn.instructions.add(new IntInsnNode(Opcodes.SIPUSH, 8219));
         mn.instructions.add(new MethodInsnNode(Opcodes.INVOKESTATIC, owner, mName, "(IS)" + desc));
         mn.instructions.add(new InsnNode(Opcodes.ARETURN));
         mn.visitMaxs(0, 0);
@@ -225,7 +225,7 @@ public class ArchiveClassLoader extends ClassLoader {
             }
         }
         if (identity.equals("client")) {
-            addMethodGetter(node, "getItemDefinition", "Laf;", "ad", "");
+            addMethodGetter(node, "getItemDefinition", "Lad;", "ad", "l");
         }
 
         if (identity.equals("Renderable")) {

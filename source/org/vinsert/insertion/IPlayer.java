@@ -18,8 +18,4 @@ public interface IPlayer extends IActor {
 
     public int getTotalLevel();
 
-    public int getPrayerIcon();
-
-    public int getSkullIcon();
-
 }
