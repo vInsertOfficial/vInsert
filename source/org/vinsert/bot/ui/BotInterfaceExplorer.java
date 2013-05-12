@@ -176,7 +176,6 @@ public class BotInterfaceExplorer extends JFrame implements ProjectionListener {
                 + "<b>Model ID:</b> " + getModelId(par, chi) + "<br>"
                 + "<b>Text:</b> " + getText(par, chi) + "<br>"
                 + "<b>Name:</b> " + getName(par, chi) + "<br>"
-                + "<b>Spell Name:</b> " + getSpellName(par, chi) + "<br>"
                 + "<b>Tooltip:</b> " + getTooltip(par, chi) + "<br>"
                 + "<b>Selected Action:</b> " + getSelAction(par, chi) + "<br>"
                 + "<b>Actions:</b> " + getActions(par, chi) + "<br>"

@@ -6,6 +6,7 @@ import org.json.simple.parser.JSONParser;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.*;
 import org.vinsert.Configuration;
+import org.vinsert.bot.IOHelper;
 import org.vinsert.bot.util.InstructionSearcher;
 
 import java.io.*;
@@ -130,8 +131,8 @@ public class ArchiveClassLoader extends ClassLoader {
     private void loadMappings() {
         try {
             try {
-             //   fetch(Configuration.composeres() + Configuration.jsonfile + IOHelper.downloadAsString(new URL(
-                     //   Configuration.composeres() + Configuration.currRevScript)));
+                fetch(Configuration.composeres() + Configuration.jsonfile + IOHelper.downloadAsString(new URL(
+                        Configuration.composeres() + Configuration.currRevScript)));
             } catch (final Exception ignored) {
                 System.err.println("Failed to downloaded version file and hooks. Attempting to run without latest hooks.");
             }
