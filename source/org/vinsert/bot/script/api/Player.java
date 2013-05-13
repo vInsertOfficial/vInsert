@@ -106,6 +106,23 @@ public class Player extends Actor {
     public int getNpcTrans() {
         return player.getComposite().getNpcTrans();
     }
+    
+    /**
+     * Returns if the special-attack option is enabled or not.
+	 *
+	 * @return true if special is enabled; else false.
+	 */
+	public boolean isSpecialEnabled() {
+        return ctx.settings.get(301) == 1;
+    }
 
+	/**
+	 * Gets the special bar energy in percentage.
+	 *
+     * @return The current special bar energy in percentage
+	 */
+	public int getSpecialEnergy() {
+        return (ctx.settings.get(300) / 10);
+    }
 
 }
