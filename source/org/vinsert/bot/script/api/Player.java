@@ -108,7 +108,7 @@ public class Player extends Actor {
     }
     
     /**
-     * Returns if the special-attack option is enabled or not.
+     * Returns if the special attack option is enabled or not.
      * 
      *  @return true if special is enabled; else false.
      */
