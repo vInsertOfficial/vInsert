@@ -112,7 +112,7 @@ public class Player extends Actor {
      * 
      *  @return true if special is enabled; else false.
      */
-	public boolean isSpecialEnabled() {
+    public boolean isSpecialEnabled() {
         return ctx.settings.get(301) == 1;
     }
     
@@ -121,7 +121,7 @@ public class Player extends Actor {
      *
      * @return The current special bar energy in percentage
      */
-	public int getSpecialEnergy() {
+    public int getSpecialEnergy() {
         return (ctx.settings.get(300) / 10);
     }
 
