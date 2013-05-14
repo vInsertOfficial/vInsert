@@ -18,6 +18,8 @@ public class DebugPlayerInfo extends IncrementalDebugger {
         text.append(", location=").append(loc.toString());
         String speech = context.players.getLocalPlayer().getSpeech();
         text.append(", speech=").append(speech);
+        boolean moving = context.players.getLocalPlayer().isMoving();
+        text.append(", moving=").append(moving);
         graphics.drawString(text.toString(), point.x, point.y);
     }
 

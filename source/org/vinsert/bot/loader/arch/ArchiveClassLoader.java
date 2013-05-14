@@ -254,7 +254,7 @@ public class ArchiveClassLoader extends ClassLoader {
                         mn.instructions.insert(matches[matches.length - 1], var);
                         mn.instructions.insert(var, var2);
                         mn.instructions.insert(var2, new MethodInsnNode(Opcodes.INVOKESTATIC, "org/vinsert/bot/script/callback/ModelCallback", "callback", "(Lorg/vinsert/insertion/IRenderable;Lorg/vinsert/insertion/IModel;)V"));
-
+                        System.out.println(mn.name);
                         /// System.out.println("\tInserted model callback to "+node.name+"."+mn.name);
                     }
                 }
