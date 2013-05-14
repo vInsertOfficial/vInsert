@@ -35,7 +35,6 @@ public class RandomEventPool {
         register(new Iles());
         register(new StrangeBox());
         register(new Lamp());
-        register(new ApendageRandom());
         register(new Molly());
     }
 
