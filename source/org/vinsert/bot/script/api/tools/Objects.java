@@ -109,19 +109,23 @@ public class Objects {
      * @return The nearest object
      */
     public GameObject getNearest(Filter<GameObject> filter) {
-        GameObject[] objects = getAll(null, TYPE_ALL);
-        GameObject nearest = null;
-        Actor player = ctx.players.getLocalPlayer();
-        for (GameObject obj : objects) {
-            if (obj == null) continue;
-
-            if (nearest == null || (player.getLocation().distanceTo(obj.getLocation()) < player.getLocation().distanceTo(nearest.getLocation())
-                    && (filter == null || filter.accept(obj)))) {
-                nearest = obj;
-            }
-        }
-        return nearest;
-    }
+		GameObject[] objects = getAll(null, TYPE_ALL);
+		GameObject nearest = null;
+		double lastDist = 9999.9;
+		for (GameObject obj : objects) {
+			if (obj != null) {
+				if (filter.accept(obj)) {
+					double tempDist = ctx.players.getLocalPlayer()
+							.getLocation().distanceTo(obj.getLocation());
+					if (tempDist < lastDist) {
+						nearest = obj;
+						lastDist = tempDist;
+					}
+				}
+			}
+		}
+		return nearest;
+	}
 
     /**
      * Returns an array of all game objects which satisfy the filter
