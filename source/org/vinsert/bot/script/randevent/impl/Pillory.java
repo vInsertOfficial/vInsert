@@ -95,21 +95,23 @@ public class Pillory extends RandomEvent {
         return RandomEventPriority.HIGH;
     }
     
-    public boolean checkPosition() {
-    	if(game.isLoggedIn()) {
-    	Tile cageTile = objects.getNearest(Filters.objectId(CAGE_ID)).getLocation();
-    	if (cageTile != null) {
-    		if (localPlayer.getLocation().distanceTo(cageTile) < 4) {
-    			keyboard.press(38);
-    	        sleep(1500, 1750);
-    	        keyboard.release(38);
-    			camera.rotateToTile(cageTile);
-    			return true;
-    		}
-    	}
-    	}
-    	return false;
-    }
+	public boolean checkPosition() {
+		if (game.isLoggedIn()) {
+			GameObject cage = objects.getNearest(Filters.objectId(CAGE_ID));
+			if (cage != null) {
+				Tile cageTile = cage.getLocation();
+				if (localPlayer.getLocation().distanceTo(cageTile) < 4) {
+					keyboard.press(38);
+					sleep(1500, 1750);
+					keyboard.release(38);
+					camera.rotateToTile(cageTile);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 
     private enum Polygon {
     	CIRCLE(9751, 9755),
