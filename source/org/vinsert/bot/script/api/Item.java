@@ -20,6 +20,9 @@ public class Item {
         this.id = id;
         this.amount = amount;
         this.ctx = ctx;
+        if(ctx.getClient().getItemDefinition(id) != null) {
+        	itemDefinition = ctx.getClient().getItemDefinition(id-1);
+        }
     }
 
     /**
@@ -58,37 +61,51 @@ public class Item {
     }
 
     public String getName() {
-        itemDefinition = ctx.getClient().getItemDefinition(id - 1);
+    	if(ctx.getClient().getItemDefinition(id) != null) {
+        	itemDefinition = ctx.getClient().getItemDefinition(id);
+        }
         return itemDefinition.getName();
     }
 
     public String[] getActions() {
-        itemDefinition = ctx.getClient().getItemDefinition(id - 1);
+    	if(ctx.getClient().getItemDefinition(id) != null) {
+        	itemDefinition = ctx.getClient().getItemDefinition(id);
+        }
         return itemDefinition.getActions();
     }
 
     public String[] getGroundActions() {
-        itemDefinition = ctx.getClient().getItemDefinition(id - 1);
+    	if(ctx.getClient().getItemDefinition(id) != null) {
+        	itemDefinition = ctx.getClient().getItemDefinition(id);
+        }
         return itemDefinition.getGroundActions();
     }
 
     public int getModelId() {
-        itemDefinition = ctx.getClient().getItemDefinition(id - 1);
+    	if(ctx.getClient().getItemDefinition(id) != null) {
+        	itemDefinition = ctx.getClient().getItemDefinition(id);
+        }
         return itemDefinition.getModelId();
     }
 
     public int[] getStackAmounts() {
-        itemDefinition = ctx.getClient().getItemDefinition(id - 1);
+    	if(ctx.getClient().getItemDefinition(id) != null) {
+        	itemDefinition = ctx.getClient().getItemDefinition(id);
+        }
         return itemDefinition.getStackAmounts();
     }
 
     public int[] getStackIds() {
-        itemDefinition = ctx.getClient().getItemDefinition(id - 1);
+    	if(ctx.getClient().getItemDefinition(id) != null) {
+        	itemDefinition = ctx.getClient().getItemDefinition(id);
+        }
         return itemDefinition.getStackIds();
     }
 
     public int getValue() {
-        itemDefinition = ctx.getClient().getItemDefinition(id - 1);
+    	if(ctx.getClient().getItemDefinition(id) != null) {
+        	itemDefinition = ctx.getClient().getItemDefinition(id);
+        }
         return itemDefinition.getValue();
     }
 

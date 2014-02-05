@@ -43,6 +43,9 @@ public class GroundItem extends Item implements Hullable, Interactable {
         super(ctx, id, amount);
         this.ctx = ctx;
         this.location = tile;
+        if(ctx.getClient().getItemDefinition(id) != null) {
+        	itemDefinition = ctx.getClient().getItemDefinition(id);
+        }
     }
 
     /**
@@ -251,43 +254,57 @@ public class GroundItem extends Item implements Hullable, Interactable {
 
     @Override
     public String getName() {
-        itemDefinition = ctx.getClient().getItemDefinition(getId());
+    	if(ctx.getClient().getItemDefinition(getId()) != null) {
+        	itemDefinition = ctx.getClient().getItemDefinition(getId());
+        }
         return itemDefinition.getName();
     }
 
     @Override
     public String[] getActions() {
-        itemDefinition = ctx.getClient().getItemDefinition(getId());
+    	if(ctx.getClient().getItemDefinition(getId()) != null) {
+        	itemDefinition = ctx.getClient().getItemDefinition(getId());
+        }
         return itemDefinition.getActions();
     }
 
     @Override
     public String[] getGroundActions() {
-        itemDefinition = ctx.getClient().getItemDefinition(getId());
+    	if(ctx.getClient().getItemDefinition(getId()) != null) {
+        	itemDefinition = ctx.getClient().getItemDefinition(getId());
+        }
         return itemDefinition.getGroundActions();
     }
 
     @Override
     public int getModelId() {
-        itemDefinition = ctx.getClient().getItemDefinition(getId());
+    	if(ctx.getClient().getItemDefinition(getId()) != null) {
+        	itemDefinition = ctx.getClient().getItemDefinition(getId());
+        }
         return itemDefinition.getModelId();
     }
 
     @Override
     public int[] getStackAmounts() {
-        itemDefinition = ctx.getClient().getItemDefinition(getId());
+    	if(ctx.getClient().getItemDefinition(getId()) != null) {
+        	itemDefinition = ctx.getClient().getItemDefinition(getId());
+        }
         return itemDefinition.getStackAmounts();
     }
 
     @Override
     public int[] getStackIds() {
-        itemDefinition = ctx.getClient().getItemDefinition(getId());
+    	if(ctx.getClient().getItemDefinition(getId()) != null) {
+        	itemDefinition = ctx.getClient().getItemDefinition(getId());
+        }
         return itemDefinition.getStackIds();
     }
 
     @Override
     public int getValue() {
-        itemDefinition = ctx.getClient().getItemDefinition(getId());
+    	if(ctx.getClient().getItemDefinition(getId()) != null) {
+        	itemDefinition = ctx.getClient().getItemDefinition(getId());
+        }
         return itemDefinition.getValue();
     }
 
