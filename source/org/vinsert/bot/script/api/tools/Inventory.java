@@ -437,5 +437,26 @@ public class Inventory {
             dropItem(i);
         }
     }
+    
+     public boolean clickItem(Item item) {
+        int slot = inventory.indexOf(item);
+        Point point = inventory.getClickPoint(slot);
+        mouse.click(point.x, point.y, true);
+        return false;
+    }
+    /**
+     * @param dropArray the array that has to be dropped
+     */
+    public void dropAll(int[] dropArray) {
+        Item[] items = inventory.getItems();
+        for (Item item : items) {
+            for (int i : dropArray) {
+                if (item.getId() == i) {
+                    clickItem(item);
+                    menu.click("Drop");
+                }
+            }
+        }
+    }
 
 }
