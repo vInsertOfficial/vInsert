@@ -31,4 +31,14 @@ public class Settings {
         return -1;
     }
 
+	/*
+	 * Returns settings array
+	 */
+
+	public int[] getAll() {
+		int[] settings = ctx.getClient().getWidgetSettings();
+		if (settings != null)
+			return settings;
+	}
+
 }
